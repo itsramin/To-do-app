@@ -7,21 +7,49 @@ const taskDoneList = document.querySelector(".tasks--done--list");
 const taskDone = document.querySelector(".tasks--done");
 let checkboxs = document.querySelectorAll(".checkbox");
 const btnSubTask = document.querySelector(".sub--task");
+const del = document.querySelector(".del");
+const deltask = document.querySelector(".deltask");
 let idNum = 0;
+let idCounter = 0;
 let taskId;
 const UndoneTasks = [];
-const allTasks = [];
+let allTasks = [];
 
 // check cookie is available
 function checkCookie() {
-  let allTasks = getCookie("tasks");
-  console.log(allTasks);
-  if (allTasks != "") {
-    showUndoneTasks();
-    showDoneTasks();
+  // if (getCookie(idCounter) != "") {
+  //   do {
+  //     const gettask = getCookie(idCounter).split(",");
+  //     allTasks.push({
+  //       id: idCounter,
+  //       title: gettask[1],
+  //       done: gettask[2][0] == "f" ? false : true,
+  //     });
+  //     idCounter++;
+  //   } while (getCookie(idCounter));
+  // }
+  const lastTask = getCookie("lastTask");
+  console.log(lastTask);
+  let t;
+  if (lastTask != 0) {
+    for (t = 0; t < lastTask; t++) {
+      const gettask = getCookie(t).split(",");
+      console.log(gettask);
+      allTasks.push({
+        id: t,
+        title: gettask[1],
+        done: gettask[2][0] == "f" ? false : true,
+      });
+    }
   }
+  if (t == 0) {
+    idNum = 0;
+  } else {
+    idNum = allTasks.length;
+  }
+  showAllTasks();
 }
-// get cookies number
+// get cookies numbرer
 function getCookie(cname) {
   let name = cname + "=";
   let decodedCookie = decodeURIComponent(document.cookie);
@@ -47,74 +75,97 @@ function setCookie(cname, cvalue, exdays) {
 
 const Newtask = function (title) {
   this.title = title;
-  // this.date = date;
   this.id = idNum;
   this.done = false;
+  setCookie(idNum, [idNum, title, false], 30);
+
   idNum++;
-};
-const showUndoneTasks = function () {
-  taskUndone.textContent = "";
-  allTasks.forEach(function (task) {
-    if (!task.done) {
-      const taskRow = `
-        <div data-id="${task.id}" class="taskRow flex flex-row items-center gap-2">
-        <input type="checkbox" class="checkbox w-5 h-5 rounded-full">
-        <span class="task-title">${task.title}</span>
-        </div>`;
-      taskUndone.insertAdjacentHTML("beforeend", taskRow);
-    }
-  });
+  setCookie("lastTask", allTasks.length + 1, 30);
+  console.log("lastTask", getCookie("lastTask"));
   console.log(allTasks);
-  setCookie("tasks", [allTasks], 30);
 };
-const showDoneTasks = function () {
-  taskDone.textContent = "";
+
+const showAllTasks = function () {
+  taskUndone.textContent = taskDone.textContent = "";
+
   allTasks.forEach(function (task) {
-    if (task.done) {
-      const taskRow = `
-        <div data-id="${task.id}" class="taskRow flex flex-row items-center gap-2">
-        <input type="checkbox" class="checkbox w-5 h-5 rounded-full">
-        <span class="task-title">${task.title}</span>
+    const taskIsDone = task.done ? true : false;
+    const taskRow = `
+        <div data-id="${
+          task.id
+        }" class="taskRow flex flex-row items-center gap-2 mx-4">
+        <input type="checkbox" ${
+          taskIsDone ? `checked = "true"` : ""
+        } class="checkbox w-5 h-5 rounded-full">
+        <input value="${
+          task.title
+        }" class="task-title grow bg-transparent focus-visible:outline-1 outline-cyan-500 ${
+      taskIsDone ? `text-gray-500 line-through` : ""
+    }"></span>
+    <span class="deltask cursor-pointer">🗑</span>
         </div>`;
-      taskDone.insertAdjacentHTML("beforeend", taskRow);
-    }
+    const chooseList = task.done ? taskDone : taskUndone;
+    chooseList.insertAdjacentHTML("beforeend", taskRow);
   });
 };
 const checkTask = function (idNum, task) {
   allTasks[idNum].done = true;
-  setCookie("tasks", allTasks, 30);
+  // setCookie("tasks", allTasks, 30);
   taskDone.insertAdjacentElement("beforeend", task);
   task.style.color = "#777";
   task.style.textDecoration = "line-through";
 };
+const deleteCookie = function () {
+  for (let i = 0; i < allTasks.length; i++) {
+    setCookie(i, "", -10);
+  }
+  setCookie("lastTask", "", -10);
+  idNum = idCounter = 0;
+  allTasks = [];
+  showAllTasks();
+};
+
+// event handlers
 btnSubTask.addEventListener("click", function (e) {
   e.preventDefault();
   if (taskText.value !== "") {
     taskId = `t-${idNum}`;
-    window[taskId] = new Newtask(taskText.value);
+    const task_text = taskText.value;
+    window[taskId] = new Newtask(task_text);
     allTasks.push(window[taskId]);
     taskText.value = "";
-
-    showUndoneTasks();
+    showAllTasks();
   }
 });
 taskList.addEventListener("click", function (e) {
   if (e.target.classList.contains("checkbox")) {
-    const curTask = e.target.closest(".taskRow");
-    // const curTaskText = e.target
-    //   .closest(".taskRow")
-    //   .querySelector(".task-title");
+    const curTaskTitle = e.target
+      .closest(".taskRow")
+      .querySelector(".task-title");
     const curTaskId = e.target.closest(".taskRow").dataset.id;
-    if (!allTasks[curTaskId].done) {
-      checkTask(curTaskId, curTask);
-    } else {
-      allTasks[curTaskId].done = false;
-      setCookie("tasks", allTasks, 30);
-      taskDone.querySelector(`[data-id='${curTaskId}']`).remove();
-      showUndoneTasks();
-    }
+
+    const curId = allTasks.findIndex((task) => task.id == curTaskId);
+    console.log("curTaskId", curTaskId);
+    console.log("allTasks array num", curId);
+    allTasks[curId].title = curTaskTitle.value;
+    allTasks[curId].done = !allTasks[curId].done;
+    setCookie(
+      curTaskId,
+      [curTaskId, curTaskTitle.value, allTasks[curId].done],
+      30
+    );
+    showAllTasks();
+  }
+  if (e.target.classList.contains("deltask")) {
+    const curTaskId = e.target.closest(".taskRow").dataset.id;
+    setCookie(curTaskId, "", -10);
+    const delId = allTasks.findIndex((task) => task.id == curTaskId);
+    allTasks.splice(delId, 1);
+    setCookie("lastTask", allTasks.length - 1, 30);
+    showAllTasks();
   }
 });
 window.addEventListener("load", function () {
   setTimeout(checkCookie, 5);
 });
+del.addEventListener("click", deleteCookie);

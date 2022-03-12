@@ -7,19 +7,21 @@
     <script src="../scripts/script.js" defer></script>
     <title>Document</title>
   </head>
-  <body>
-    <div class="main flex flex-col items-center">
+  <body class="box-border">
+    <div
+      class="main flex flex-col items-center box-border bg-gray-50 rounded-lg max-w-lg mx-auto mt-6"
+    >
       <header
-        class="px-10 py-6 m-10 text-cyan-700 text-4xl rounded-lg font-bold"
+        class="px-10 py-3 m-10 text-cyan-700 text-4xl rounded-lg font-bold"
       >
         To do app
       </header>
-      <div class="box">
+      <div class="box w-11/12 bg-gray-100 p-2 m-4 rounded-lg">
         <div class="task--entry flex flex-row gap-4 items-center">
           <input
             type="text"
             placeholder="Create a task"
-            class="task--text px-3 py-2 border-2 rounded-lg focus-visible:outline-1 outline-cyan-500"
+            class="task--text px-3 py-2 border-2 grow rounded-lg focus-visible:outline-1 outline-cyan-500"
           />
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -39,15 +41,20 @@
         </div>
         <div class="tasks--list">
           <div class="tasks--undone--list p-4 flex flex-col gap-2">
-            <span>Tasks:</span>
+            <span class="font-bold text-cyan-600 bg-gray-200 p-2 rounded-lg"
+              >✍🏻 Tasks:</span
+            >
             <div class="tasks--undone"></div>
           </div>
           <div class="tasks--done--list p-4 flex flex-col gap-2">
-            <span>Compeleted:</span>
+            <span class="font-bold text-cyan-600 bg-gray-200 p-2 rounded-lg"
+              >✅ Compeleted:</span
+            >
             <div class="tasks--done"></div>
           </div>
         </div>
       </div>
     </div>
+    <button class="del sub--task px-3 py-2">🚮</button>
   </body>
 </html>
