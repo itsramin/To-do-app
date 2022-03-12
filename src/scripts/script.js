@@ -9,11 +9,12 @@ let checkboxs = document.querySelectorAll(".checkbox");
 const btnSubTask = document.querySelector(".sub--task");
 const del = document.querySelector(".del");
 const deltask = document.querySelector(".deltask");
-let idNum = 0;
+let idNum = 1;
 let idCounter = 0;
 let taskId;
 const UndoneTasks = [];
 let allTasks = [];
+let idArr = [];
 
 // check cookie is available
 function checkCookie() {
@@ -28,22 +29,25 @@ function checkCookie() {
   //     idCounter++;
   //   } while (getCookie(idCounter));
   // }
-  const lastTask = getCookie("lastTask");
-  console.log(lastTask);
   let t;
-  if (lastTask != 0) {
-    for (t = 0; t < lastTask; t++) {
+  let lastTask = getCookie("lastTask");
+  console.log(lastTask);
+  for (t = 0; t < 100; ++t) {
+    if (getCookie(t) !== "") {
       const gettask = getCookie(t).split(",");
-      console.log(gettask);
       allTasks.push({
         id: t,
         title: gettask[1],
         done: gettask[2][0] == "f" ? false : true,
       });
+      console.log(allTasks);
+    } else {
+      console.log("ther is no task");
+      continue;
     }
   }
   if (t == 0) {
-    idNum = 0;
+    idNum = 1;
   } else {
     idNum = allTasks.length;
   }
@@ -77,12 +81,9 @@ const Newtask = function (title) {
   this.title = title;
   this.id = idNum;
   this.done = false;
+  allTasks.push(this);
   setCookie(idNum, [idNum, title, false], 30);
-
   idNum++;
-  setCookie("lastTask", allTasks.length + 1, 30);
-  console.log("lastTask", getCookie("lastTask"));
-  console.log(allTasks);
 };
 
 const showAllTasks = function () {
@@ -116,7 +117,7 @@ const checkTask = function (idNum, task) {
   task.style.textDecoration = "line-through";
 };
 const deleteCookie = function () {
-  for (let i = 0; i < allTasks.length; i++) {
+  for (let i = 0; i < 100; i++) {
     setCookie(i, "", -10);
   }
   setCookie("lastTask", "", -10);
@@ -132,12 +133,12 @@ btnSubTask.addEventListener("click", function (e) {
     taskId = `t-${idNum}`;
     const task_text = taskText.value;
     window[taskId] = new Newtask(task_text);
-    allTasks.push(window[taskId]);
     taskText.value = "";
     showAllTasks();
   }
 });
 taskList.addEventListener("click", function (e) {
+  console.log(e.target);
   if (e.target.classList.contains("checkbox")) {
     const curTaskTitle = e.target
       .closest(".taskRow")
@@ -145,9 +146,7 @@ taskList.addEventListener("click", function (e) {
     const curTaskId = e.target.closest(".taskRow").dataset.id;
 
     const curId = allTasks.findIndex((task) => task.id == curTaskId);
-    console.log("curTaskId", curTaskId);
-    console.log("allTasks array num", curId);
-    allTasks[curId].title = curTaskTitle.value;
+    // allTasks[curId].title = curTaskTitle.value;
     allTasks[curId].done = !allTasks[curId].done;
     setCookie(
       curTaskId,
@@ -161,7 +160,9 @@ taskList.addEventListener("click", function (e) {
     setCookie(curTaskId, "", -10);
     const delId = allTasks.findIndex((task) => task.id == curTaskId);
     allTasks.splice(delId, 1);
-    setCookie("lastTask", allTasks.length - 1, 30);
+    console.log(allTasks);
+    setCookie("lastTask", idNum, 30);
+
     showAllTasks();
   }
 });
