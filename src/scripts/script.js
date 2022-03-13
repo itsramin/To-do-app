@@ -9,6 +9,8 @@ let checkboxs = document.querySelectorAll(".checkbox");
 const btnSubTask = document.querySelector(".sub--task");
 const del = document.querySelector(".del");
 const deltask = document.querySelector(".deltask");
+const calendar = document.querySelector(".calendar");
+const taskdate = document.querySelector(".taskdate");
 let idNum = 1;
 let idCounter = 0;
 let taskId;
@@ -26,7 +28,8 @@ function checkCookie() {
       allTasks.push({
         id: t,
         title: gettask[1],
-        done: gettask[2][0] == "f" ? false : true,
+        date: gettask[2],
+        done: gettask[3][0] == "f" ? false : true,
       });
     } else {
       continue;
@@ -63,12 +66,13 @@ function setCookie(cname, cvalue, exdays) {
   document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
 }
 
-const Newtask = function (title) {
+const Newtask = function (title, date = 0) {
   this.title = title;
   this.id = idNum;
+  this.date = date;
   this.done = false;
   allTasks.push(this);
-  setCookie(idNum, [idNum, title, false], 30);
+  setCookie(idNum, [idNum, title, date, false], 30);
   idNum++;
   setCookie("lastTask", idNum, 30);
 };
@@ -89,7 +93,9 @@ const showAllTasks = function () {
           task.title
         }" class="task-title grow pl-1 bg-transparent focus-visible:outline-1 outline-cyan-500 ${
       taskIsDone ? `text-gray-500 line-through` : ""
-    }"></span>
+    }"></span><span class="taskrowdate text-sm text-gray-500" >${
+      task.date
+    }</span>
     <span class="deltask cursor-pointer opacity-30">🗑</span>
         </div>`;
     const chooseList = task.done ? taskDone : taskUndone;
@@ -119,7 +125,8 @@ btnSubTask.addEventListener("click", function (e) {
   if (taskText.value !== "") {
     taskId = `t-${idNum}`;
     const task_text = taskText.value;
-    window[taskId] = new Newtask(task_text);
+    const task_date = taskdate.value;
+    window[taskId] = new Newtask(task_text, task_date);
     taskText.value = "";
     showAllTasks();
   }
@@ -135,7 +142,12 @@ taskList.addEventListener("click", function (e) {
     allTasks[curId].done = !allTasks[curId].done;
     setCookie(
       curTaskId,
-      [curTaskId, curTaskTitle.value, allTasks[curId].done],
+      [
+        curTaskId,
+        curTaskTitle.value,
+        allTasks[curId].date,
+        allTasks[curId].done,
+      ],
       30
     );
     showAllTasks();
@@ -159,7 +171,12 @@ taskList.addEventListener("click", function (e) {
       allTasks[arrId].title = curTaskTitle.value;
       setCookie(
         curTaskId,
-        [curTaskId, curTaskTitle.value, allTasks[arrId].done],
+        [
+          curTaskId,
+          curTaskTitle.value,
+          allTasks[arrId].date,
+          allTasks[arrId].done,
+        ],
         30
       );
     });
@@ -169,3 +186,7 @@ window.addEventListener("load", function () {
   setTimeout(checkCookie, 5);
 });
 del.addEventListener("click", deleteCookie);
+
+// calendar.addEventListener("click", function (e) {
+//   taskdate.classList.toggle("hidden");
+// });
