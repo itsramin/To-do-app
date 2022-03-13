@@ -18,21 +18,9 @@ let idArr = [];
 
 // check cookie is available
 function checkCookie() {
-  // if (getCookie(idCounter) != "") {
-  //   do {
-  //     const gettask = getCookie(idCounter).split(",");
-  //     allTasks.push({
-  //       id: idCounter,
-  //       title: gettask[1],
-  //       done: gettask[2][0] == "f" ? false : true,
-  //     });
-  //     idCounter++;
-  //   } while (getCookie(idCounter));
-  // }
   let t;
   let lastTask = getCookie("lastTask");
-  console.log(lastTask);
-  for (t = 0; t < 100; ++t) {
+  for (t = 0; t < lastTask; ++t) {
     if (getCookie(t) !== "") {
       const gettask = getCookie(t).split(",");
       allTasks.push({
@@ -40,9 +28,7 @@ function checkCookie() {
         title: gettask[1],
         done: gettask[2][0] == "f" ? false : true,
       });
-      console.log(allTasks);
     } else {
-      console.log("ther is no task");
       continue;
     }
   }
@@ -84,6 +70,7 @@ const Newtask = function (title) {
   allTasks.push(this);
   setCookie(idNum, [idNum, title, false], 30);
   idNum++;
+  setCookie("lastTask", idNum, 30);
 };
 
 const showAllTasks = function () {
@@ -94,16 +81,16 @@ const showAllTasks = function () {
     const taskRow = `
         <div data-id="${
           task.id
-        }" class="taskRow flex flex-row items-center gap-2 mx-4">
+        }" class="taskRow flex flex-row items-center gap-2 mx-4 mt-1">
         <input type="checkbox" ${
           taskIsDone ? `checked = "true"` : ""
         } class="checkbox w-5 h-5 rounded-full">
         <input value="${
           task.title
-        }" class="task-title grow bg-transparent focus-visible:outline-1 outline-cyan-500 ${
+        }" class="task-title grow pl-1 bg-transparent focus-visible:outline-1 outline-cyan-500 ${
       taskIsDone ? `text-gray-500 line-through` : ""
     }"></span>
-    <span class="deltask cursor-pointer">🗑</span>
+    <span class="deltask cursor-pointer opacity-30">🗑</span>
         </div>`;
     const chooseList = task.done ? taskDone : taskUndone;
     chooseList.insertAdjacentHTML("beforeend", taskRow);
@@ -138,7 +125,6 @@ btnSubTask.addEventListener("click", function (e) {
   }
 });
 taskList.addEventListener("click", function (e) {
-  console.log(e.target);
   if (e.target.classList.contains("checkbox")) {
     const curTaskTitle = e.target
       .closest(".taskRow")
@@ -146,7 +132,6 @@ taskList.addEventListener("click", function (e) {
     const curTaskId = e.target.closest(".taskRow").dataset.id;
 
     const curId = allTasks.findIndex((task) => task.id == curTaskId);
-    // allTasks[curId].title = curTaskTitle.value;
     allTasks[curId].done = !allTasks[curId].done;
     setCookie(
       curTaskId,
@@ -160,10 +145,24 @@ taskList.addEventListener("click", function (e) {
     setCookie(curTaskId, "", -10);
     const delId = allTasks.findIndex((task) => task.id == curTaskId);
     allTasks.splice(delId, 1);
-    console.log(allTasks);
-    setCookie("lastTask", idNum, 30);
 
     showAllTasks();
+  }
+  if (e.target.classList.contains("task-title")) {
+    e.target.addEventListener("input", function () {
+      const curTaskTitle = e.target
+        .closest(".taskRow")
+        .querySelector(".task-title");
+
+      const curTaskId = e.target.closest(".taskRow").dataset.id;
+      const arrId = allTasks.findIndex((task) => task.id == curTaskId);
+      allTasks[arrId].title = curTaskTitle.value;
+      setCookie(
+        curTaskId,
+        [curTaskId, curTaskTitle.value, allTasks[arrId].done],
+        30
+      );
+    });
   }
 });
 window.addEventListener("load", function () {

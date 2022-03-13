@@ -11,10 +11,12 @@
     <div
       class="main flex flex-col items-center box-border bg-gray-50 rounded-lg max-w-lg mx-auto mt-6"
     >
-      <header class="m-10 text-cyan-700 text-4xl rounded-lg font-bold">
+      <header
+        class="m-7 text-cyan-700 text-4xl rounded-lg font-bold select-none"
+      >
         To do app
       </header>
-      <div class="box w-11/12 bg-gray-100 p-2 m-4 rounded-lg">
+      <div class="box w-11/12 bg-gray-100 p-3 m-4 rounded-lg h-full">
         <div class="task--entry flex flex-row gap-4 items-center">
           <input
             type="text"
@@ -26,7 +28,7 @@
             class="calendar"
             width="30"
             height="30"
-            fill="#e5e7eb"
+            fill="#b6b6b6"
             viewBox="0 0 24 24"
           >
             <path
@@ -37,15 +39,17 @@
             Add
           </button>
         </div>
-        <div class="tasks--list">
+        <div class="tasks--list flex flex-col justify-between">
           <div class="tasks--undone--list pt-4 pb-6 flex flex-col gap-2">
-            <span class="font-bold text-cyan-600 bg-gray-200 p-2 rounded-lg"
+            <span
+              class="font-bold text-cyan-600 bg-gray-200 p-2 rounded-lg select-none"
               >✍🏻 Tasks:</span
             >
             <div class="tasks--undone"></div>
           </div>
           <div class="tasks--done--list pt-4 pb-6 flex flex-col gap-2">
-            <span class="font-bold text-cyan-600 bg-gray-200 p-2 rounded-lg"
+            <span
+              class="font-bold text-cyan-600 bg-gray-200 p-2 rounded-lg select-none"
               >✅ Compeleted:</span
             >
             <div class="tasks--done"></div>
