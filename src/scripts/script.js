@@ -91,9 +91,9 @@ const showAllTasks = function () {
         } class="checkbox w-5 h-5 rounded-full">
         <input value="${
           task.title
-        }" class="task-title grow pl-1 bg-transparent focus-visible:outline-1 outline-cyan-500 ${
+        }" class="task-title grow pl-1 w-10 bg-transparent focus-visible:outline-1 outline-cyan-500 ${
       taskIsDone ? `text-gray-500 line-through` : ""
-    }"></span><span class="taskrowdate text-sm text-gray-500" >${
+    } md:w-auto"></span><span class="taskrowdate text-sm text-gray-500" >${
       task.date
     }</span>
     <span class="deltask cursor-pointer opacity-30">🗑</span>
