@@ -3,9 +3,60 @@
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="./reset.css" />
     <link rel="stylesheet" href="./style.css" />
     <script src="./script.js" defer></script>
     <title>Document</title>
   </head>
-  <body></body>
+  <body>
+    <div class="container">
+      <select class="list-group">
+        <option class="list-option" value="work">Work</option>
+        <option class="list-option" value="home">Home</option>
+      </select>
+
+      <div class="main-box">
+        <div class="tabs">
+          <div class="tab tab--undone tab--active">📃</div>
+          <div class="tab tab--done">✅</div>
+        </div>
+        <div class="tasks--lists">
+          <div class="tasks--list tasks--list--undone"></div>
+          <div class="tasks--list tasks--list--done hidden"></div>
+        </div>
+        <div class="new--task--form hidden">
+          <form class="form--new">
+            <div class="form--section">
+              <label class="form-lable">Title</label>
+              <input class="form--input form--input--title" type="text" />
+            </div>
+            <div class="form--section">
+              <label class="form-lable">Date</label>
+              <input class="form--input form--input--date" type="date" />
+            </div>
+            <div class="form--section">
+              <label class="form-lable">List</label>
+              <select class="form--list form--input--list"></select>
+            </div>
+            <div class="form--section">
+              <label class="form-lable">Description</label>
+              <textarea
+                class="form--input--description"
+                cols="30"
+                rows="5"
+              ></textarea>
+            </div>
+            <div class="form--section form--btns">
+              <input class="form--sub" type="submit" />
+              <button class="btn--del">Delete task</button>
+            </div>
+          </form>
+        </div>
+      </div>
+      <div class="buttons">
+        <button class="btn btn--new">+</button>
+        <button class="btn btn--sort">⮁</button>
+      </div>
+    </div>
+  </body>
 </html>

@@ -1,0 +1,114 @@
+:root {
+  --color-primary: #fff;
+  --color-secondary: #004e92;
+  --color-tertiary: #ff585f;
+  --bg-primary: #fff;
+  --gradient-primary: linear-gradient(to top left, #000428, #004e92);
+  --gradient-secondary: linear-gradient(to top left, #ffb003, #ffcb03);
+}
+
+body {
+  background: var(--gradient-primary);
+  font-size: 1rem;
+  font-family: "Franklin Gothic Medium", "Arial Narrow", Arial, sans-serif;
+}
+
+.container {
+  max-width: 400px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 80px auto 20px;
+  gap: 20px;
+}
+.list-group {
+  padding: 0.5rem 1.5rem;
+  border-radius: 7px;
+  border: none;
+}
+.main-box {
+  background: var(--bg-primary);
+  width: 100%;
+  /* border-radius: 7px; */
+  min-height: 400px;
+  display: flex;
+  flex-direction: column;
+}
+.tabs {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+}
+.tab {
+  transition: 0.5s all;
+  padding: 20px;
+  width: 100%;
+  text-align: center;
+  background-color: rgb(228, 228, 228);
+  cursor: pointer;
+}
+.tab--active {
+  background: var(--bg-primary);
+}
+.hidden {
+  display: none;
+}
+.btn {
+  background: var(--gradient-secondary);
+  width: 50px;
+  height: 50px;
+  border: none;
+  font-size: 25px;
+  border-radius: 50%;
+  color: var(--color-primary);
+  /* box-shadow: 0 0 20px 0px #ffb0035e; */
+  cursor: pointer;
+}
+.buttons {
+  position: relative;
+  top: -45px;
+}
+.form-lable {
+  font-family: inherit;
+  color: var(--color-secondary);
+  margin-right: 10px;
+  vertical-align: top;
+}
+.form--new {
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+}
+.form--section {
+  padding: 1rem;
+}
+.form--input {
+  border: none;
+  border-bottom: 1px solid;
+  border-color: var(--color-secondary);
+  outline: none;
+  color: var(--color--secondary);
+}
+.form--sub {
+  padding: 1rem 3rem;
+  /* width: 100px; */
+  color: var(--color-primary);
+  background: var(--gradient-primary);
+  border: none !important;
+  font-size: 1rem;
+}
+.form--btns {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+}
+.btn--del {
+  background: none;
+  font-weight: 500;
+  padding: 0.5rem 2rem;
+  text-align: center;
+  border: none;
+  font-size: 0.9rem;
+  color: #d6212a;
+  cursor: pointer;
+}
