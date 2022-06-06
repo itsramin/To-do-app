@@ -37,6 +37,7 @@ class App {
     this._createCatsList(catgroup);
 
     btnNew.addEventListener("click", this._hideNShowForm.bind(this));
+    btnNew.addEventListener("click", this._createCatsList(formInputCat));
     tabs.addEventListener("click", this._changeTab);
     btnSubmitForm.addEventListener("click", this._newTask.bind(this));
     closeNewForm.addEventListener("click", this._hideNShowForm);
@@ -60,6 +61,7 @@ class App {
     place.insertAdjacentHTML("beforeend", html);
   }
   _hideNShowCatForm(e) {
+    btnNewCat.classList.toggle("btn-cancel");
     e.preventDefault();
     document.querySelector(".new--cat").value = "";
     document.querySelector(".form--new--cat").classList.toggle("hidden");
@@ -75,6 +77,7 @@ class App {
   }
   _changeCat(e) {
     e.preventDefault();
+    catgroup.blur();
     this._renderAllTasks(false, catgroup.value);
   }
 
@@ -129,19 +132,21 @@ class App {
     buttons.classList.toggle("hidden");
     formNew.classList.toggle("hidden");
 
-    this._createCatsList(formInputCat);
+    // this._createCatsList(formInputCat);
   }
   _changeTab(e) {
-    // active current tab
-    document
-      .querySelectorAll(".tab")
-      .forEach((tab) => tab.classList.remove("tab--active"));
-    e.target.classList.add("tab--active");
+    if (!e.target.classList.contains("tab--active")) {
+      // active current tab
+      document
+        .querySelectorAll(".tab")
+        .forEach((tab) => tab.classList.remove("tab--active"));
+      e.target.classList.add("tab--active");
 
-    // show active list
-    document
-      .querySelectorAll(".tasks--list")
-      .forEach((list) => list.classList.toggle("hidden"));
+      // show active list
+      document
+        .querySelectorAll(".tasks--list")
+        .forEach((list) => list.classList.toggle("hidden"));
+    }
   }
   _newTask(e) {
     e.preventDefault();
