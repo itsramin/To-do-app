@@ -18,7 +18,7 @@ body {
   display: flex;
   flex-direction: column;
   align-items: center;
-  margin: 80px auto 20px;
+  margin: 80px auto 18px;
   gap: 20px;
 }
 .list-group {
@@ -67,6 +67,7 @@ body {
 .buttons {
   position: relative;
   top: -45px;
+  transition: 0.5s all;
 }
 .form-lable {
   font-family: inherit;
@@ -78,6 +79,7 @@ body {
   padding: 1rem;
   display: flex;
   flex-direction: column;
+  position: relative;
 }
 .form--section {
   padding: 1rem;
@@ -111,4 +113,43 @@ body {
   font-size: 0.9rem;
   color: #d6212a;
   cursor: pointer;
+}
+.form--input--description {
+  outline: none;
+}
+.close--new--form {
+  position: absolute;
+  top: 1rem;
+  right: 1.2rem;
+  font-size: 2rem;
+  color: #333;
+  cursor: pointer;
+  border: none;
+  background: none;
+}
+.btn--new--list {
+  background: none;
+  border: none;
+  font-size: 2rem;
+  vertical-align: middle;
+  color: var(--color-primary);
+  cursor: pointer;
+}
+
+.task--box {
+  margin: 20px 20px 00px 20;
+  padding-bottom: 20px;
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+  font-size: 1rem;
+  color: #555;
+  align-items: baseline;
+  border-bottom: 1px solid #999;
+}
+.task--title {
+  flex-grow: 2;
+}
+.task--date {
+  font-size: 0.9rem;
 }

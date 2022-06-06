@@ -6,14 +6,17 @@
     <link rel="stylesheet" href="./reset.css" />
     <link rel="stylesheet" href="./style.css" />
     <script src="./script.js" defer></script>
-    <title>Document</title>
+    <title>Todo app</title>
   </head>
   <body>
     <div class="container">
-      <select class="list-group">
-        <option class="list-option" value="work">Work</option>
-        <option class="list-option" value="home">Home</option>
-      </select>
+      <div class="list--box">
+        <select class="list-group">
+          <option class="list-option" value="work">Work</option>
+          <option class="list-option" value="home">Home</option>
+        </select>
+        <button class="btn--new--list">+</button>
+      </div>
 
       <div class="main-box">
         <div class="tabs">
@@ -26,6 +29,7 @@
         </div>
         <div class="new--task--form hidden">
           <form class="form--new">
+            <button class="close--new--form">&times;</button>
             <div class="form--section">
               <label class="form-lable">Title</label>
               <input class="form--input form--input--title" type="text" />
@@ -48,7 +52,7 @@
             </div>
             <div class="form--section form--btns">
               <input class="form--sub" type="submit" />
-              <button class="btn--del">Delete task</button>
+              <button class="btn--del hidden">Delete task</button>
             </div>
           </form>
         </div>
