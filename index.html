@@ -10,12 +10,12 @@
   </head>
   <body>
     <div class="container">
-      <div class="list--box">
-        <select class="list-group">
-          <option class="list-option" value="work">Work</option>
-          <option class="list-option" value="home">Home</option>
-        </select>
-        <button class="btn--new--list">+</button>
+      <div class="cat--box">
+        <select class="cat-group"></select>
+        <form class="form--new--cat hidden">
+          <input class="new--cat" type="text" />
+        </form>
+        <button class="btn--new--cat">+</button>
       </div>
 
       <div class="main-box">
@@ -39,8 +39,8 @@
               <input class="form--input form--input--date" type="date" />
             </div>
             <div class="form--section">
-              <label class="form-lable">List</label>
-              <select class="form--list form--input--list"></select>
+              <label class="form-lable">Category</label>
+              <select class="form--input form--input--cat"></select>
             </div>
             <div class="form--section">
               <label class="form-lable">Description</label>

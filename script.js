@@ -11,46 +11,100 @@ const btnSubmitForm = document.querySelector(".form--sub");
 const tasksListUndone = document.querySelector(".tasks--list--undone");
 const tasksListDone = document.querySelector(".tasks--list--done");
 const closeNewForm = document.querySelector(".close--new--form");
+const catgroup = document.querySelector(".cat-group");
+const btnNewCat = document.querySelector(".btn--new--cat");
+const formNewCat = document.querySelector(".form--new--cat");
+const formInputCat = document.querySelector(".form--input--cat");
+
+class Task {
+  date = new Date();
+  id = (Date.now() + "").slice(-10);
+  constructor(title, date, cat, description = "") {
+    this.title = title;
+    this.date = date;
+    this.cat = cat;
+    this.description = description;
+    this.status = false;
+  }
+}
 
 class App {
   #allTasks = [];
   #sorted = false;
+  allCats = [];
   constructor() {
     this._getLocalStorage();
+    this._createCatsList(catgroup);
 
-    btnNew.addEventListener("click", this._hideNShowForm);
+    btnNew.addEventListener("click", this._hideNShowForm.bind(this));
     tabs.addEventListener("click", this._changeTab);
     btnSubmitForm.addEventListener("click", this._newTask.bind(this));
     closeNewForm.addEventListener("click", this._hideNShowForm);
     tasksLists.addEventListener("click", this._checkTask.bind(this));
     btnSort.addEventListener("click", this._sortList.bind(this));
+    btnNewCat.addEventListener("click", this._hideNShowCatForm.bind(this));
+    formNewCat.addEventListener("submit", this._newCat.bind(this));
+    catgroup.addEventListener("change", this._changeCat.bind(this));
+  }
+
+  _createCatsList(place) {
+    place.innerHTML = "";
+    let html;
+    this.allCats.forEach(
+      (cat) =>
+        (html += `
+    <option class="cat-option" value="${cat}">${cat}</option>
+`)
+    );
+
+    place.insertAdjacentHTML("beforeend", html);
+  }
+  _hideNShowCatForm(e) {
+    e.preventDefault();
+    document.querySelector(".new--cat").value = "";
+    document.querySelector(".form--new--cat").classList.toggle("hidden");
+    catgroup.classList.toggle("hidden");
+  }
+  _newCat(e) {
+    e.preventDefault();
+    const newCat = document.querySelector(".new--cat").value;
+    this.allCats.push(newCat);
+    this._hideNShowCatForm(e);
+    this._setLocalStorage();
+    this._createCatsList(catgroup);
+  }
+  _changeCat(e) {
+    e.preventDefault();
+    this._renderAllTasks(false, catgroup.value);
   }
 
   _checkTask(e) {
-    // const target = e.target.closest("task--box");
-    // const task = this.#allTasks.find((task) => task.id === target.dataset.id);
-    // console.log(task);
-
     if (e.target.classList.contains("task--checkbox")) {
       const taskEl = e.target.closest(".task--box");
       const task = this.#allTasks.find((task) => task.id === taskEl.dataset.id);
       task.status = !task.status;
-      console.log(task);
-      console.log(this.#allTasks);
-      // this.#allTasks.push(task);
       this._setLocalStorage();
       this._renderAllTasks();
     }
   }
   _setLocalStorage() {
     localStorage.setItem("allTasks", JSON.stringify(this.#allTasks));
+    localStorage.setItem("allCats", JSON.stringify(this.allCats));
   }
   _getLocalStorage() {
+    // recive all tasks
     const data = JSON.parse(localStorage.getItem("allTasks"));
-
     if (!data) return;
+    // recive all cats
+    const data2 = JSON.parse(localStorage.getItem("allCats"));
+    if (!data2) return [];
 
+    // save data
+    this.allCats = data2;
     this.#allTasks = data;
+
+    // load localStorage
+    this._createCatsList(catgroup);
     this._renderAllTasks();
   }
   _renderTask(task, status = false) {
@@ -74,6 +128,8 @@ class App {
     tabs.classList.toggle("hidden");
     buttons.classList.toggle("hidden");
     formNew.classList.toggle("hidden");
+
+    this._createCatsList(formInputCat);
   }
   _changeTab(e) {
     // active current tab
@@ -91,7 +147,7 @@ class App {
     e.preventDefault();
     const newTaskTitle = document.querySelector(".form--input--title").value;
     const newTaskDate = document.querySelector(".form--input--date").value;
-    const newTaskList = document.querySelector(".form--input--list").value;
+    const newTaskCat = document.querySelector(".form--input--cat").value;
     const newTaskDescription = document.querySelector(
       ".form--input--description"
     ).value;
@@ -99,7 +155,7 @@ class App {
     let task = new Task(
       newTaskTitle,
       newTaskDate,
-      newTaskList,
+      newTaskCat,
       newTaskDescription
     );
     this._renderTask(task);
@@ -107,14 +163,14 @@ class App {
 
     document.querySelector(".form--input--title").value =
       document.querySelector(".form--input--date").value =
-      document.querySelector(".form--input--list").value =
+      document.querySelector(".form--input--cat").value =
       document.querySelector(".form--input--description").value =
         "";
 
     this._hideNShowForm(e);
     this._setLocalStorage();
   }
-  _renderAllTasks(sorted = false) {
+  _renderAllTasks(sorted = false, cat = "") {
     // clean 2 tabs
     document
       .querySelectorAll(".tasks--list")
@@ -127,6 +183,8 @@ class App {
           .sort((a, b) => Date.parse(a.date) - Date.parse(b.date))
       : this.#allTasks;
 
+    allTasks = cat ? allTasks.filter((task) => task.cat === cat) : allTasks;
+
     // render all tasks
     allTasks.forEach((task) => this._renderTask(task, task.status));
   }
@@ -137,15 +195,3 @@ class App {
 }
 
 const app = new App();
-
-class Task {
-  date = new Date();
-  id = (Date.now() + "").slice(-10);
-  constructor(title, date, list, description = "") {
-    this.title = title;
-    this.date = +date;
-    this.list = list;
-    this.description = description;
-    this.status = false;
-  }
-}
