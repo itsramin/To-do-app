@@ -5,6 +5,7 @@ const btnNew = document.querySelector(".btn--new");
 const btnSort = document.querySelector(".btn--sort");
 const tasksLists = document.querySelector(".tasks--lists");
 const formNew = document.querySelector(".new--task--form");
+const formEdit = document.querySelector(".edit--task--form");
 const listGroup = document.querySelector(".list-group");
 const buttons = document.querySelector(".buttons");
 const btnSubmitForm = document.querySelector(".form--sub");
@@ -15,10 +16,13 @@ const catgroup = document.querySelector(".cat-group");
 const btnNewCat = document.querySelector(".btn--new--cat");
 const formNewCat = document.querySelector(".form--new--cat");
 const formInputCat = document.querySelector(".form--input--cat");
+const btnSaveEdit = document.querySelector(".form--save--edit");
+const btnDel = document.querySelector(".btn--del");
 
 class Task {
   date = new Date();
   id = (Date.now() + "").slice(-10);
+  doneDate;
   constructor(title, date, cat, description = "") {
     this.title = title;
     this.date = date;
@@ -32,6 +36,7 @@ class App {
   #allTasks = [];
   #sorted = false;
   allCats = [];
+  #currentId;
   constructor() {
     this._getLocalStorage();
     this._createCatsList(catgroup);
@@ -46,6 +51,8 @@ class App {
     btnNewCat.addEventListener("click", this._hideNShowCatForm.bind(this));
     formNewCat.addEventListener("submit", this._newCat.bind(this));
     catgroup.addEventListener("change", this._changeCat.bind(this));
+    btnSaveEdit.addEventListener("click", this._saveEdit.bind(this));
+    btnDel.addEventListener("click", this._delTask.bind(this));
   }
 
   _createCatsList(place) {
@@ -74,20 +81,70 @@ class App {
     this._hideNShowCatForm(e);
     this._setLocalStorage();
     this._createCatsList(catgroup);
+    this._createCatsList(formInputCat);
   }
   _changeCat(e) {
     e.preventDefault();
     catgroup.blur();
     this._renderAllTasks(false, catgroup.value);
   }
+  _hideNShowEditForm(e) {
+    e.preventDefault();
+    tasksLists.classList.toggle("hidden");
+    tabs.classList.toggle("hidden");
+    buttons.classList.toggle("hidden");
+    formEdit.classList.toggle("hidden");
 
-  _checkTask(e) {
-    if (e.target.classList.contains("task--checkbox")) {
-      const taskEl = e.target.closest(".task--box");
-      const task = this.#allTasks.find((task) => task.id === taskEl.dataset.id);
-      task.status = !task.status;
+    // this._createCatsList(formInputCat);
+  }
+  _saveEdit(e) {
+    e.preventDefault();
+    console.log(e);
+
+    const task = this.#allTasks.find((task) => task.id === this.#currentId);
+    task.title = document.querySelector(".form--edit--input--title").value;
+    task.date = document.querySelector(".form--edit--input--date").value;
+    task.cat = document.querySelector(".form--edit--input--cat").value;
+    task.description = document.querySelector(
+      ".form--edit--input--description"
+    ).value;
+    this._setLocalStorage();
+    this._renderAllTasks();
+    this._hideNShowEditForm(e);
+  }
+  _delTask(e) {
+    e.preventDefault();
+    if (confirm("Are you sure you want to delete this task")) {
+      this.#allTasks.splice(
+        this.#allTasks.findIndex((task) => task.id === this.#currentId),
+        1
+      );
       this._setLocalStorage();
       this._renderAllTasks();
+      this._hideNShowEditForm(e);
+    }
+  }
+
+  _checkTask(e) {
+    const taskEl = e.target.closest(".task--box");
+    if (!taskEl) return;
+    const task = this.#allTasks.find((task) => task.id === taskEl.dataset.id);
+    console.log(task);
+    if (e.target.classList.contains("task--checkbox")) {
+      task.status = !task.status;
+      task.doneDate = new Date();
+      this._setLocalStorage();
+      this._renderAllTasks();
+    } else {
+      this._hideNShowEditForm(e);
+      const catInput = document.querySelector(".form--edit--input--cat");
+      this._createCatsList(catInput);
+      document.querySelector(".form--edit--input--title").value = task.title;
+      document.querySelector(".form--edit--input--date").value = task.date;
+      catInput.value = task.cat;
+      document.querySelector(".form--edit--input--description").value =
+        task.description;
+      this.#currentId = task.id;
     }
   }
   _setLocalStorage() {
@@ -131,6 +188,7 @@ class App {
     tabs.classList.toggle("hidden");
     buttons.classList.toggle("hidden");
     formNew.classList.toggle("hidden");
+    document.querySelector(".form--input--title").focus();
 
     // this._createCatsList(formInputCat);
   }

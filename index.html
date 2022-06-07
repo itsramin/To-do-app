@@ -52,7 +52,39 @@
             </div>
             <div class="form--section form--btns">
               <input class="form--sub" type="submit" />
-              <button class="btn--del hidden">Delete task</button>
+            </div>
+          </form>
+        </div>
+        <div class="edit--task--form hidden">
+          <form class="form--new">
+            <button class="close--new--form">&times;</button>
+            <div class="form--section">
+              <label class="form-lable">Title</label>
+              <input class="form--input form--edit--input--title" type="text" />
+            </div>
+            <div class="form--section">
+              <label class="form-lable">Date</label>
+              <input class="form--input form--edit--input--date" type="date" />
+            </div>
+            <div class="form--section">
+              <label class="form-lable">Category</label>
+              <select class="form--input form--edit--input--cat"></select>
+            </div>
+            <div class="form--section">
+              <label class="form-lable">Description</label>
+              <textarea
+                class="form--edit--input--description"
+                cols="30"
+                rows="5"
+              ></textarea>
+            </div>
+            <div class="form--section form--btns">
+              <input
+                class="form--sub form--save--edit"
+                type="submit"
+                value="Save"
+              />
+              <button class="btn--del">Delete task</button>
             </div>
           </form>
         </div>
