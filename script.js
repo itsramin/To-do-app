@@ -12,9 +12,9 @@ const btnSubmitForm = document.querySelector(".form--sub");
 const tasksListUndone = document.querySelector(".tasks--list--undone");
 const tasksListDone = document.querySelector(".tasks--list--done");
 const closeNewForm = document.querySelector(".close--new--form");
-const catgroup = document.querySelector(".cat-group");
-const btnNewCat = document.querySelector(".btn--new--cat");
-const formNewCat = document.querySelector(".form--new--cat");
+const catgroup = document.querySelector(".cat-select-list");
+const btnNewCat = document.querySelector(".btn--f-n-cat-i");
+const formNewCat = document.querySelector(".f-n-cat");
 const formInputCat = document.querySelector(".form--input--cat");
 const btnSaveEdit = document.querySelector(".form--save--edit");
 const btnDel = document.querySelector(".btn--del");
@@ -70,13 +70,13 @@ class App {
   _hideNShowCatForm(e) {
     btnNewCat.classList.toggle("btn-cancel");
     e.preventDefault();
-    document.querySelector(".new--cat").value = "";
-    document.querySelector(".form--new--cat").classList.toggle("hidden");
+    document.querySelector(".f-n-cat-i").value = "";
+    document.querySelector(".f-n-cat").classList.toggle("hidden");
     catgroup.classList.toggle("hidden");
   }
   _newCat(e) {
     e.preventDefault();
-    const newCat = document.querySelector(".new--cat").value;
+    const newCat = document.querySelector(".f-n-cat-i").value;
     this.allCats.push(newCat);
     this._hideNShowCatForm(e);
     this._setLocalStorage();

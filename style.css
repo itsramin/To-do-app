@@ -3,7 +3,7 @@
   --color-secondary: #004e92;
   --color-tertiary: #ff585f;
   --bg-primary: #fff;
-  --gradient-primary: linear-gradient(to top left, #f12711, #f5af19);
+  --gradient-primary: linear-gradient(to top left, #02aab0, #00cdac);
   --gradient-secondary: linear-gradient(to top left, #ffb003, #ffcb03);
 }
 
@@ -21,19 +21,19 @@ body {
   margin: 80px auto 18px;
   gap: 20px;
 }
-.cat-group {
+.cat-select-list {
   padding: 0.5rem 1.5rem;
   width: 180px;
   border-radius: 7px;
   border: none;
   transition: 0.5s;
 }
-.cat--box {
+.cat-box {
   display: flex;
   flex-direction: row;
   gap: 0.5rem;
 }
-.new--cat {
+.f-n-cat-i {
   width: 180px;
   height: 39px;
   padding: 0.5rem 1.5rem;
@@ -64,7 +64,7 @@ body {
   padding: 20px;
   width: 100%;
   text-align: center;
-  background-color: rgb(228, 228, 228);
+  background-color: #b0e1c3;
   cursor: pointer;
   -webkit-box-shadow: inset 0px -20px 16px -20px rgb(0 0 0 / 40%);
   box-shadow: inset 0px -20px 16px -20px rgb(0 0 0 / 40%);
@@ -151,7 +151,7 @@ body {
   border: none;
   background: none;
 }
-.btn--new--cat {
+.btn--f-n-cat-i {
   background: none;
   border: none;
   font-size: 2rem;
