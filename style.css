@@ -69,7 +69,7 @@ body {
   -webkit-box-shadow: inset 0px -20px 16px -20px rgb(0 0 0 / 40%);
   box-shadow: inset 0px -20px 16px -20px rgb(0 0 0 / 40%);
 }
-.tab--active {
+.tab-active {
   background: var(--bg-primary);
   box-shadow: none;
 }
@@ -87,34 +87,35 @@ body {
   /* box-shadow: 0 0 20px 0px #ffb0035e; */
   cursor: pointer;
 }
-.buttons {
+.control-btns {
   position: relative;
   top: -45px;
   transition: 0.5s all;
 }
-.form-lable {
+.f-l {
   font-family: inherit;
   color: var(--color-secondary);
   margin-right: 10px;
   vertical-align: top;
 }
-.form--new {
+.f-n-task,
+.f-e-task {
   padding: 1rem;
   display: flex;
   flex-direction: column;
   position: relative;
 }
-.form--section {
+.f-section {
   padding: 1rem;
 }
-.form--input {
+.f-n-task-i {
   border: none;
   border-bottom: 1px solid;
   border-color: var(--color-secondary);
   outline: none;
   color: var(--color--secondary);
 }
-.form--sub {
+.f-n-task-s {
   padding: 1rem 3rem;
   /* width: 100px; */
   color: var(--color-primary);
@@ -122,12 +123,12 @@ body {
   border: none !important;
   font-size: 1rem;
 }
-.form--btns {
+.f-n-task-b {
   display: flex;
   flex-direction: row;
   justify-content: center;
 }
-.btn--del {
+.f-e-task-del {
   background: none;
   font-weight: 500;
   padding: 0.5rem 2rem;
@@ -137,11 +138,11 @@ body {
   color: #d6212a;
   cursor: pointer;
 }
-.form--input--description {
+.f-des {
   outline: none;
-  margin-top: 10px;
+  margin-top: 7px;
 }
-.close--new--form {
+.f-c {
   position: absolute;
   top: 1rem;
   right: 1.2rem;
@@ -151,7 +152,7 @@ body {
   border: none;
   background: none;
 }
-.btn--f-n-cat-i {
+.f-n-cat-b {
   background: none;
   border: none;
   font-size: 2rem;
@@ -165,7 +166,7 @@ body {
   transform: rotateZ(45deg);
 }
 
-.task--box {
+.task-box {
   margin: 20px 20px 00px 20;
   padding-bottom: 20px;
   display: flex;
@@ -176,9 +177,9 @@ body {
   align-items: baseline;
   border-bottom: 1px solid #999;
 }
-.task--title {
+.task-title {
   flex-grow: 2;
 }
-.task--date {
+.task-date {
   font-size: 0.9rem;
 }

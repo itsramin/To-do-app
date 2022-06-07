@@ -1,23 +1,30 @@
 "use strict";
 
+const catSelectList = document.querySelector(".cat-select-list");
+const fNCat = document.querySelector(".f-n-cat");
+const fNCatB = document.querySelector(".f-n-cat-b");
+const fNCatI = document.querySelector(".f-n-cat-i");
+
 const tabs = document.querySelector(".tabs");
-const btnNew = document.querySelector(".btn--new");
-const btnSort = document.querySelector(".btn--sort");
-const tasksLists = document.querySelector(".tasks--lists");
-const formNew = document.querySelector(".new--task--form");
-const formEdit = document.querySelector(".edit--task--form");
-const listGroup = document.querySelector(".list-group");
-const buttons = document.querySelector(".buttons");
-const btnSubmitForm = document.querySelector(".form--sub");
-const tasksListUndone = document.querySelector(".tasks--list--undone");
-const tasksListDone = document.querySelector(".tasks--list--done");
-const closeNewForm = document.querySelector(".close--new--form");
-const catgroup = document.querySelector(".cat-select-list");
-const btnNewCat = document.querySelector(".btn--f-n-cat-i");
-const formNewCat = document.querySelector(".f-n-cat");
-const formInputCat = document.querySelector(".form--input--cat");
-const btnSaveEdit = document.querySelector(".form--save--edit");
-const btnDel = document.querySelector(".btn--del");
+
+const tasksLists = document.querySelector(".tasks-lists");
+const tasksListUndone = document.querySelector(".tasks-list-undone");
+const tasksListDone = document.querySelector(".tasks-list-done");
+
+const boxNTask = document.querySelector(".box-n-task");
+const fNTaskS = document.querySelector(".f-n-task-s");
+
+const fNTaskC = document.querySelector(".f-n-task-c");
+const fNTaskICat = document.querySelector(".f-n-task-i-cat");
+
+const boxEtask = document.querySelector(".box-e-task");
+const fETaskC = document.querySelector(".f-e-task-c");
+const btnSaveEdit = document.querySelector(".f-e-task-save");
+const btnDel = document.querySelector(".f-e-task-del");
+
+const controlBtns = document.querySelector(".control-btns");
+const btnNew = document.querySelector(".btn-new");
+const btnSort = document.querySelector(".btn-sort");
 
 class Task {
   date = new Date();
@@ -37,27 +44,38 @@ class App {
   #sorted = false;
   allCats = [];
   #currentId;
+  #currentCat;
+
   constructor() {
     this._getLocalStorage();
-    this._createCatsList(catgroup);
 
     btnNew.addEventListener("click", this._hideNShowForm.bind(this));
-    btnNew.addEventListener("click", this._createCatsList(formInputCat));
+
     tabs.addEventListener("click", this._changeTab);
-    btnSubmitForm.addEventListener("click", this._newTask.bind(this));
-    closeNewForm.addEventListener("click", this._hideNShowForm);
+
+    fNTaskS.addEventListener("click", this._newTask.bind(this));
+    fNTaskC.addEventListener("click", this._hideNShowForm);
+
+    fETaskC.addEventListener("click", this._hideNShowEditForm);
+
     tasksLists.addEventListener("click", this._checkTask.bind(this));
     btnSort.addEventListener("click", this._sortList.bind(this));
-    btnNewCat.addEventListener("click", this._hideNShowCatForm.bind(this));
-    formNewCat.addEventListener("submit", this._newCat.bind(this));
-    catgroup.addEventListener("change", this._changeCat.bind(this));
+    fNCatB.addEventListener("click", this._hideNShowCatForm.bind(this));
+    fNCat.addEventListener("submit", this._newCat.bind(this));
+    catSelectList.addEventListener("change", this._changeCat.bind(this));
     btnSaveEdit.addEventListener("click", this._saveEdit.bind(this));
     btnDel.addEventListener("click", this._delTask.bind(this));
   }
 
+  // _checkTitle(mode) {
+  //   if (`document.querySelector(".f-${mode}-task-title").value === ''`)
+  //     return false;
+  // }
+
   _createCatsList(place) {
     place.innerHTML = "";
     let html;
+    if (this.allCats === []) return;
     this.allCats.forEach(
       (cat) =>
         (html += `
@@ -68,48 +86,47 @@ class App {
     place.insertAdjacentHTML("beforeend", html);
   }
   _hideNShowCatForm(e) {
-    btnNewCat.classList.toggle("btn-cancel");
     e.preventDefault();
-    document.querySelector(".f-n-cat-i").value = "";
+    fNCatB.classList.toggle("btn-cancel");
+
+    catSelectList.classList.toggle("hidden");
     document.querySelector(".f-n-cat").classList.toggle("hidden");
-    catgroup.classList.toggle("hidden");
+    document.querySelector(".f-n-cat-i").value = "";
   }
   _newCat(e) {
     e.preventDefault();
     const newCat = document.querySelector(".f-n-cat-i").value;
+    if (!newCat) return;
     this.allCats.push(newCat);
     this._hideNShowCatForm(e);
     this._setLocalStorage();
-    this._createCatsList(catgroup);
-    this._createCatsList(formInputCat);
+    this._createCatsList(catSelectList);
+    this._createCatsList(fNTaskICat);
+    catSelectList.value = newCat;
   }
   _changeCat(e) {
     e.preventDefault();
-    catgroup.blur();
-    this._renderAllTasks(false, catgroup.value);
+    catSelectList.blur();
+    this.#currentCat = catSelectList.value;
+    this._renderAllTasks(false, this.#currentCat);
   }
   _hideNShowEditForm(e) {
     e.preventDefault();
     tasksLists.classList.toggle("hidden");
     tabs.classList.toggle("hidden");
-    buttons.classList.toggle("hidden");
-    formEdit.classList.toggle("hidden");
-
-    // this._createCatsList(formInputCat);
+    controlBtns.classList.toggle("hidden");
+    boxEtask.classList.toggle("hidden");
   }
   _saveEdit(e) {
     e.preventDefault();
-    console.log(e);
 
     const task = this.#allTasks.find((task) => task.id === this.#currentId);
-    task.title = document.querySelector(".form--edit--input--title").value;
-    task.date = document.querySelector(".form--edit--input--date").value;
-    task.cat = document.querySelector(".form--edit--input--cat").value;
-    task.description = document.querySelector(
-      ".form--edit--input--description"
-    ).value;
+    task.title = document.querySelector(".f-e-task-title").value;
+    task.date = document.querySelector(".f-e-task-date").value;
+    task.cat = document.querySelector(".f-e-task-cat").value;
+    task.description = document.querySelector(".f-e-task-des").value;
     this._setLocalStorage();
-    this._renderAllTasks();
+    this._renderAllTasks(false, this.#currentCat);
     this._hideNShowEditForm(e);
   }
   _delTask(e) {
@@ -120,30 +137,29 @@ class App {
         1
       );
       this._setLocalStorage();
-      this._renderAllTasks();
+      this._renderAllTasks(false, this.#currentCat);
       this._hideNShowEditForm(e);
     }
   }
 
   _checkTask(e) {
-    const taskEl = e.target.closest(".task--box");
+    const taskEl = e.target.closest(".task-box");
     if (!taskEl) return;
     const task = this.#allTasks.find((task) => task.id === taskEl.dataset.id);
-    console.log(task);
-    if (e.target.classList.contains("task--checkbox")) {
+
+    if (e.target.classList.contains("task-checkbox")) {
       task.status = !task.status;
       task.doneDate = new Date();
       this._setLocalStorage();
-      this._renderAllTasks();
+      this._renderAllTasks(false, this.#currentCat);
     } else {
       this._hideNShowEditForm(e);
-      const catInput = document.querySelector(".form--edit--input--cat");
+      const catInput = document.querySelector(".f-e-task-cat");
       this._createCatsList(catInput);
-      document.querySelector(".form--edit--input--title").value = task.title;
-      document.querySelector(".form--edit--input--date").value = task.date;
+      document.querySelector(".f-e-task-title").value = task.title;
+      document.querySelector(".f-e-task-date").value = task.date;
       catInput.value = task.cat;
-      document.querySelector(".form--edit--input--description").value =
-        task.description;
+      document.querySelector(".f-e-task-des").value = task.description;
       this.#currentId = task.id;
     }
   }
@@ -157,24 +173,24 @@ class App {
     if (!data) return;
     // recive all cats
     const data2 = JSON.parse(localStorage.getItem("allCats"));
-    if (!data2) return [];
+    if (!data2) return;
 
     // save data
     this.allCats = data2;
     this.#allTasks = data;
 
     // load localStorage
-    this._createCatsList(catgroup);
-    this._renderAllTasks();
+    this._createCatsList(catSelectList);
+    this._renderAllTasks(false, this.allCats[0]);
   }
   _renderTask(task, status = false) {
     let html = `
-      <div class="task--box" data-id="${task.id}">
+      <div class="task-box" data-id="${task.id}">
         <input type="checkbox" ${
           status === false ? "" : "checked"
-        } class="task--checkbox">
-        <div class="task--title">${task.title}</div>
-        <div class="task--date">${task.date}</div>
+        } class="task-checkbox">
+        <div class="task-title">${task.title}</div>
+        <div class="task-date">${task.date}</div>
         
       </div>
     `;
@@ -186,34 +202,30 @@ class App {
     e.preventDefault();
     tasksLists.classList.toggle("hidden");
     tabs.classList.toggle("hidden");
-    buttons.classList.toggle("hidden");
-    formNew.classList.toggle("hidden");
-    document.querySelector(".form--input--title").focus();
-
-    // this._createCatsList(formInputCat);
+    controlBtns.classList.toggle("hidden");
+    boxNTask.classList.toggle("hidden");
+    document.querySelector(".f-n-task-i-title").focus();
   }
   _changeTab(e) {
-    if (!e.target.classList.contains("tab--active")) {
+    if (!e.target.classList.contains("tab-active")) {
       // active current tab
       document
         .querySelectorAll(".tab")
-        .forEach((tab) => tab.classList.remove("tab--active"));
-      e.target.classList.add("tab--active");
+        .forEach((tab) => tab.classList.remove("tab-active"));
+      e.target.classList.add("tab-active");
 
       // show active list
       document
-        .querySelectorAll(".tasks--list")
+        .querySelectorAll(".tasks-list")
         .forEach((list) => list.classList.toggle("hidden"));
     }
   }
   _newTask(e) {
     e.preventDefault();
-    const newTaskTitle = document.querySelector(".form--input--title").value;
-    const newTaskDate = document.querySelector(".form--input--date").value;
-    const newTaskCat = document.querySelector(".form--input--cat").value;
-    const newTaskDescription = document.querySelector(
-      ".form--input--description"
-    ).value;
+    const newTaskTitle = document.querySelector(".f-n-task-i-title").value;
+    const newTaskDate = document.querySelector(".f-n-task-i-date").value;
+    const newTaskCat = document.querySelector(".f-n-task-i-cat").value;
+    const newTaskDescription = document.querySelector(".f-n-task-i-des").value;
 
     let task = new Task(
       newTaskTitle,
@@ -224,10 +236,10 @@ class App {
     this._renderTask(task);
     this.#allTasks.push(task);
 
-    document.querySelector(".form--input--title").value =
-      document.querySelector(".form--input--date").value =
-      document.querySelector(".form--input--cat").value =
-      document.querySelector(".form--input--description").value =
+    document.querySelector(".f-n-task-i-title").value =
+      document.querySelector(".f-n-task-i-date").value =
+      document.querySelector(".f-n-task-i-cat").value =
+      document.querySelector(".f-n-task-i-des").value =
         "";
 
     this._hideNShowForm(e);
@@ -236,7 +248,7 @@ class App {
   _renderAllTasks(sorted = false, cat = "") {
     // clean 2 tabs
     document
-      .querySelectorAll(".tasks--list")
+      .querySelectorAll(".tasks-list")
       .forEach((list) => (list.innerHTML = ""));
 
     // sort lists
@@ -253,7 +265,7 @@ class App {
   }
   _sortList() {
     this.#sorted = !this.#sorted;
-    this._renderAllTasks(this.#sorted);
+    this._renderAllTasks(this.#sorted, this.#currentCat);
   }
 }
 
