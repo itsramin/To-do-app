@@ -50,6 +50,7 @@ class App {
     this._getLocalStorage();
 
     btnNew.addEventListener("click", this._hideNShowForm.bind(this));
+    btnNew.addEventListener("click", this._createCatsList(fNTaskICat));
 
     tabs.addEventListener("click", this._changeTab);
 
@@ -152,6 +153,7 @@ class App {
       task.doneDate = new Date();
       this._setLocalStorage();
       this._renderAllTasks(false, this.#currentCat);
+      console.log(task);
     } else {
       this._hideNShowEditForm(e);
       const catInput = document.querySelector(".f-e-task-cat");
