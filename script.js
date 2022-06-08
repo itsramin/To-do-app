@@ -10,6 +10,7 @@ history.forward();
 // -b : button
 
 const catSelectList = document.querySelector(".cat-select-list");
+const catContainer = document.querySelector(".cat-container");
 const fNCat = document.querySelector(".f-n-cat");
 const fNCatB = document.querySelector(".f-n-cat-b");
 const fNCatI = document.querySelector(".f-n-cat-i");
@@ -61,22 +62,156 @@ class App {
   constructor() {
     this._getLocalStorage();
 
-    btnNew.addEventListener("click", this._hideShowFormNew.bind(this));
+    fNCat.addEventListener("submit", this._newCat.bind(this));
+    fNCatB.addEventListener("click", this._hideShowCatForm.bind(this));
+    catSelectList.addEventListener("change", this._changeCat.bind(this));
 
     tabs.addEventListener("click", this._changeTab);
 
-    fNTaskS.addEventListener("click", this._newTask.bind(this));
     fNTaskC.addEventListener("click", this._hideShowFormNew);
-
-    fETaskC.addEventListener("click", this._hideShowEditForm);
+    fNTaskS.addEventListener("click", this._newTask.bind(this));
 
     tasksLists.addEventListener("click", this._checkTask.bind(this));
+
     btnSort.addEventListener("click", this._sortList.bind(this));
-    fNCatB.addEventListener("click", this._hideShowCatForm.bind(this));
-    fNCat.addEventListener("submit", this._newCat.bind(this));
-    catSelectList.addEventListener("change", this._changeCat.bind(this));
-    fETaskSave.addEventListener("click", this._saveEdit.bind(this));
+    btnNew.addEventListener("click", this._hideShowFormNew.bind(this));
+
+    fETaskC.addEventListener("click", this._hideShowEditForm);
     fETaskDel.addEventListener("click", this._delTask.bind(this));
+    fETaskSave.addEventListener("click", this._saveEdit.bind(this));
+  }
+  _setLocalStorage() {
+    localStorage.setItem("allTasks", JSON.stringify(this.#allTasks));
+    localStorage.setItem("allCats", JSON.stringify(this.#allCats));
+  }
+  _getLocalStorage() {
+    // recive all tasks
+    const data = JSON.parse(localStorage.getItem("allTasks"));
+    if (!data) return;
+    // recive all cats
+    const data2 = JSON.parse(localStorage.getItem("allCats"));
+    if (!data2) return;
+
+    // save data
+    this.#allCats = data2;
+    this.#allTasks = data;
+
+    // load localStorage
+
+    this._createCatsList(catSelectList);
+    this.#currentCat = catSelectList.value;
+    this._renderAllTasks(false, this.#allCats[0]);
+  }
+
+  _newCat(e) {
+    e.preventDefault();
+    const newCat = document.querySelector(".f-n-cat-i").value;
+    if (!newCat) return;
+    this.#allCats.push(newCat);
+    this._hideShowCatForm(e);
+    this._setLocalStorage();
+    this._createCatsList(catSelectList);
+    this._createCatsList(fNTaskICat);
+    catSelectList.value = newCat;
+  }
+  _newTask(e) {
+    e.preventDefault();
+    if (document.querySelector(".f-n-task-i-title").value === "")
+      return alert("Please enter a title");
+    const newTaskTitle = document.querySelector(".f-n-task-i-title").value;
+    const newTaskDate = document.querySelector(".f-n-task-i-date").value;
+    const newTaskCat = document.querySelector(".f-n-task-i-cat").value;
+    const newTaskDescription = document.querySelector(".f-n-task-i-des").value;
+
+    let task = new Task(
+      newTaskTitle,
+      newTaskDate,
+      newTaskCat,
+      newTaskDescription
+    );
+    this._renderTask(task);
+    this.#allTasks.push(task);
+
+    document.querySelector(".f-n-task-i-title").value =
+      document.querySelector(".f-n-task-i-date").value =
+      document.querySelector(".f-n-task-i-cat").value =
+      document.querySelector(".f-n-task-i-des").value =
+        "";
+    tabUndoneCount.textContent = +tabUndoneCount.textContent + 1;
+
+    this._hideShowFormNew(e);
+    this._setLocalStorage();
+  }
+
+  _hideShowCatForm(e) {
+    e.preventDefault();
+    fNCatB.classList.toggle("btn-cancel");
+    catSelectList.classList.toggle("hidden");
+    document.querySelector(".f-n-cat").classList.toggle("hidden");
+    document.querySelector(".f-n-cat-i").value = "";
+    document.querySelector(".f-n-cat-i").focus();
+  }
+  _hideShowEditForm(e) {
+    e.preventDefault();
+    catContainer.classList.toggle("hidden");
+    tasksLists.classList.toggle("hidden");
+    tabs.classList.toggle("hidden");
+    controlBtns.classList.toggle("hidden");
+    boxEtask.classList.toggle("hidden");
+  }
+  _hideShowFormNew(e) {
+    e.preventDefault();
+    catContainer.classList.toggle("hidden");
+    tasksLists.classList.toggle("hidden");
+    tabs.classList.toggle("hidden");
+    controlBtns.classList.toggle("hidden");
+    boxNTask.classList.toggle("hidden");
+    document.querySelector(".f-n-task-i-title").focus();
+    if (tasksLists.classList.contains("hidden")) {
+      this._createCatsList(fNTaskICat);
+    }
+  }
+
+  _renderTask(task, status = false) {
+    let html = `
+      <div class="task-box" data-id="${task.id}">
+        <input type="checkbox" ${
+          status === false ? "" : "checked"
+        } class="task-checkbox">
+        <div class="task-title">${task.title}</div>
+        <div class="task-date">${task.date}</div>
+        
+      </div>
+    `;
+    status === false
+      ? tasksListUndone.insertAdjacentHTML("beforeend", html)
+      : tasksListDone.insertAdjacentHTML("beforeend", html);
+  }
+  _renderAllTasks(sorted = false, cat) {
+    // clean 2 tabs
+    document
+      .querySelectorAll(".tasks-list")
+      .forEach((list) => (list.innerHTML = ""));
+
+    // sort lists
+    let allTasks = sorted
+      ? this.#allTasks
+          .slice()
+          .sort((a, b) => Date.parse(a.date) - Date.parse(b.date))
+      : this.#allTasks;
+
+    allTasks = cat ? allTasks.filter((task) => task.cat === cat) : allTasks;
+    let doneCount = 0;
+    let undoneCount = 0;
+
+    // render all tasks
+    allTasks.forEach((task) => {
+      this._renderTask(task, task.status);
+
+      task.status ? doneCount++ : undoneCount++;
+    });
+    tabDoneCount.textContent = doneCount;
+    tabUndoneCount.textContent = undoneCount;
   }
 
   _createCatsList(place) {
@@ -91,37 +226,11 @@ class App {
 
     place.insertAdjacentHTML("beforeend", html);
   }
-  _hideShowCatForm(e) {
-    e.preventDefault();
-    fNCatB.classList.toggle("btn-cancel");
-    catSelectList.classList.toggle("hidden");
-    document.querySelector(".f-n-cat").classList.toggle("hidden");
-    document.querySelector(".f-n-cat-i").value = "";
-    document.querySelector(".f-n-cat-i").focus();
-  }
-  _newCat(e) {
-    e.preventDefault();
-    const newCat = document.querySelector(".f-n-cat-i").value;
-    if (!newCat) return;
-    this.#allCats.push(newCat);
-    this._hideShowCatForm(e);
-    this._setLocalStorage();
-    this._createCatsList(catSelectList);
-    this._createCatsList(fNTaskICat);
-    catSelectList.value = newCat;
-  }
   _changeCat(e) {
     e.preventDefault();
     catSelectList.blur();
     this.#currentCat = catSelectList.value;
     this._renderAllTasks(false, this.#currentCat);
-  }
-  _hideShowEditForm(e) {
-    e.preventDefault();
-    tasksLists.classList.toggle("hidden");
-    tabs.classList.toggle("hidden");
-    controlBtns.classList.toggle("hidden");
-    boxEtask.classList.toggle("hidden");
   }
   _saveEdit(e) {
     e.preventDefault();
@@ -193,54 +302,6 @@ class App {
         .insertAdjacentHTML("afterend", html);
     }
   }
-  _setLocalStorage() {
-    localStorage.setItem("allTasks", JSON.stringify(this.#allTasks));
-    localStorage.setItem("allCats", JSON.stringify(this.#allCats));
-  }
-  _getLocalStorage() {
-    // recive all tasks
-    const data = JSON.parse(localStorage.getItem("allTasks"));
-    if (!data) return;
-    // recive all cats
-    const data2 = JSON.parse(localStorage.getItem("allCats"));
-    if (!data2) return;
-
-    // save data
-    this.#allCats = data2;
-    this.#allTasks = data;
-
-    // load localStorage
-
-    this._createCatsList(catSelectList);
-    this.#currentCat = catSelectList.value;
-    this._renderAllTasks(false, this.#allCats[0]);
-  }
-  _renderTask(task, status = false) {
-    let html = `
-      <div class="task-box" data-id="${task.id}">
-        <input type="checkbox" ${
-          status === false ? "" : "checked"
-        } class="task-checkbox">
-        <div class="task-title">${task.title}</div>
-        <div class="task-date">${task.date}</div>
-        
-      </div>
-    `;
-    status === false
-      ? tasksListUndone.insertAdjacentHTML("beforeend", html)
-      : tasksListDone.insertAdjacentHTML("beforeend", html);
-  }
-  _hideShowFormNew(e) {
-    e.preventDefault();
-    tasksLists.classList.toggle("hidden");
-    tabs.classList.toggle("hidden");
-    controlBtns.classList.toggle("hidden");
-    boxNTask.classList.toggle("hidden");
-    document.querySelector(".f-n-task-i-title").focus();
-    if (tasksLists.classList.contains("hidden")) {
-      this._createCatsList(fNTaskICat);
-    }
-  }
   _changeTab(e) {
     const target = e.target.closest(".tab");
     if (!target.classList.contains("tab-active")) {
@@ -257,60 +318,6 @@ class App {
         .querySelectorAll(".tasks-list")
         .forEach((list) => list.classList.toggle("hidden"));
     }
-  }
-  _newTask(e) {
-    e.preventDefault();
-    if (document.querySelector(".f-n-task-i-title").value === "")
-      return alert("Please enter a title");
-    const newTaskTitle = document.querySelector(".f-n-task-i-title").value;
-    const newTaskDate = document.querySelector(".f-n-task-i-date").value;
-    const newTaskCat = document.querySelector(".f-n-task-i-cat").value;
-    const newTaskDescription = document.querySelector(".f-n-task-i-des").value;
-
-    let task = new Task(
-      newTaskTitle,
-      newTaskDate,
-      newTaskCat,
-      newTaskDescription
-    );
-    this._renderTask(task);
-    this.#allTasks.push(task);
-
-    document.querySelector(".f-n-task-i-title").value =
-      document.querySelector(".f-n-task-i-date").value =
-      document.querySelector(".f-n-task-i-cat").value =
-      document.querySelector(".f-n-task-i-des").value =
-        "";
-    tabUndoneCount.textContent = +tabUndoneCount.textContent + 1;
-
-    this._hideShowFormNew(e);
-    this._setLocalStorage();
-  }
-  _renderAllTasks(sorted = false, cat = "") {
-    // clean 2 tabs
-    document
-      .querySelectorAll(".tasks-list")
-      .forEach((list) => (list.innerHTML = ""));
-
-    // sort lists
-    let allTasks = sorted
-      ? this.#allTasks
-          .slice()
-          .sort((a, b) => Date.parse(a.date) - Date.parse(b.date))
-      : this.#allTasks;
-
-    allTasks = cat ? allTasks.filter((task) => task.cat === cat) : allTasks;
-    let doneCount = 0;
-    let undoneCount = 0;
-
-    // render all tasks
-    allTasks.forEach((task) => {
-      this._renderTask(task, task.status);
-
-      task.status ? doneCount++ : undoneCount++;
-    });
-    tabDoneCount.textContent = doneCount;
-    tabUndoneCount.textContent = undoneCount;
   }
   _sortList() {
     this.#sorted = !this.#sorted;

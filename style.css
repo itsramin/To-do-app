@@ -13,8 +13,12 @@ body {
   font-family: Vazirmatn, "Franklin Gothic Medium", "Arial Narrow", Arial,
     sans-serif;
 }
-input {
+input,
+select {
   font-family: inherit;
+}
+select * {
+  height: 2rem !important;
 }
 header {
   margin-top: 2.5rem;
@@ -42,6 +46,10 @@ header {
   transition: 0.5s;
 }
 .cat-box {
+  height: 40px;
+}
+.cat-container {
+  transition: 1s all;
   display: flex;
   flex-direction: row;
   gap: 0.5rem;
