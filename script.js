@@ -39,6 +39,10 @@ const controlBtns = document.querySelector(".control-btns");
 const btnNew = document.querySelector(".btn-new");
 const btnSort = document.querySelector(".btn-sort");
 
+const btnTheme = document.querySelector(".btn-theme");
+const prefersDarkScheme = window.matchMedia("(prefers-color-scheme: dark)");
+const currentTheme = localStorage.getItem("theme");
+
 class Task {
   date = new Date();
   id = (Date.now() + "").slice(-10);
@@ -79,6 +83,9 @@ class App {
     fETaskC.addEventListener("click", this._hideShowEditForm);
     fETaskDel.addEventListener("click", this._delTask.bind(this));
     fETaskSave.addEventListener("click", this._saveEdit.bind(this));
+
+    //theme
+    btnTheme.addEventListener("click", this._changeTheme);
   }
   _setLocalStorage() {
     localStorage.setItem("allTasks", JSON.stringify(this.#allTasks));
@@ -101,6 +108,13 @@ class App {
     this._createCatsList(catSelectList);
     this.#currentCat = catSelectList.value;
     this._renderAllTasks(false, this.#allCats[0]);
+
+    //theme
+    if (currentTheme == "dark") {
+      document.body.classList.toggle("dark-theme");
+    } else if (currentTheme == "light") {
+      document.body.classList.toggle("light-theme");
+    }
   }
 
   _newCat(e) {
@@ -322,6 +336,21 @@ class App {
   _sortList() {
     this.#sorted = !this.#sorted;
     this._renderAllTasks(this.#sorted, this.#currentCat);
+  }
+
+  _changeTheme() {
+    if (prefersDarkScheme.matches) {
+      document.body.classList.toggle("light-theme");
+      var theme = document.body.classList.contains("light-theme")
+        ? "light"
+        : "dark";
+    } else {
+      document.body.classList.toggle("dark-theme");
+      var theme = document.body.classList.contains("dark-theme")
+        ? "dark"
+        : "light";
+    }
+    localStorage.setItem("theme", theme);
   }
 }
 
