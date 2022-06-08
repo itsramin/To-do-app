@@ -4,11 +4,18 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="stylesheet" href="./reset.css" />
+    <link
+      href="https://cdn.jsdelivr.net/gh/rastikerdar/vazirmatn@v32.102/Vazirmatn-font-face.css"
+      rel="stylesheet"
+      type="text/css"
+    />
+
     <link rel="stylesheet" href="./style.css" />
     <script src="./script.js" defer></script>
     <title>Todo app</title>
   </head>
   <body>
+    <header>Todo app</header>
     <div class="container">
       <div class="cat-box">
         <select class="cat-select-list"></select>
@@ -20,8 +27,12 @@
 
       <div class="main-box">
         <div class="tabs">
-          <div class="tab tab-undone tab-active">📃</div>
-          <div class="tab tab-done">✅</div>
+          <div class="tab tab-undone tab-active">
+            📃 <span class="tab-count tab-undone-count"></span>
+          </div>
+          <div class="tab tab-done">
+            ✅ <span class="tab-count tab-done-count"></span>
+          </div>
         </div>
         <div class="tasks-lists">
           <div class="tasks-list tasks-list-undone"></div>
@@ -62,7 +73,7 @@
               <label class="f-l">Title</label>
               <input class="f-n-task-i f-e-task-title" type="text" />
             </div>
-            <div class="f-section">
+            <div class="f-section date-section">
               <label class="f-l">Date</label>
               <input class="f-n-task-i f-e-task-date" type="date" />
             </div>

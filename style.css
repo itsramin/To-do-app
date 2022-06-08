@@ -10,7 +10,19 @@
 body {
   background: var(--gradient-primary);
   font-size: 1rem;
-  font-family: "Franklin Gothic Medium", "Arial Narrow", Arial, sans-serif;
+  font-family: Vazirmatn, "Franklin Gothic Medium", "Arial Narrow", Arial,
+    sans-serif;
+}
+input {
+  font-family: inherit;
+}
+header {
+  margin-top: 2.5rem;
+  color: var(--color-primary);
+  font-size: 3rem;
+  font-weight: 500;
+  display: flex;
+  justify-content: center;
 }
 
 .container {
@@ -18,10 +30,11 @@ body {
   display: flex;
   flex-direction: column;
   align-items: center;
-  margin: 80px auto 18px;
+  margin: 30px auto 10px;
   gap: 20px;
 }
 .cat-select-list {
+  background-color: var(--bg-primary);
   padding: 0.5rem 1.5rem;
   width: 180px;
   border-radius: 7px;
@@ -40,18 +53,36 @@ body {
   border-radius: 7px;
   border: none;
   transition: 0.5s;
+  outline: none;
 }
 
 .main-box {
   background: var(--bg-primary);
   width: 100%;
-  /* border-radius: 7px; */
-  min-height: 400px;
+  height: 370px;
   display: flex;
   flex-direction: column;
+
   -webkit-box-shadow: 0px 15px 38px -7px #00000070,
     5px 5px 15px 5px rgba(0, 0, 0, 0);
   box-shadow: 0px 15px 38px -7px #00000070, 5px 5px 15px 5px rgba(0, 0, 0, 0);
+}
+.tasks-lists {
+  overflow: auto;
+}
+.tasks-lists::-webkit-scrollbar {
+  width: 7px;
+}
+
+.tasks-lists::-webkit-scrollbar-track {
+  /* -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3); */
+  border-radius: 10px;
+}
+
+.tasks-lists::-webkit-scrollbar-thumb {
+  border-radius: 10px;
+  background: rgb(218, 218, 218);
+  /* -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.5); */
 }
 .tabs {
   display: flex;
@@ -106,7 +137,9 @@ body {
   position: relative;
 }
 .f-section {
-  padding: 1rem;
+  padding: 10px;
+  display: flex;
+  align-items: baseline;
 }
 .f-n-task-i {
   border: none;
@@ -116,8 +149,7 @@ body {
   color: var(--color--secondary);
 }
 .f-n-task-s {
-  padding: 1rem 3rem;
-  /* width: 100px; */
+  padding: 0.9rem 2rem;
   color: var(--color-primary);
   background: var(--gradient-primary);
   border: none !important;
@@ -175,11 +207,19 @@ body {
   font-size: 1rem;
   color: #555;
   align-items: baseline;
-  border-bottom: 1px solid #999;
+  border-bottom: 1px solid #d7d7d7;
 }
 .task-title {
   flex-grow: 2;
 }
 .task-date {
   font-size: 0.9rem;
+}
+.task-done-date {
+  font-size: 0.8rem;
+  color: #333;
+}
+.tab-count {
+  font-size: 0.8rem;
+  color: #555;
 }
