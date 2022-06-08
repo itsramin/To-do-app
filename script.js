@@ -1,4 +1,5 @@
 "use strict";
+history.forward();
 
 //// abbreviations
 // -f : form
