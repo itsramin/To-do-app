@@ -242,12 +242,15 @@ class App {
     }
   }
   _changeTab(e) {
-    if (!e.target.classList.contains("tab-active")) {
+    const target = e.target.closest(".tab");
+    if (!target.classList.contains("tab-active")) {
       // active current tab
       document
         .querySelectorAll(".tab")
         .forEach((tab) => tab.classList.remove("tab-active"));
-      e.target.classList.add("tab-active");
+      target.classList.add("tab-active");
+
+      // ;
 
       // show active list
       document
@@ -278,6 +281,7 @@ class App {
       document.querySelector(".f-n-task-i-cat").value =
       document.querySelector(".f-n-task-i-des").value =
         "";
+    tabUndoneCount.textContent = +tabUndoneCount.textContent + 1;
 
     this._hideShowFormNew(e);
     this._setLocalStorage();
