@@ -76,7 +76,7 @@ select {
 }
 
 header {
-  margin-top: 2.5rem;
+  margin: 2.5rem 0px 1rem;
   color: var(--color-f-one);
   font-size: 3rem;
   font-weight: 500;
@@ -296,7 +296,7 @@ header {
 .label {
   width: 40;
   height: 14px;
-  background-color: var(--color-forth);
+  background-color: var(--scrollbar);
   display: flex;
   border-radius: 50px;
   align-items: center;
@@ -323,7 +323,7 @@ header {
 }
 
 .fa-moon {
-  color: pink;
+  color: gray;
 }
 
 .fa-sun {
