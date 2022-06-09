@@ -294,6 +294,8 @@ class App {
       fETaskCat.value = task.cat;
       this.#currentId = task.id;
     }
+    if (!task.status)
+      return document.querySelector(".done-date-section")?.remove();
     if (task.status && !document.querySelector(".task-done-date")) {
       task.doneDate = new Date(task.doneDate);
       let html = `

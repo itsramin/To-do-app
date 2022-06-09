@@ -185,6 +185,7 @@ header {
   position: relative;
   top: -45px;
   transition: 0.5s all;
+  margin-bottom: -15px;
 }
 .f-l {
   font-family: inherit;
@@ -282,7 +283,7 @@ header {
 }
 .task-done-date {
   font-size: 0.8rem;
-  color: #333;
+  color: var(--color-secondary);
 }
 .tab-count {
   font-size: 0.8rem;
