@@ -17,6 +17,11 @@ body {
   --bg-primary: #fff;
   --scrollbar: #dadada;
   --gradient-primary: linear-gradient(to top left, #02aab0, #00cdac);
+  --gradient-primary-light: linear-gradient(
+    to top left,
+    rgb(2, 170, 176, 0.1),
+    rgb(0, 205, 172, 0.1)
+  );
 
   /*  fix colors*/
   --color-f-one: #fff;
@@ -29,6 +34,7 @@ body.dark-theme {
   --bg-primary: rgb(59, 59, 59);
   --scrollbar: #646464;
   --gradient-primary: linear-gradient(to top left, #0f0f0f, #202020);
+  --gradient-primary-light: #5c5c5c;
 
   /*  fix colors*/
   --color-f-one: #fff;
@@ -40,21 +46,31 @@ body.dark-theme {
     --color-primary: rgb(24, 24, 24);
     --color-secondary: #ffffff;
     --color-tertiary: #c2c2c2;
-    --color-forth: rgb(223, 223, 223);
-    --color-f-one: #fff;
-    --bg-primary: rgb(29, 29, 29);
-    --scrollbar: #333333;
+    --color-forth: #004e92;
+    --bg-primary: rgb(59, 59, 59);
+    --scrollbar: #646464;
     --gradient-primary: linear-gradient(to top left, #0f0f0f, #202020);
+    --gradient-primary-light: #5c5c5c;
+
+    /*  fix colors*/
+    --color-f-one: #fff;
   }
   body.light-theme {
     --color-primary: #fff;
     --color-secondary: #333333;
     --color-tertiary: #d6212a;
-    --color-forth: #333;
-    --color-f-one: #fff;
+    --color-forth: #004e92;
     --bg-primary: #fff;
     --scrollbar: #dadada;
     --gradient-primary: linear-gradient(to top left, #02aab0, #00cdac);
+    --gradient-primary-light: linear-gradient(
+      to top left,
+      rgb(2, 170, 176, 0.1),
+      rgb(0, 205, 172, 0.1)
+    );
+
+    /*  fix colors*/
+    --color-f-one: #fff;
   }
 }
 
@@ -190,7 +206,7 @@ header {
 .f-l {
   font-family: inherit;
   color: var(--color-secondary);
-  margin-right: 10px;
+
   vertical-align: top;
 }
 .f-n-task,
@@ -204,6 +220,7 @@ header {
   padding: 10px;
   display: flex;
   align-items: baseline;
+  gap: 10px;
 }
 .f-n-task-i {
   border: none;
@@ -297,7 +314,7 @@ header {
 .label {
   width: 40;
   height: 14px;
-  background-color: var(--scrollbar);
+  background-color: var(--color-forth);
   display: flex;
   border-radius: 50px;
   align-items: center;
@@ -324,7 +341,7 @@ header {
 }
 
 .fa-moon {
-  color: gray;
+  color: rgb(226, 226, 226);
 }
 
 .fa-sun {
@@ -335,4 +352,32 @@ header {
   top: 20px;
   left: 20px;
   width: 60px;
+}
+.f-n-task-rep,
+.f-e-task-rep {
+  margin-left: 10px;
+  padding: 0.5rem 0.8rem;
+  font-weight: 300;
+  font-size: 0.9rem;
+  border-radius: 50px;
+  color: var(--color-secondary);
+  cursor: pointer;
+  user-select: none;
+  background: var(--gradient-primary-light);
+}
+.f-n-task-i-rep,
+.f-e-task-i-rep {
+  width: 40px;
+  overflow: hidden;
+  text-align: center;
+  border: none;
+  border-bottom: 1px solid;
+  border-color: var(--color-secondary);
+}
+.f-e-select-period,
+.f-n-select-period {
+  text-align: center;
+  border: none;
+  border-bottom: 1px solid;
+  border-color: var(--color-secondary);
 }
