@@ -39,6 +39,9 @@ const controlBtns = document.querySelector(".control-btns");
 const btnNew = document.querySelector(".btn-new");
 const btnSort = document.querySelector(".btn-sort");
 
+const fNTaskRep = document.querySelector(".f-n-task-rep");
+const fETaskRep = document.querySelector(".f-e-task-rep");
+
 const btnTheme = document.querySelector(".btn-theme");
 const prefersDarkScheme = window.matchMedia("(prefers-color-scheme: dark)");
 const currentTheme = localStorage.getItem("theme");
@@ -47,12 +50,13 @@ class Task {
   date = new Date();
   id = (Date.now() + "").slice(-10);
   doneDate;
-  constructor(title, date, cat, description = "") {
+  constructor(title, date, cat, description = "", repeatCount = 0) {
     this.title = title;
     this.date = date;
     this.cat = cat;
     this.description = description;
     this.status = false;
+    this.repeatCount = repeatCount;
   }
 }
 
@@ -86,6 +90,10 @@ class App {
 
     //theme
     btnTheme.addEventListener("click", this._changeTheme);
+
+    //
+    fNTaskRep.addEventListener("click", this._addNRepeatation);
+    fETaskRep.addEventListener("click", this._addERepeatation.bind(""));
   }
   _setLocalStorage() {
     localStorage.setItem("allTasks", JSON.stringify(this.#allTasks));
@@ -130,30 +138,61 @@ class App {
   }
   _newTask(e) {
     e.preventDefault();
+    //alerts
     if (document.querySelector(".f-n-task-i-title").value === "")
       return alert("Please enter a title");
+    if (document.querySelector(".f-n-task-i-rep")?.value <= 0)
+      return alert("Please enter a positive number");
+    if (
+      document.querySelector(".f-n-task-i-rep") &&
+      document.querySelector(".f-n-task-i-date").value === ""
+    )
+      return alert("Please enter a date");
+
+    // collect data
     const newTaskTitle = document.querySelector(".f-n-task-i-title").value;
     const newTaskDate = document.querySelector(".f-n-task-i-date").value;
     const newTaskCat = document.querySelector(".f-n-task-i-cat").value;
     const newTaskDescription = document.querySelector(".f-n-task-i-des").value;
+    const repeatPeriod = document.querySelector(".f-n-select-period")?.value;
+    let period;
+    if (repeatPeriod === "days") period = 1;
+    if (repeatPeriod === "weeks") period = 7;
+    if (repeatPeriod === "monthes") period = 30;
+    if (repeatPeriod === "years") period = 365;
+    const newRepeatCount =
+      document.querySelector(".f-n-task-i-rep")?.value * period;
 
+    // new task define
     let task = new Task(
       newTaskTitle,
       newTaskDate,
       newTaskCat,
-      newTaskDescription
+      newTaskDescription,
+      newRepeatCount
     );
     this._renderTask(task);
     this.#allTasks.push(task);
 
+    // cleaning form inputs
     document.querySelector(".f-n-task-i-title").value =
       document.querySelector(".f-n-task-i-date").value =
       document.querySelector(".f-n-task-i-cat").value =
       document.querySelector(".f-n-task-i-des").value =
         "";
+    document.querySelector(".f-n-task-i-rep")
+      ? (document.querySelector(".f-n-task-i-rep").value = "")
+      : "";
+    const el = document.querySelector(".f-section-rep");
+    if (el) el.remove();
+
+    // count done and undone tasks
     tabUndoneCount.textContent = +tabUndoneCount.textContent + 1;
 
+    // hide new form
     this._hideShowFormNew(e);
+
+    // save to localStorage
     this._setLocalStorage();
   }
 
@@ -187,13 +226,17 @@ class App {
   }
 
   _renderTask(task, status = false) {
+    const options = { year: "numeric", month: "numeric", day: "numeric" };
+    const intlDate = task.date
+      ? new Intl.DateTimeFormat("en-US", options).format(new Date(task.date))
+      : "";
     let html = `
       <div class="task-box" data-id="${task.id}">
         <input type="checkbox" ${
           status === false ? "" : "checked"
         } class="task-checkbox">
         <div class="task-title">${task.title}</div>
-        <div class="task-date">${task.date}</div>
+        <div class="task-date">${intlDate}</div>
         
       </div>
     `;
@@ -249,11 +292,33 @@ class App {
   _saveEdit(e) {
     e.preventDefault();
 
+    //alerts
+    if (document.querySelector(".f-n-task-i-title").value === "")
+      return alert("Please enter a title");
+    if (document.querySelector(".f-n-task-i-rep")?.value <= 0)
+      return alert("Please enter a positive number");
+    if (
+      document.querySelector(".f-n-task-i-rep") &&
+      document.querySelector(".f-n-task-i-date").value === ""
+    )
+      return alert("Please enter a date");
+
+    //
+
     const task = this.#allTasks.find((task) => task.id === this.#currentId);
     task.title = document.querySelector(".f-e-task-title").value;
     task.date = document.querySelector(".f-e-task-date").value;
     task.cat = document.querySelector(".f-e-task-cat").value;
     task.description = document.querySelector(".f-e-task-des").value;
+    const repeatPeriod = document.querySelector(".f-e-select-period")?.value;
+    let period;
+    if (repeatPeriod === "days") period = 1;
+    if (repeatPeriod === "weeks") period = 7;
+    if (repeatPeriod === "monthes") period = 30;
+    if (repeatPeriod === "years") period = 365;
+    task.repeatCount =
+      document.querySelector(".f-e-task-i-rep")?.value * period;
+
     this._setLocalStorage();
     this._renderAllTasks(false, this.#currentCat);
     this._hideShowEditForm(e);
@@ -275,9 +340,25 @@ class App {
     if (!taskEl) return;
     const task = this.#allTasks.find((task) => task.id === taskEl.dataset.id);
 
+    // checkbox
     if (e.target.classList.contains("task-checkbox")) {
       task.status = !task.status;
       task.doneDate = new Date();
+
+      if (task.repeatCount > 0) {
+        let newtask = new Task(
+          task.title,
+          new Date(
+            new Date(task.date).getTime() +
+              task.repeatCount * 24 * 60 * 60 * 1000
+          ),
+          task.cat,
+          task.description,
+          task.repeatCount
+        );
+        this._renderTask(newtask);
+        this.#allTasks.push(newtask);
+      }
 
       this._setLocalStorage();
       this._renderAllTasks(false, this.#currentCat);
@@ -285,37 +366,47 @@ class App {
         document.querySelector(".done-date-section").remove();
       }
     } else {
+      // edit task
       this._hideShowEditForm(e);
 
       this._createCatsList(fETaskCat);
       document.querySelector(".f-e-task-title").value = task.title;
-      document.querySelector(".f-e-task-date").value = task.date;
+      document.querySelector(".f-e-task-date").valueAsDate = new Date(
+        task.date
+      );
       document.querySelector(".f-e-task-des").value = task.description;
+      if (task.repeatCount > 0) {
+        this._addERepeatation(task.repeatCount, "unRegen");
+      }
       fETaskCat.value = task.cat;
       this.#currentId = task.id;
-    }
-    if (!task.status)
-      return document.querySelector(".done-date-section")?.remove();
-    if (task.status && !document.querySelector(".task-done-date")) {
-      task.doneDate = new Date(task.doneDate);
-      let html = `
-        <div class="f-section done-date-section">
-          <label class="f-l">Compelited on</label>
-          <label class="task-done-date">
-          ${String(task.doneDate.getDate()).padStart(2, 0)}/${String(
-        task.doneDate.getMonth() + 1
-      ).padStart(2, 0)}/${String(task.doneDate.getFullYear())}
-            -  
-          ${String(task.doneDate.getHours()).padStart(2, 0)}:
-          ${String(task.doneDate.getMinutes()).padStart(2, 0)}
-          
-          </label>
-        </div>
-      
-      `;
-      document
-        .querySelector(".date-section")
-        .insertAdjacentHTML("afterend", html);
+
+      // clean complited section
+      if (!task.status && document.querySelector(".done-date-section"))
+        return document.querySelector(".done-date-section").remove();
+      if (task.status && !document.querySelector(".task-done-date")) {
+        // add donr date to task
+        task.doneDate = new Date(task.doneDate);
+        document.querySelector(".f-e-task-rep").remove();
+        let htmlEl = `
+          <div class="f-section done-date-section">
+            <label class="f-l">Compelited on</label>
+            <label class="task-done-date">
+            ${String(task.doneDate.getDate()).padStart(2, 0)}/${String(
+          task.doneDate.getMonth() + 1
+        ).padStart(2, 0)}/${String(task.doneDate.getFullYear())}
+              -  
+            ${String(task.doneDate.getHours()).padStart(2, 0)}:
+            ${String(task.doneDate.getMinutes()).padStart(2, 0)}
+            
+            </label>
+          </div>
+        
+        `;
+        document
+          .querySelector(".f-e-date-section")
+          .insertAdjacentHTML("afterend", htmlEl);
+      }
     }
   }
   _changeTab(e) {
@@ -353,6 +444,56 @@ class App {
         : "light";
     }
     localStorage.setItem("theme", theme);
+  }
+  //
+  _addERepeatation(value, regen = "regen") {
+    const el = document.querySelector(".f-section-rep");
+    if (el) {
+      if (regen === "regen") return el.remove();
+      el.remove();
+    }
+    let html = `
+      <div class="f-section f-section-rep">
+        <label class="f-l">Repeat every</label>
+        <input class="f-e-task-i f-e-task-i-rep" type="number" placeholder="" value="${
+          value ? value : ""
+        }" />
+        <select class="f-e-select-period">
+          <option value="days">days</option>
+          <option value="weeks">weeks</option>
+          <option value="monthes">monthes</option>
+          <option value="years">years</option>
+      </select>
+        
+          
+      </div>
+
+    `;
+    document
+      .querySelector(".f-e-date-section")
+      .insertAdjacentHTML("afterend", html);
+  }
+  _addNRepeatation() {
+    const el = document.querySelector(".f-section-rep");
+    if (el) return el.remove();
+
+    let html = `
+      <div class="f-section f-section-rep">
+        <label class="f-l">Repeat every</label>
+        <input class="f-n-task-i f-n-task-i-rep" type="number" placeholder="" />
+        <select class="f-n-select-period">
+          <option value="days">days</option>
+          <option value="weeks">weeks</option>
+          <option value="monthes">monthes</option>
+          <option value="years">years</option>
+        </select>
+          
+      </div>
+
+    `;
+    document
+      .querySelector(".f-n-date-section")
+      .insertAdjacentHTML("afterend", html);
   }
 }
 
