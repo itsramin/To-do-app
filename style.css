@@ -28,6 +28,7 @@ body {
   --bg-primary: linear-gradient(to top left, #02aab0, #00cdac);
   --bg-secondary: #fff;
   --bg-light: rgb(0, 204, 170, 0.1);
+  --bg-red: rgba(239, 83, 80, 0.1);
 
   --shadow-primary: rgba(0, 0, 0, 0.2);
   --shadow-secondary: rgba(0, 0, 0, 0);
@@ -55,6 +56,7 @@ body.dark-theme {
   --bg-primary: #121212;
   --bg-secondary: #272727;
   --bg-light: rgb(250, 250, 250, 0.1);
+  --bg-red: rgba(239, 83, 80, 0.3);
 
   --shadow-primary: rgba(0, 0, 0, 1);
 }
@@ -398,4 +400,11 @@ header {
   border: none;
   border-bottom: 1px solid;
   border-color: var(--color-primary);
+}
+.task-late {
+  font-size: 0.8rem;
+  color: var(--color-red);
+  background-color: var(--bg-red);
+  padding: 0.3rem 0.6rem 0.2rem;
+  border-radius: 50px;
 }

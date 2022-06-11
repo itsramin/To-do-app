@@ -226,17 +226,26 @@ class App {
   }
 
   _renderTask(task, status = false) {
-    const options = { year: "numeric", month: "numeric", day: "numeric" };
+    const options = { month: "numeric", day: "numeric" };
     const intlDate = task.date
       ? new Intl.DateTimeFormat("en-US", options).format(new Date(task.date))
       : "";
+
+    const isLate =
+      +new Date(task.date) / (1000 * 60 * 60 * 24) + 1 <
+      +new Date() / (1000 * 60 * 60 * 24);
+
     let html = `
       <div class="task-box" data-id="${task.id}">
         <input type="checkbox" ${
           status === false ? "" : "checked"
         } class="task-checkbox">
+        
         <div class="task-title">${task.title}</div>
-        <div class="task-date">${intlDate}</div>
+        ${isLate && !status ? `<div class="task-late">Miss</div>` : ""}
+        <div class="task-date">${
+          status === false ? this._remainDays(task.date) : intlDate
+        }</div>
         
       </div>
     `;
@@ -279,7 +288,7 @@ class App {
       let catEl = `<option class="cat-option" value="${cat}">${cat}</option>`;
       html += catEl;
     });
-    console.log(html);
+    // console.log(html);
 
     place.insertAdjacentHTML("beforeend", html);
   }
@@ -340,14 +349,20 @@ class App {
     if (!taskEl) return;
     const task = this.#allTasks.find((task) => task.id === taskEl.dataset.id);
 
-    // checkbox
+    // checkbox part
     if (e.target.classList.contains("task-checkbox")) {
+      // change task status
       task.status = !task.status;
+
+      // play audio if status is done
       const checkboxAudio = document.querySelector("audio");
       if (task.status) checkboxAudio.play();
+
+      // create date of complitition
       task.doneDate = new Date();
 
-      if (task.repeatCount > 0) {
+      // create a new task if there is repeation and the status is done
+      if (task.status && task.repeatCount > 0) {
         let newtask = new Task(
           task.title,
           new Date(
@@ -362,54 +377,127 @@ class App {
         this.#allTasks.push(newtask);
       }
 
+      // save the task to localStorage
       this._setLocalStorage();
+
+      // render all tasks
       this._renderAllTasks(false, this.#currentCat);
-      if (!task.status && document.querySelector(".task-done-date")) {
-        document.querySelector(".done-date-section").remove();
-      }
-    } else {
-      // edit task
-      this._hideShowEditForm(e);
 
-      this._createCatsList(fETaskCat);
-      document.querySelector(".f-e-task-title").value = task.title;
-      document.querySelector(".f-e-task-date").valueAsDate = new Date(
-        task.date
-      );
-      document.querySelector(".f-e-task-des").value = task.description;
-      if (task.repeatCount > 0) {
-        this._addERepeatation(task.repeatCount, "unRegen");
-      }
-      fETaskCat.value = task.cat;
-      this.#currentId = task.id;
-
-      // clean complited section
-      if (!task.status && document.querySelector(".done-date-section"))
-        return document.querySelector(".done-date-section").remove();
-      if (task.status && !document.querySelector(".task-done-date")) {
-        // add donr date to task
-        task.doneDate = new Date(task.doneDate);
-        document.querySelector(".f-e-task-rep").remove();
-        let htmlEl = `
-          <div class="f-section done-date-section">
-            <label class="f-l">Compelited on</label>
-            <label class="task-done-date">
-            ${String(task.doneDate.getDate()).padStart(2, 0)}/${String(
-          task.doneDate.getMonth() + 1
-        ).padStart(2, 0)}/${String(task.doneDate.getFullYear())}
-              -  
-            ${String(task.doneDate.getHours()).padStart(2, 0)}:
-            ${String(task.doneDate.getMinutes()).padStart(2, 0)}
-            
-            </label>
-          </div>
-        
-        `;
-        document
-          .querySelector(".f-e-date-section")
-          .insertAdjacentHTML("afterend", htmlEl);
-      }
+      return;
     }
+
+    // edit part
+    // show edit form
+    this._hideShowEditForm(e);
+
+    // fill the inputs
+    this._createCatsList(fETaskCat);
+    document.querySelector(".f-e-task-title").value = task.title;
+    document.querySelector(".f-e-task-date").valueAsDate = new Date(task.date);
+    document.querySelector(".f-e-task-des").value = task.description;
+    if (task.repeatCount > 0) {
+      this._addERepeatation(task.repeatCount, "unRegen");
+    }
+    fETaskCat.value = task.cat;
+    this.#currentId = task.id;
+
+    // add complitition to edit form
+    if (task.status) {
+      if (document.querySelector(".done-date-section"))
+        document.querySelector(".done-date-section").remove();
+      // add done date to task
+      task.doneDate = new Date(task.doneDate);
+
+      let htmlEl = `
+            <div class="f-section done-date-section">
+              <label class="f-l">Compelited on</label>
+              <label class="task-done-date">
+              ${String(task.doneDate.getDate()).padStart(2, 0)}/${String(
+        task.doneDate.getMonth() + 1
+      ).padStart(2, 0)}/${String(task.doneDate.getFullYear())}
+                -
+              ${String(task.doneDate.getHours()).padStart(2, 0)}:
+              ${String(task.doneDate.getMinutes()).padStart(2, 0)}
+  
+              </label>
+            </div>
+  
+          `;
+      document
+        .querySelector(".f-e-date-section")
+        .insertAdjacentHTML("afterend", htmlEl);
+    }
+
+    // checkbox
+    // if (e.target.classList.contains("task-checkbox")) {
+    //   task.status = !task.status;
+    //   const checkboxAudio = document.querySelector("audio");
+    //   if (task.status) checkboxAudio.play();
+    //   task.doneDate = new Date();
+
+    //   if (task.status && task.repeatCount > 0) {
+    //     let newtask = new Task(
+    //       task.title,
+    //       new Date(
+    //         new Date(task.date).getTime() +
+    //           task.repeatCount * 24 * 60 * 60 * 1000
+    //       ),
+    //       task.cat,
+    //       task.description,
+    //       task.repeatCount
+    //     );
+    //     this._renderTask(newtask);
+    //     this.#allTasks.push(newtask);
+    //   }
+
+    //   this._setLocalStorage();
+    //   this._renderAllTasks(false, this.#currentCat);
+    //   if (!task.status && document.querySelector(".done-date-section")) {
+    //     document.querySelector(".done-date-section").remove();
+    //   }
+    // } else {
+    //   // edit task
+    //   this._hideShowEditForm(e);
+
+    //   this._createCatsList(fETaskCat);
+    //   document.querySelector(".f-e-task-title").value = task.title;
+    //   document.querySelector(".f-e-task-date").valueAsDate = new Date(
+    //     task.date
+    //   );
+    //   document.querySelector(".f-e-task-des").value = task.description;
+    //   if (task.repeatCount > 0) {
+    //     this._addERepeatation(task.repeatCount, "unRegen");
+    //   }
+    //   fETaskCat.value = task.cat;
+    //   this.#currentId = task.id;
+
+    //   // clean complited section
+    //   if (!task.status && document.querySelector(".done-date-section"))
+    //     return document.querySelector(".done-date-section").remove();
+    //   if (task.status) {
+    //     // add done date to task
+    //     task.doneDate = new Date(task.doneDate);
+
+    //     let htmlEl = `
+    //       <div class="f-section done-date-section">
+    //         <label class="f-l">Compelited on</label>
+    //         <label class="task-done-date">
+    //         ${String(task.doneDate.getDate()).padStart(2, 0)}/${String(
+    //       task.doneDate.getMonth() + 1
+    //     ).padStart(2, 0)}/${String(task.doneDate.getFullYear())}
+    //           -
+    //         ${String(task.doneDate.getHours()).padStart(2, 0)}:
+    //         ${String(task.doneDate.getMinutes()).padStart(2, 0)}
+
+    //         </label>
+    //       </div>
+
+    //     `;
+    //     document
+    //       .querySelector(".f-e-date-section")
+    //       .insertAdjacentHTML("afterend", htmlEl);
+    //   }
+    // }
   }
   _changeTab(e) {
     const target = e.target.closest(".tab");
@@ -472,8 +560,8 @@ class App {
 
     `;
     document
-      .querySelector(".f-e-date-section")
-      .insertAdjacentHTML("afterend", html);
+      .querySelector(".f-e-cat-section")
+      .insertAdjacentHTML("beforebegin", html);
   }
   _addNRepeatation() {
     const el = document.querySelector(".f-section-rep");
@@ -494,8 +582,34 @@ class App {
 
     `;
     document
-      .querySelector(".f-n-date-section")
-      .insertAdjacentHTML("afterend", html);
+      .querySelector(".f-n-cat-section")
+      .insertAdjacentHTML("beforebegin", html);
+  }
+
+  _remainDays(date) {
+    if (!date) return "";
+    const now = +new Date();
+    const taskDate = new Date(date);
+    const remDays = Math.trunc(
+      (taskDate.getTime() - now) / (1000 * 60 * 60 * 24)
+    );
+    if (remDays < -1)
+      return new Intl.DateTimeFormat("en-US", {
+        month: "numeric",
+        day: "numeric",
+      }).format(taskDate);
+    if (remDays === -1) return "Yesterday";
+    if (remDays === 0) return "Today";
+    if (remDays === 1) return "Tomorrow";
+    if (remDays < 7)
+      return new Intl.DateTimeFormat("en-US", { weekday: "short" }).format(
+        taskDate
+      );
+    if (remDays >= 7)
+      return new Intl.DateTimeFormat("en-US", {
+        month: "numeric",
+        day: "numeric",
+      }).format(taskDate);
   }
 }
 
