@@ -1,6 +1,7 @@
 {
   "name": "Todo App",
   "short_name": "Todo",
+  "scope": "/To-do-app/",
   "start_url": "index.html",
   "display": "standalone",
   "background_color": "#fdfdfd",

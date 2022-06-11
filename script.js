@@ -1,4 +1,9 @@
 "use strict";
+if (navigator.serviceWorker) {
+  navigator.serviceWorker.register("/To-do-app/serviceWorker.js", {
+    scope: "/To-do-app/",
+  });
+}
 
 //// abbreviations
 // -f : form
@@ -618,11 +623,11 @@ class App {
 
 const app = new App();
 
-if ("serviceWorker" in navigator) {
-  window.addEventListener("load", function () {
-    navigator.serviceWorker
-      .register("/serviceWorker.js")
-      .then((res) => console.log("service worker registered"))
-      .catch((err) => console.log("service worker not registered", err));
-  });
-}
+// if ("serviceWorker" in navigator) {
+//   window.addEventListener("load", function () {
+//     navigator.serviceWorker
+//       .register("/serviceWorker.js")
+//       .then((res) => console.log("service worker registered"))
+//       .catch((err) => console.log("service worker not registered", err));
+//   });
+// }
