@@ -1,19 +1,4 @@
 body {
-  /* 
-  --color-primary: #333333;
-  --color-red: #d6212a;
-  --color-forth: #004e92;
-  --bg-secondary: #fff;
-  --scrollbar: #dadada;
-  --bg-primary: linear-gradient(to top left, #02aab0, #00cdac);
-  --bg-primary-light: linear-gradient(
-    to top left,
-    rgb(2, 170, 176, 0.1),
-    rgb(0, 205, 172, 0.1)
-  );
-
-  --color-fix-primary: #fff; */
-
   --color-primary: #3d3d3d;
   --color-primary-light: rgba(61, 61, 61, 0.6);
   --color-secondary: #1e88e5;
@@ -34,17 +19,6 @@ body {
   --shadow-secondary: rgba(0, 0, 0, 0);
 }
 body.dark-theme {
-  /* 
-  --color-primary: #ffffff;
-  --color-red: #c2c2c2;
-  --color-forth: #004e92;
-  --bg-secondary: rgb(59, 59, 59);
-  --scrollbar: #646464;
-  --bg-primary: linear-gradient(to top left, #0f0f0f, #202020);
-  --bg-primary-light: #5c5c5c;
-
-  --color-fix-primary: #fff; */
-
   --color-primary: rgba(255, 255, 255, 0.87);
   --color-primary-light: rgba(255, 255, 255, 0.5);
   --color-secondary: #42a5f5;
@@ -64,34 +38,40 @@ body.dark-theme {
 @media (prefers-color-scheme: dark) {
   /* defaults to dark theme */
   body {
-    --color-primary: rgb(24, 24, 24);
-    --color-primary: #ffffff;
-    --color-tertiary: #c2c2c2;
-    --color-forth: #004e92;
-    --bg-secondary: rgb(59, 59, 59);
-    --scrollbar: #646464;
-    --bg-primary: linear-gradient(to top left, #0f0f0f, #202020);
-    --bg-primary-light: #5c5c5c;
+    --color-primary: rgba(255, 255, 255, 0.87);
+    --color-primary-light: rgba(255, 255, 255, 0.5);
+    --color-secondary: #42a5f5;
+    --color-tertiary: rgba(255, 255, 255, 0.87);
+    --color-red: #ef5350;
+    --color-gray: #646464;
+    --color-button: #494949;
 
-    /*  fix colors*/
-    --color-fix-primary: #fff;
+    --bg-primary: #121212;
+    --bg-secondary: #272727;
+    --bg-light: rgb(250, 250, 250, 0.1);
+    --bg-red: rgba(239, 83, 80, 0.3);
+
+    --shadow-primary: rgba(0, 0, 0, 1);
   }
   body.light-theme {
-    --color-primary: #fff;
-    --color-primary: #333333;
-    --color-tertiary: #d6212a;
-    --color-forth: #004e92;
-    --bg-secondary: #fff;
-    --scrollbar: #dadada;
-    --bg-primary: linear-gradient(to top left, #02aab0, #00cdac);
-    --bg-primary-light: linear-gradient(
-      to top left,
-      rgb(2, 170, 176, 0.1),
-      rgb(0, 205, 172, 0.1)
-    );
+    --color-primary: #3d3d3d;
+    --color-primary-light: rgba(61, 61, 61, 0.6);
+    --color-secondary: #1e88e5;
+    --color-tertiary: #017276;
+    --color-red: #e53935;
+    --color-button: #02aab0;
 
-    /*  fix colors*/
+    --color-gray: #dadada;
+
     --color-fix-primary: #fff;
+
+    --bg-primary: linear-gradient(to top left, #02aab0, #00cdac);
+    --bg-secondary: #fff;
+    --bg-light: rgb(0, 204, 170, 0.1);
+    --bg-red: rgba(239, 83, 80, 0.1);
+
+    --shadow-primary: rgba(0, 0, 0, 0.2);
+    --shadow-secondary: rgba(0, 0, 0, 0);
   }
 }
 
@@ -137,9 +117,8 @@ header {
   border-radius: 7px;
   border: none;
   height: 40px;
-  box-shadow: 0 4px 10px var(--shadow-primary);
-  display: auto;
-  transition: 0.5s;
+  -webkit-box-shadow: 0 3px 7px var(--shadow-primary);
+  box-shadow: 0 3px 7px var(--shadow-primary);
 }
 .cat-box {
   height: 40px;
@@ -163,13 +142,13 @@ header {
 .main-box {
   background: var(--bg-secondary);
   width: 100%;
-  height: 400px;
+  min-height: 340px;
   display: flex;
   flex-direction: column;
-
-  /* -webkit-box-shadow: 25px 0px 38px -7px var(--shadow-primary),
-    0px 0px 15px 5px var(--shadow-secondary); */
-  box-shadow: 0 4px 10px var(--shadow-primary);
+  border-radius: 10px;
+  -webkit-box-shadow: 0 4px 10px var(--shadow-primary);
+  box-shadow: 0 5px 5px var(--shadow-primary);
+  margin-top: -25px;
 }
 .tasks-lists {
   overflow: auto;
@@ -182,15 +161,20 @@ header {
   background: var(--color-gray);
 }
 .tabs {
+  width: 90%;
   display: flex;
   flex-direction: row;
   justify-content: space-around;
   user-select: none;
+  border-radius: 10px 10px 0 0;
+  background: none;
 }
 .tab {
+  width: 30%;
   transition: 0.5s all;
+  border-radius: inherit;
   padding: 20px;
-  width: 100%;
+
   text-align: center;
   background-color: var(--color-gray);
   cursor: pointer;
@@ -213,6 +197,7 @@ header {
   font-size: 25px;
   border-radius: 50%;
   color: var(--color-fix-primary);
+  -webkit-box-shadow: 0 4px 10px var(--shadow-primary);
   box-shadow: 0 4px 10px var(--shadow-primary);
   cursor: pointer;
 }
