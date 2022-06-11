@@ -397,14 +397,18 @@ class App {
     document.querySelector(".f-e-task-des").value = task.description;
     if (task.repeatCount > 0) {
       this._addERepeatation(task.repeatCount, "unRegen");
+    } else {
+      if (document.querySelector(".f-section-rep"))
+        document.querySelector(".f-section-rep").remove();
     }
     fETaskCat.value = task.cat;
     this.#currentId = task.id;
 
+    if (document.querySelector(".done-date-section"))
+      document.querySelector(".done-date-section").remove();
+
     // add complitition to edit form
     if (task.status) {
-      if (document.querySelector(".done-date-section"))
-        document.querySelector(".done-date-section").remove();
       // add done date to task
       task.doneDate = new Date(task.doneDate);
 
