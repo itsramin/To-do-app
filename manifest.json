@@ -2,14 +2,14 @@
   "name": "Todo App",
   "short_name": "Todo",
   "scope": "/To-do-app/",
-  "start_url": "index.html",
+  "start_url": "/To-do-app/",
   "display": "standalone",
   "background_color": "#fdfdfd",
   "theme_color": "#00cdac",
   "orientation": "portrait-primary",
   "icons": [
     {
-      "src": "/icon/icon-512.png",
+      "src": "/To-do-app/icon/icon-512.png",
       "type": "image/png",
       "sizes": "512x512"
     }
