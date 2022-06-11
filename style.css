@@ -1,84 +1,104 @@
-/* :root {
-  --color-primary: #fff;
-  /* --color-secondary: #004e92; 
-  --color-secondary: #333333;
-  --color-tertiary: #d6212a;
-  --color-forth: #333;
-  --bg-primary: #fff;
-  --scrollbar: #dadada;
-  --gradient-primary: linear-gradient(to top left, #02aab0, #00cdac);
-}
-*/
 body {
-  --color-primary: #fff;
-  --color-secondary: #333333;
-  --color-tertiary: #d6212a;
+  /* 
+  --color-primary: #333333;
+  --color-red: #d6212a;
   --color-forth: #004e92;
-  --bg-primary: #fff;
+  --bg-secondary: #fff;
   --scrollbar: #dadada;
-  --gradient-primary: linear-gradient(to top left, #02aab0, #00cdac);
-  --gradient-primary-light: linear-gradient(
+  --bg-primary: linear-gradient(to top left, #02aab0, #00cdac);
+  --bg-primary-light: linear-gradient(
     to top left,
     rgb(2, 170, 176, 0.1),
     rgb(0, 205, 172, 0.1)
   );
 
-  /*  fix colors*/
-  --color-f-one: #fff;
+  --color-fix-primary: #fff; */
+
+  --color-primary: #3d3d3d;
+  --color-primary-light: rgba(61, 61, 61, 0.6);
+  --color-secondary: #1e88e5;
+  --color-tertiary: #017276;
+  --color-red: #e53935;
+  --color-button: #02aab0;
+
+  --color-gray: #dadada;
+
+  --color-fix-primary: #fff;
+
+  --bg-primary: linear-gradient(to top left, #02aab0, #00cdac);
+  --bg-secondary: #fff;
+  --bg-light: rgb(0, 204, 170, 0.1);
+
+  --shadow-primary: rgba(0, 0, 0, 0.2);
+  --shadow-secondary: rgba(0, 0, 0, 0);
 }
 body.dark-theme {
-  --color-primary: rgb(24, 24, 24);
-  --color-secondary: #ffffff;
-  --color-tertiary: #c2c2c2;
+  /* 
+  --color-primary: #ffffff;
+  --color-red: #c2c2c2;
   --color-forth: #004e92;
-  --bg-primary: rgb(59, 59, 59);
+  --bg-secondary: rgb(59, 59, 59);
   --scrollbar: #646464;
-  --gradient-primary: linear-gradient(to top left, #0f0f0f, #202020);
-  --gradient-primary-light: #5c5c5c;
+  --bg-primary: linear-gradient(to top left, #0f0f0f, #202020);
+  --bg-primary-light: #5c5c5c;
 
-  /*  fix colors*/
-  --color-f-one: #fff;
+  --color-fix-primary: #fff; */
+
+  --color-primary: rgba(255, 255, 255, 0.87);
+  --color-primary-light: rgba(255, 255, 255, 0.5);
+  --color-secondary: #42a5f5;
+  --color-tertiary: rgba(255, 255, 255, 0.87);
+  --color-red: #ef5350;
+  --color-gray: #646464;
+  --color-button: #494949;
+
+  --bg-primary: #121212;
+  --bg-secondary: #272727;
+  --bg-light: rgb(250, 250, 250, 0.1);
+
+  --shadow-primary: rgba(0, 0, 0, 1);
 }
 
 @media (prefers-color-scheme: dark) {
   /* defaults to dark theme */
   body {
     --color-primary: rgb(24, 24, 24);
-    --color-secondary: #ffffff;
+    --color-primary: #ffffff;
     --color-tertiary: #c2c2c2;
     --color-forth: #004e92;
-    --bg-primary: rgb(59, 59, 59);
+    --bg-secondary: rgb(59, 59, 59);
     --scrollbar: #646464;
-    --gradient-primary: linear-gradient(to top left, #0f0f0f, #202020);
-    --gradient-primary-light: #5c5c5c;
+    --bg-primary: linear-gradient(to top left, #0f0f0f, #202020);
+    --bg-primary-light: #5c5c5c;
 
     /*  fix colors*/
-    --color-f-one: #fff;
+    --color-fix-primary: #fff;
   }
   body.light-theme {
     --color-primary: #fff;
-    --color-secondary: #333333;
+    --color-primary: #333333;
     --color-tertiary: #d6212a;
     --color-forth: #004e92;
-    --bg-primary: #fff;
+    --bg-secondary: #fff;
     --scrollbar: #dadada;
-    --gradient-primary: linear-gradient(to top left, #02aab0, #00cdac);
-    --gradient-primary-light: linear-gradient(
+    --bg-primary: linear-gradient(to top left, #02aab0, #00cdac);
+    --bg-primary-light: linear-gradient(
       to top left,
       rgb(2, 170, 176, 0.1),
       rgb(0, 205, 172, 0.1)
     );
 
     /*  fix colors*/
-    --color-f-one: #fff;
+    --color-fix-primary: #fff;
   }
 }
 
 body {
-  background: var(--gradient-primary);
+  background: var(--bg-primary);
   font-size: 1rem;
   font-family: Vazirmatn, "Franklin Gothic Medium", "Arial Narrow", Arial,
     sans-serif;
+  transition: 0.5s;
 }
 * {
   font-family: Vazirmatn, "Franklin Gothic Medium", "Arial Narrow", Arial,
@@ -87,13 +107,13 @@ body {
 input,
 select {
   font-family: inherit;
-  color: var(--color-secondary);
-  background: var(--bg-primary);
+  color: var(--color-primary);
+  background: var(--bg-secondary);
 }
 
 header {
   margin: 2.5rem 0px 1rem;
-  color: var(--color-f-one);
+  color: var(--color-fix-primary);
   font-size: 3rem;
   font-weight: 500;
   display: flex;
@@ -109,59 +129,55 @@ header {
   gap: 25px;
 }
 .cat-select-list {
-  background-color: var(--bg-primary);
+  background-color: var(--bg-secondary);
   padding: 0.5rem 1.5rem;
   width: 180px;
   border-radius: 7px;
   border: none;
-  transition: 0.5s;
   height: 40px;
+  box-shadow: 0 4px 10px var(--shadow-primary);
+  display: auto;
+  transition: 0.5s;
 }
 .cat-box {
   height: 40px;
 }
 .cat-container {
-  transition: 1s all;
   display: flex;
   flex-direction: row;
   align-items: center;
   gap: 0.5rem;
 }
+
 .f-n-cat-i {
   width: 180px;
   height: 39px;
   padding: 0.5rem 1.5rem;
   border-radius: 7px;
   border: none;
-  transition: 0.5s;
   outline: none;
 }
 
 .main-box {
-  background: var(--bg-primary);
+  background: var(--bg-secondary);
   width: 100%;
   height: 370px;
   display: flex;
   flex-direction: column;
 
-  -webkit-box-shadow: 0px 15px 38px -7px #00000070,
-    5px 5px 15px 5px rgba(0, 0, 0, 0);
-  box-shadow: 0px 15px 38px -7px #00000070, 5px 5px 15px 5px rgba(0, 0, 0, 0);
+  /* -webkit-box-shadow: 25px 0px 38px -7px var(--shadow-primary),
+    0px 0px 15px 5px var(--shadow-secondary); */
+  box-shadow: 0 4px 10px var(--shadow-primary);
 }
 .tasks-lists {
   overflow: auto;
 }
 .tasks-lists::-webkit-scrollbar {
-  width: 7px;
-}
-
-.tasks-lists::-webkit-scrollbar-track {
-  border-radius: 10px;
+  width: 5px;
 }
 
 .tasks-lists::-webkit-scrollbar-thumb {
-  border-radius: 10px;
-  background: var(--scrollbar);
+  background: var(--color-gray);
 }
 .tabs {
   display: flex;
@@ -174,39 +190,38 @@ header {
   padding: 20px;
   width: 100%;
   text-align: center;
-  background-color: var(--scrollbar);
+  background-color: var(--color-gray);
   cursor: pointer;
   -webkit-box-shadow: inset 0px -20px 16px -20px rgb(0 0 0 / 40%);
   box-shadow: inset 0px -20px 16px -20px rgb(0 0 0 / 40%);
 }
 .tab-active {
-  background: var(--bg-primary);
+  background: var(--bg-secondary);
   box-shadow: none;
 }
 .hidden {
   display: none;
 }
 .btn {
-  background: var(--color-forth);
+  background: var(--color-secondary);
+  margin: 0 5px;
   width: 50px;
   height: 50px;
   border: none;
   font-size: 25px;
   border-radius: 50%;
-  color: var(--color-f-one);
-  /* box-shadow: 0 0 20px 0px #ffb0035e; */
+  color: var(--color-fix-primary);
+  box-shadow: 0 4px 10px var(--shadow-primary);
   cursor: pointer;
 }
 .control-btns {
   position: relative;
   top: -45px;
-  transition: 0.5s all;
   margin-bottom: -15px;
 }
 .f-l {
   font-family: inherit;
-  color: var(--color-secondary);
-
+  color: var(--color-tertiary);
   vertical-align: top;
 }
 .f-n-task,
@@ -225,15 +240,17 @@ header {
 .f-n-task-i {
   border: none;
   border-bottom: 1px solid;
-  border-color: var(--color-secondary);
+  border-color: var(--color-primary);
   outline: none;
 }
 .f-n-task-s {
   padding: 0.9rem 2rem;
-  color: var(--color-f-one);
-  background: var(--gradient-primary);
+  color: var(--color-fix-primary);
+  background: var(--color-button);
   border: none !important;
   font-size: 1rem;
+  cursor: pointer;
+  user-select: none;
 }
 .f-n-task-b {
   display: flex;
@@ -247,7 +264,7 @@ header {
   text-align: center;
   border: none;
   font-size: 0.9rem;
-  color: var(--color-tertiary);
+  color: var(--color-red);
   cursor: pointer;
 }
 .f-des {
@@ -259,7 +276,7 @@ header {
   top: 1rem;
   right: 1.2rem;
   font-size: 2rem;
-  color: var(--color-secondary);
+  color: var(--color-primary);
   cursor: pointer;
   border: none;
   background: none;
@@ -269,7 +286,7 @@ header {
   border: none;
   font-size: 2rem;
   vertical-align: middle;
-  color: var(--color-f-one);
+  color: var(--color-fix-primary);
   cursor: pointer;
   transition: 0.5s ease-in-out;
 }
@@ -285,9 +302,9 @@ header {
   flex-direction: row;
   gap: 10px;
   font-size: 1rem;
-  color: var(--color-secondary);
+  color: var(--color-primary);
   align-items: baseline;
-  border-bottom: 1px solid var(--scrollbar);
+  border-bottom: 1px solid var(--color-gray);
 }
 .task-box:last-child {
   border-bottom: none;
@@ -297,14 +314,15 @@ header {
 }
 .task-date {
   font-size: 0.9rem;
+  color: var(--color-primary-light);
 }
 .task-done-date {
   font-size: 0.8rem;
-  color: var(--color-secondary);
+  color: var(--color-primary);
 }
 .tab-count {
   font-size: 0.8rem;
-  color: var(--color-secondary);
+  color: var(--color-primary);
 }
 .btn-theme {
   opacity: 0;
@@ -314,7 +332,7 @@ header {
 .label {
   width: 40;
   height: 14px;
-  background-color: var(--color-forth);
+  background-color: var(--color-secondary);
   display: flex;
   border-radius: 50px;
   align-items: center;
@@ -327,7 +345,7 @@ header {
 .ball {
   width: 20px;
   height: 20px;
-  background-color: var(--color-f-one);
+  background-color: var(--color-fix-primary);
   position: absolute;
   top: 2px;
   left: 2px;
@@ -341,7 +359,7 @@ header {
 }
 
 .fa-moon {
-  color: rgb(226, 226, 226);
+  color: rgb(255, 255, 255);
 }
 
 .fa-sun {
@@ -360,10 +378,10 @@ header {
   font-weight: 300;
   font-size: 0.9rem;
   border-radius: 50px;
-  color: var(--color-secondary);
+  color: var(--color-primary);
   cursor: pointer;
   user-select: none;
-  background: var(--gradient-primary-light);
+  background: var(--bg-light);
 }
 .f-n-task-i-rep,
 .f-e-task-i-rep {
@@ -372,12 +390,12 @@ header {
   text-align: center;
   border: none;
   border-bottom: 1px solid;
-  border-color: var(--color-secondary);
+  border-color: var(--color-primary);
 }
 .f-e-select-period,
 .f-n-select-period {
   text-align: center;
   border: none;
   border-bottom: 1px solid;
-  border-color: var(--color-secondary);
+  border-color: var(--color-primary);
 }

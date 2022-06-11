@@ -343,6 +343,8 @@ class App {
     // checkbox
     if (e.target.classList.contains("task-checkbox")) {
       task.status = !task.status;
+      const checkboxAudio = document.querySelector("audio");
+      if (task.status) checkboxAudio.play();
       task.doneDate = new Date();
 
       if (task.repeatCount > 0) {
