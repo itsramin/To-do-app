@@ -36,6 +36,8 @@ window.addEventListener("beforeinstallprompt", (e) => {
 // -i : input
 // -b : button
 
+const clearLS = document.querySelector(".clear-ls");
+
 const catSelectList = document.querySelector(".cat-select-list");
 const catContainer = document.querySelector(".cat-container");
 const fNCat = document.querySelector(".f-n-cat");
@@ -99,6 +101,8 @@ class App {
   constructor() {
     this._getLocalStorage();
 
+    clearLS.addEventListener("click", this._clearLocalStorage);
+
     fNCat.addEventListener("submit", this._newCat.bind(this));
     fNCatB.addEventListener("click", this._hideShowCatForm.bind(this));
     catSelectList.addEventListener("change", this._changeCat.bind(this));
@@ -152,6 +156,9 @@ class App {
     } else if (currentTheme == "light") {
       document.body.classList.toggle("light-theme");
     }
+  }
+  _clearLocalStorage() {
+    localStorage.clear();
   }
 
   _newCat(e) {

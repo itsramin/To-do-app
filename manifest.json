@@ -4,8 +4,7 @@
   "scope": "/To-do-app/",
   "start_url": "/To-do-app/",
   "display": "standalone",
-  "background_color": "var(--bg-primary)",
-  "theme_color": "#00cdac",
+  "background_color": "#fff",
   "orientation": "portrait-primary",
   "icons": [
     {
