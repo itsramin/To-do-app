@@ -40,7 +40,9 @@ const catSelectList = document.querySelector(".cat-select-list");
 const catContainer = document.querySelector(".cat-container");
 const fNCat = document.querySelector(".f-n-cat");
 const fNCatB = document.querySelector(".f-n-cat-b");
-const fNCatBPlus = document.querySelector(".f-n-cat-b-plus");
+const fNCatAdd = document.querySelector(".f-n-cat-add");
+const fNCatDel = document.querySelector(".f-n-cat-del");
+// const fNCatBPlus = document.querySelector(".f-n-cat-b-plus");
 const fNCatI = document.querySelector(".f-n-cat-i");
 
 const tabs = document.querySelector(".tabs");
@@ -101,7 +103,8 @@ class App {
     this._getLocalStorage();
 
     fNCat.addEventListener("submit", this._newCat.bind(this));
-    fNCatB.addEventListener("click", this._hideShowCatForm.bind(this));
+    fNCatAdd.addEventListener("click", this._hideShowCatForm.bind(this));
+    fNCatDel.addEventListener("click", this._delCat.bind(this));
     catSelectList.addEventListener("change", this._changeCat.bind(this));
 
     tabs.addEventListener("click", this._changeTab);
@@ -228,10 +231,10 @@ class App {
 
   _hideShowCatForm(e) {
     e.preventDefault();
-    fNCatBPlus.classList.toggle("btn-cancel");
+    fNCatAdd.classList.toggle("btn-cancel");
     catSelectList.classList.toggle("hidden");
     document.querySelector(".f-n-cat").classList.toggle("hidden");
-    document.querySelector(".f-n-cat-b-label").classList.toggle("hidden");
+    // document.querySelector(".f-n-cat-b-label").classList.toggle("hidden");
     document.querySelector(".f-n-cat-i").value = "";
     document.querySelector(".f-n-cat-i").focus();
   }
@@ -313,23 +316,54 @@ class App {
     tabUndoneCount.textContent = undoneCount;
   }
 
-  _createCatsList(place) {
-    place.innerHTML = "";
-    let html;
-    if (this.#allCats === []) return;
-    this.#allCats.forEach((cat) => {
-      let catEl = `<option class="cat-option" value="${cat}">${cat}</option>`;
-      html += catEl;
-    });
-    // console.log(html);
+  _delCat() {
+    if (catSelectList.value) {
+      if (
+        confirm(
+          `Are you sure you want to delete "${catSelectList.value}" list?`
+        )
+      ) {
+        this.#allCats.splice(
+          this.#allCats.findIndex((cat) => cat === catSelectList.value),
+          1
+        );
 
-    place.insertAdjacentHTML("beforeend", html);
+        this._setLocalStorage();
+        this._createCatsList(catSelectList);
+        this._createCatsList(fNTaskICat);
+      }
+    }
   }
+  _delTask(e) {
+    e.preventDefault();
+    if (confirm("Are you sure you want to delete this task")) {
+      this.#allTasks.splice(
+        this.#allTasks.findIndex((task) => task.id === this.#currentId),
+        1
+      );
+      this._setLocalStorage();
+      this._renderAllTasks(false, this.#currentCat);
+      this._hideShowEditForm(e);
+    }
+  }
+
   _changeCat(e) {
     e.preventDefault();
     catSelectList.blur();
     this.#currentCat = catSelectList.value;
     this._renderAllTasks(false, this.#currentCat);
+  }
+  _createCatsList(place) {
+    place.innerHTML = "";
+    let html;
+    if (this.#allCats === []) return;
+    this.#allCats.forEach((cat) => {
+      let catEl = `<option class="cat-option" value="${cat}">${cat}</option><span>del</span>`;
+      html += catEl;
+    });
+    // console.log(html);
+
+    place.insertAdjacentHTML("beforeend", html);
   }
   _saveEdit(e) {
     e.preventDefault();
@@ -364,18 +398,6 @@ class App {
     this._setLocalStorage();
     this._renderAllTasks(false, this.#currentCat);
     this._hideShowEditForm(e);
-  }
-  _delTask(e) {
-    e.preventDefault();
-    if (confirm("Are you sure you want to delete this task")) {
-      this.#allTasks.splice(
-        this.#allTasks.findIndex((task) => task.id === this.#currentId),
-        1
-      );
-      this._setLocalStorage();
-      this._renderAllTasks(false, this.#currentCat);
-      this._hideShowEditForm(e);
-    }
   }
   _checkTask(e) {
     const taskEl = e.target.closest(".task-box");
