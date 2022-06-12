@@ -264,9 +264,9 @@ header {
   display: flex;
   flex-direction: row;
   justify-content: center;
-  position: absolute;
+  /* position: absolute;
   left: 20vw;
-  top: 67vh;
+  top: 67vh; */
 }
 .f-e-task-del {
   background: none;
