@@ -1,9 +1,9 @@
 "use strict";
-// if (navigator.serviceWorker) {
-//   navigator.serviceWorker.register("/To-do-app/serviceWorker.js", {
-//     scope: "/To-do-app/",
-//   });
-// }
+if (navigator.serviceWorker) {
+  navigator.serviceWorker.register("/To-do-app/serviceWorker.js", {
+    scope: "/To-do-app/",
+  });
+}
 // let deferredPrompt;
 
 // window.addEventListener("beforeinstallprompt", (e) => {
@@ -35,12 +35,6 @@
 // -c : close
 // -i : input
 // -b : button
-
-if ("serviceWorker" in navigator) {
-  navigator.serviceWorker.register(
-    new URL("./serviceWorker.js", import.meta.url)
-  );
-}
 
 const catSelectList = document.querySelector(".cat-select-list");
 const catContainer = document.querySelector(".cat-container");
