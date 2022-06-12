@@ -4,6 +4,29 @@ if (navigator.serviceWorker) {
     scope: "/To-do-app/",
   });
 }
+let deferredPrompt;
+
+window.addEventListener("beforeinstallprompt", (e) => {
+  // Prevent Chrome 67 and earlier from automatically showing the prompt
+  e.preventDefault();
+  // Stash the event so it can be triggered later.
+  deferredPrompt = e;
+  // Update UI to notify the user they can add to home screen
+
+  // hide our user interface that shows our A2HS button
+  addBtn.style.display = "none";
+  // Show the prompt
+  deferredPrompt.prompt();
+  // Wait for the user to respond to the prompt
+  deferredPrompt.userChoice.then((choiceResult) => {
+    if (choiceResult.outcome === "accepted") {
+      console.log("User accepted the A2HS prompt");
+    } else {
+      console.log("User dismissed the A2HS prompt");
+    }
+    deferredPrompt = null;
+  });
+});
 
 //// abbreviations
 // -f : form
@@ -26,6 +49,8 @@ const tabUndoneCount = document.querySelector(".tab-undone-count");
 const tasksLists = document.querySelector(".tasks-lists");
 const tasksListUndone = document.querySelector(".tasks-list-undone");
 const tasksListDone = document.querySelector(".tasks-list-done");
+
+const mainBox = document.querySelector(".main-box");
 
 const boxNTask = document.querySelector(".box-n-task");
 const fNTaskS = document.querySelector(".f-n-task-s");
@@ -205,6 +230,7 @@ class App {
     fNCatB.classList.toggle("btn-cancel");
     catSelectList.classList.toggle("hidden");
     document.querySelector(".f-n-cat").classList.toggle("hidden");
+    document.querySelector(".f-n-cat-b-label").classList.toggle("hidden");
     document.querySelector(".f-n-cat-i").value = "";
     document.querySelector(".f-n-cat-i").focus();
   }
@@ -215,6 +241,7 @@ class App {
     tabs.classList.toggle("hidden");
     controlBtns.classList.toggle("hidden");
     boxEtask.classList.toggle("hidden");
+    mainBox.classList.toggle("max-height");
   }
   _hideShowFormNew(e) {
     e.preventDefault();
@@ -223,6 +250,7 @@ class App {
     tabs.classList.toggle("hidden");
     controlBtns.classList.toggle("hidden");
     boxNTask.classList.toggle("hidden");
+    mainBox.classList.toggle("max-height");
     document.querySelector(".f-n-task-i-title").focus();
     if (tasksLists.classList.contains("hidden")) {
       this._createCatsList(fNTaskICat);

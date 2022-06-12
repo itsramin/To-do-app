@@ -1,7 +1,7 @@
 body {
   --color-primary: rgba(255, 255, 255, 0.87);
   --color-primary-light: rgba(255, 255, 255, 0.5);
-  --color-secondary: #42a5f5;
+  --color-secondary: #1e88e5;
   --color-tertiary: rgba(255, 255, 255, 0.87);
   --color-red: #ef5350;
   --color-gray: #646464;
@@ -18,6 +18,7 @@ body.light-theme {
   --color-primary: #3d3d3d;
   --color-primary-light: rgba(61, 61, 61, 0.6);
   --color-secondary: #1e88e5;
+  --color-secondary-light: rgba(31, 137, 229, 0.3);
   --color-tertiary: #017276;
   --color-red: #e53935;
   --color-button: #02aab0;
@@ -26,9 +27,9 @@ body.light-theme {
 
   --color-fix-primary: #fff;
 
-  --bg-primary: linear-gradient(to top left, #02aab0, #00cdac);
+  --bg-primary: #fff;
   --bg-secondary: #fff;
-  --bg-light: rgb(0, 204, 170, 0.1);
+  --bg-light: rgba(31, 137, 229, 0.1);
   --bg-red: rgba(239, 83, 80, 0.1);
 
   --shadow-primary: rgba(0, 0, 0, 0.2);
@@ -41,6 +42,7 @@ body.light-theme {
     --color-primary: #3d3d3d;
     --color-primary-light: rgba(61, 61, 61, 0.6);
     --color-secondary: #1e88e5;
+    --color-secondary-light: rgba(31, 137, 229, 0.3);
     --color-tertiary: #017276;
     --color-red: #e53935;
     --color-button: #02aab0;
@@ -49,9 +51,9 @@ body.light-theme {
 
     --color-fix-primary: #fff;
 
-    --bg-primary: linear-gradient(to top left, #02aab0, #00cdac);
+    --bg-primary: #fff;
     --bg-secondary: #fff;
-    --bg-light: rgb(0, 204, 170, 0.1);
+    --bg-light: rgba(31, 137, 229, 0.1);
     --bg-red: rgba(239, 83, 80, 0.1);
 
     --shadow-primary: rgba(0, 0, 0, 0.2);
@@ -60,7 +62,7 @@ body.light-theme {
   body.dark-theme {
     --color-primary: rgba(255, 255, 255, 0.87);
     --color-primary-light: rgba(255, 255, 255, 0.5);
-    --color-secondary: #42a5f5;
+    --color-secondary: #1e88e5;
     --color-tertiary: rgba(255, 255, 255, 0.87);
     --color-red: #ef5350;
     --color-gray: #646464;
@@ -95,7 +97,7 @@ select {
 
 header {
   margin: 2.5rem 0px 1rem;
-  color: var(--color-fix-primary);
+  color: var(--color-secondary);
   font-size: 3rem;
   font-weight: 500;
   display: flex;
@@ -115,10 +117,8 @@ header {
   padding: 0.5rem 1.5rem;
   width: 150px;
   border-radius: 7px;
-  border: none;
+  border: 1px solid var(--color-secondary);
   height: 40px;
-  -webkit-box-shadow: 0 3px 7px var(--shadow-primary);
-  box-shadow: 0 3px 7px var(--shadow-primary);
 }
 .cat-box {
   height: 40px;
@@ -126,39 +126,44 @@ header {
 .cat-container {
   display: flex;
   flex-direction: row;
-  align-items: center;
-  gap: 0.5rem;
+  align-items: baseline;
 }
 
 .f-n-cat-i {
   width: 150px;
-  height: 39px;
+  height: 40px;
   padding: 0.5rem 1rem;
   border-radius: 7px;
-  border: none;
+  border: 1px solid var(--color-secondary);
   outline: none;
 }
 
 .main-box {
   background: var(--bg-secondary);
   width: 100%;
-  min-height: 340px;
+  height: 340px;
   display: flex;
   flex-direction: column;
   border-radius: 10px;
-  -webkit-box-shadow: 0 4px 10px var(--shadow-primary);
-  box-shadow: 0 5px 5px var(--shadow-primary);
-  margin-top: -25px;
+  border: 1px solid var(--color-secondary);
+  margin-top: -26px;
+}
+.max-height {
+  height: 380px;
 }
 .tasks-lists {
   overflow: auto;
 }
 .tasks-lists::-webkit-scrollbar {
-  width: 5px;
+  width: 16px;
+  border-radius: 10px;
 }
 
 .tasks-lists::-webkit-scrollbar-thumb {
-  background: var(--color-gray);
+  border: 5px solid transparent;
+  background-color: var(--color-gray);
+  border-radius: 10px;
+  background-clip: padding-box;
 }
 .tabs {
   width: 90%;
@@ -174,19 +179,29 @@ header {
   transition: 0.5s all;
   border-radius: inherit;
   padding: 20px;
-
+  border: 1px solid var(--color-secondary);
+  border-bottom: none;
+  z-index: 10;
   text-align: center;
-  background-color: var(--color-gray);
   cursor: pointer;
-  -webkit-box-shadow: inset 0px -20px 16px -20px rgb(0 0 0 / 40%);
-  box-shadow: inset 0px -20px 16px -20px rgb(0 0 0 / 40%);
+  opacity: 0.3;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  /* -webkit-box-shadow: inset 0px -20px 16px -20px rgb(0 0 0 / 40%);
+  box-shadow: inset 0px -20px 16px -20px rgb(0 0 0 / 40%); */
 }
 .tab-done {
   color: green;
 }
+.tab-undone {
+  color: var(--color-primary);
+}
 .tab-active {
   background: var(--bg-secondary);
-  box-shadow: none;
+  border: 1px solid var(--color-secondary);
+  border-bottom: none;
+  opacity: 1;
 }
 .hidden {
   display: none;
@@ -205,12 +220,12 @@ header {
 }
 .control-btns {
   position: relative;
-  top: -50px;
+  top: -45px;
   margin-bottom: -15px;
 }
 .f-l {
   font-family: inherit;
-  color: var(--color-tertiary);
+  color: var(--color-secondary);
   vertical-align: top;
 }
 .f-n-task,
@@ -235,7 +250,7 @@ header {
 .f-n-task-s {
   padding: 0.9rem 2rem;
   color: var(--color-fix-primary);
-  background: var(--color-button);
+  background: var(--color-secondary);
   border: none !important;
   font-size: 1rem;
   cursor: pointer;
@@ -275,9 +290,15 @@ header {
   border: none;
   font-size: 1rem;
   vertical-align: middle;
-  color: var(--color-fix-primary);
+  color: var(--color-secondary);
   cursor: pointer;
   transition: 0.5s ease-in-out;
+  margin-left: 1rem;
+  margin-right: 0.3rem;
+}
+.f-n-cat-b-label {
+  color: var(--color-secondary);
+  font-size: 0.9rem;
 }
 .btn-cancel {
   transition: 0.5s ease-in-out;
@@ -310,6 +331,7 @@ header {
   color: var(--color-primary);
 }
 .tab-count {
+  margin-left: 10px;
   font-size: 0.8rem;
   color: var(--color-primary);
 }
