@@ -84,6 +84,7 @@ body {
     sans-serif;
 }
 * {
+  -webkit-tap-highlight-color: transparent;
   font-family: Vazirmatn, "Franklin Gothic Medium", "Arial Narrow", Arial,
     sans-serif;
 }
