@@ -448,3 +448,18 @@ input[type="date"]:before {
   right: 6px;
   color: var(--color-primary);
 } */
+@media only screen and (max-width: 600px) {
+  body {
+    width: 90%;
+    margin: 0 auto;
+  }
+  .container {
+    height: 85%;
+  }
+  .main-box {
+    height: 80%;
+  }
+  .max-height {
+    height: 80%;
+  }
+}
