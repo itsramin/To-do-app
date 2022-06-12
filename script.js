@@ -159,6 +159,7 @@ class App {
   }
   _clearLocalStorage() {
     localStorage.clear();
+    location.reload();
   }
 
   _newCat(e) {
