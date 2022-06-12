@@ -36,12 +36,11 @@ window.addEventListener("beforeinstallprompt", (e) => {
 // -i : input
 // -b : button
 
-const clearLS = document.querySelector(".clear-ls");
-
 const catSelectList = document.querySelector(".cat-select-list");
 const catContainer = document.querySelector(".cat-container");
 const fNCat = document.querySelector(".f-n-cat");
 const fNCatB = document.querySelector(".f-n-cat-b");
+const fNCatBPlus = document.querySelector(".f-n-cat-b-plus");
 const fNCatI = document.querySelector(".f-n-cat-i");
 
 const tabs = document.querySelector(".tabs");
@@ -101,8 +100,6 @@ class App {
   constructor() {
     this._getLocalStorage();
 
-    clearLS.addEventListener("click", this._clearLocalStorage);
-
     fNCat.addEventListener("submit", this._newCat.bind(this));
     fNCatB.addEventListener("click", this._hideShowCatForm.bind(this));
     catSelectList.addEventListener("change", this._changeCat.bind(this));
@@ -156,10 +153,6 @@ class App {
     } else if (currentTheme == "light") {
       document.body.classList.toggle("light-theme");
     }
-  }
-  _clearLocalStorage() {
-    localStorage.clear();
-    location.reload();
   }
 
   _newCat(e) {
@@ -235,7 +228,7 @@ class App {
 
   _hideShowCatForm(e) {
     e.preventDefault();
-    fNCatB.classList.toggle("btn-cancel");
+    fNCatBPlus.classList.toggle("btn-cancel");
     catSelectList.classList.toggle("hidden");
     document.querySelector(".f-n-cat").classList.toggle("hidden");
     document.querySelector(".f-n-cat-b-label").classList.toggle("hidden");
@@ -658,12 +651,3 @@ class App {
 }
 
 const app = new App();
-
-// if ("serviceWorker" in navigator) {
-//   window.addEventListener("load", function () {
-//     navigator.serviceWorker
-//       .register("/serviceWorker.js")
-//       .then((res) => console.log("service worker registered"))
-//       .catch((err) => console.log("service worker not registered", err));
-//   });
-// }
