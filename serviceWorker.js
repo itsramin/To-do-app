@@ -34,3 +34,5 @@ var URLS = [
   `${GHPATH}/style.css`,
   `${GHPATH}/script.js`,
 ];
+
+self.addEventListener("fetch", function (event) {});
