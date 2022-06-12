@@ -424,7 +424,7 @@ header {
   border-radius: 50px;
 }
 
-input[type="date"] {
+/* input[type="date"] {
   position: relative;
 }
 input[type="date"]::-webkit-calendar-picker-indicator {
@@ -437,11 +437,11 @@ input[type="date"]:before {
   display: block;
   font-family: "FontAwesome";
   content: "\f133";
-  /* This is the calendar icon in FontAwesome */
+  
   width: 15px;
   height: 20px;
   position: absolute;
 
   right: 6px;
   color: var(--color-primary);
-}
+} */
