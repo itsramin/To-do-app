@@ -64,15 +64,19 @@
               placeholder="Add new category"
             />
           </form>
-          <button class="f-n-cat-b">+</button>
+          <button class="f-n-cat-b">
+            <i class="far fa-plus"></i>
+          </button>
         </div>
       </div>
       <div class="tabs">
         <div class="tab tab-undone tab-active">
-          📃 <span class="tab-count tab-undone-count"></span>
+          <i class="far fa-list-ul"></i>
+          <span class="tab-count tab-undone-count"></span>
         </div>
         <div class="tab tab-done">
-          ✅ <span class="tab-count tab-done-count"></span>
+          <i class="far fa-check"></i>
+          <span class="tab-count tab-done-count"></span>
         </div>
       </div>
       <div class="main-box">
@@ -82,7 +86,7 @@
         </div>
         <div class="box-n-task hidden">
           <form class="f-n-task">
-            <button class="f-c f-n-task-c">&times;</button>
+            <i class="far fa-times f-c f-n-task-c"></i>
             <div class="f-section">
               <label class="f-l">Title</label>
               <input class="f-n-task-i f-n-task-i-title" type="text" />
@@ -90,7 +94,9 @@
             <div class="f-section f-n-date-section">
               <label class="f-l">Date</label>
               <input class="f-n-task-i f-n-task-i-date" type="date" />
-              <span class="f-n-task-rep">&orarr; repeat</span>
+              <span class="f-n-task-rep"
+                ><i class="far fa-repeat-alt"></i> repeat</span
+              >
             </div>
             <div class="f-section f-n-cat-section">
               <label class="f-l">Category</label>
@@ -111,7 +117,7 @@
         </div>
         <div class="box-e-task hidden">
           <form class="f-e-task">
-            <button class="f-c f-e-task-c">&times;</button>
+            <i class="far fa-times f-c f-e-task-c"></i>
             <div class="f-section">
               <label class="f-l">Title</label>
               <input class="f-n-task-i f-e-task-title" type="text" />
@@ -119,7 +125,9 @@
             <div class="f-section date-section f-e-date-section">
               <label class="f-l">Date</label>
               <input class="f-n-task-i f-e-task-date" type="date" />
-              <span class="f-e-task-rep">&orarr; repeat</span>
+              <span class="f-e-task-rep"
+                ><i class="far fa-repeat-alt"></i> repeat</span
+              >
             </div>
             <div class="f-section f-e-cat-section">
               <label class="f-l">Category</label>
@@ -145,8 +153,12 @@
         </div>
       </div>
       <div class="control-btns">
-        <button class="btn btn-new">+</button>
-        <button class="btn btn-sort">&udhar;</button>
+        <button class="btn btn-new">
+          <i class="far fa-plus"></i> New task
+        </button>
+        <button class="btn btn-sort">
+          <i class="far fa-sort-alt"></i> Sort
+        </button>
       </div>
     </div>
     <audio id="audio" src="./accept.mp3"></audio>

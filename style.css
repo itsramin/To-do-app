@@ -113,7 +113,7 @@ header {
 .cat-select-list {
   background-color: var(--bg-secondary);
   padding: 0.5rem 1.5rem;
-  width: 180px;
+  width: 150px;
   border-radius: 7px;
   border: none;
   height: 40px;
@@ -131,9 +131,9 @@ header {
 }
 
 .f-n-cat-i {
-  width: 180px;
+  width: 150px;
   height: 39px;
-  padding: 0.5rem 1.5rem;
+  padding: 0.5rem 1rem;
   border-radius: 7px;
   border: none;
   outline: none;
@@ -181,6 +181,9 @@ header {
   -webkit-box-shadow: inset 0px -20px 16px -20px rgb(0 0 0 / 40%);
   box-shadow: inset 0px -20px 16px -20px rgb(0 0 0 / 40%);
 }
+.tab-done {
+  color: green;
+}
 .tab-active {
   background: var(--bg-secondary);
   box-shadow: none;
@@ -191,11 +194,10 @@ header {
 .btn {
   background: var(--color-secondary);
   margin: 0 5px;
-  width: 50px;
-  height: 50px;
+  padding: 0.5rem 0.8rem;
   border: none;
-  font-size: 25px;
-  border-radius: 50%;
+  font-size: 0.9rem;
+  border-radius: 5px;
   color: var(--color-fix-primary);
   -webkit-box-shadow: 0 4px 10px var(--shadow-primary);
   box-shadow: 0 4px 10px var(--shadow-primary);
@@ -262,7 +264,7 @@ header {
   position: absolute;
   top: 1rem;
   right: 1.2rem;
-  font-size: 2rem;
+  font-size: 1.2rem;
   color: var(--color-primary);
   cursor: pointer;
   border: none;
@@ -271,7 +273,7 @@ header {
 .f-n-cat-b {
   background: none;
   border: none;
-  font-size: 2rem;
+  font-size: 1rem;
   vertical-align: middle;
   color: var(--color-fix-primary);
   cursor: pointer;
