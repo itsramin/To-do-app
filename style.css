@@ -446,9 +446,8 @@ input[type="date"]::-webkit-calendar-picker-indicator {
 input[type="date"]:before {
   background: none;
   display: block;
-  font-family: "FontAwesome";
+  font-family: "Font Awesome 5 Pro";
   content: "\f133";
-
   width: 15px;
   height: 20px;
   position: absolute;
