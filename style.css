@@ -90,6 +90,7 @@ header {
   font-weight: 500;
   display: flex;
   justify-content: center;
+  user-select: none;
 }
 
 .container {
@@ -109,13 +110,6 @@ header {
   border: 1px solid transparent;
   border-right: 4px solid transparent;
   height: 40px;
-}
-.cat-box {
-  /* height: 40px; */
-}
-.search-box {
-  /* margin-top: -26px; */
-  /* height: 40px; */
 }
 .cat-container {
   display: flex;

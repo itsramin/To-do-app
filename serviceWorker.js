@@ -5,7 +5,7 @@ const contentToCache = [
   "/To-do-app/script.js",
   "/To-do-app/reset.css",
   "/To-do-app/style.css",
-  "/To-do-app/accept.mp3",
+  "/To-do-app/media/accept.mp3",
   "/To-do-app/icon/icon-144.png",
 ];
 self.addEventListener("install", (e) => {
