@@ -254,6 +254,11 @@ class App {
       this._createCatsList(fNTaskICat);
       fNTaskICat.value = this.#currentCat;
     }
+    if (!fNCat.classList.contains("hidden")) {
+      fNCat.classList.add("hidden");
+      catSelectList.classList.remove("hidden");
+      fNCatAdd.classList.remove("btn-cancel");
+    }
   }
   _hideShowSearchForm(e) {
     e.preventDefault();
@@ -270,6 +275,11 @@ class App {
     fSearchI.value = "";
     fSearchI.focus();
     searchRes.innerHTML = "";
+    if (!fNCat.classList.contains("hidden")) {
+      fNCat.classList.add("hidden");
+      catSelectList.classList.remove("hidden");
+      fNCatAdd.classList.remove("btn-cancel");
+    }
   }
 
   _renderTask(task, status = false, search = false) {
@@ -348,7 +358,8 @@ class App {
   }
 
   _delCat(e) {
-    if (catSelectList.value !== "Main list") {
+    if (!fNCat.classList.contains("hidden")) return;
+    if (catSelectList.value !== "") {
       if (
         confirm(
           `Are you sure you want to delete "${catSelectList.value}" list?`
