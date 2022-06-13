@@ -252,6 +252,7 @@ class App {
     document.querySelector(".f-n-task-i-title").focus();
     if (tasksLists.classList.contains("hidden")) {
       this._createCatsList(fNTaskICat);
+      fNTaskICat.value = this.#currentCat;
     }
   }
   _hideShowSearchForm(e) {
@@ -347,7 +348,7 @@ class App {
   }
 
   _delCat(e) {
-    if (!catSelectList.value === "Main list") {
+    if (catSelectList.value !== "Main list") {
       if (
         confirm(
           `Are you sure you want to delete "${catSelectList.value}" list?`
