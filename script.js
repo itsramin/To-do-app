@@ -1,8 +1,6 @@
 "use strict";
 if (navigator.serviceWorker) {
-  navigator.serviceWorker.register("/To-do-app/serviceWorker.js", {
-    scope: "/To-do-app/",
-  });
+  navigator.serviceWorker.register("/To-do-app/serviceWorker.js");
 }
 
 //// abbreviations
