@@ -350,52 +350,12 @@ header {
   font-size: 0.8rem;
   color: var(--color-primary);
 }
-.btn-theme {
-  opacity: 0;
-  position: absolute;
-}
 
-.label {
-  width: 40;
-  height: 14px;
-  background-color: var(--color-secondary);
-  display: flex;
-  border-radius: 50px;
-  align-items: center;
-  justify-content: space-between;
-  padding: 5px;
-  position: relative;
-  transform: scale(1.1);
-}
-
-.ball {
-  width: 20px;
-  height: 20px;
-  background-color: var(--color-fix-primary);
-  position: absolute;
-  top: 2px;
-  left: 2px;
-  border-radius: 50%;
-  transition: transform 0.2s linear;
-}
-
-/*  target the elemenent after the label*/
-.btn-theme:checked + .label .ball {
-  transform: translateX(24px);
-}
-
-.fa-moon {
-  color: var(--color-fix-primary);
-}
-
-.fa-sun {
-  color: yellow;
-}
 .theme-toggle {
   position: absolute;
   top: 20px;
   left: 20px;
-  width: 60px;
+  width: 20px;
 }
 .f-n-task-rep,
 .f-e-task-rep {
@@ -455,7 +415,15 @@ input[type="date"]:before {
   right: 6px;
   color: var(--color-primary);
 }
-
+.fa-moon,
+.fa-sun {
+  color: var(--color-secondary);
+}
+.no-task {
+  margin: 2rem 0;
+  text-align: center;
+  color: var(--color-primary-light);
+}
 @media only screen and (max-width: 600px) {
   body {
     width: 90%;
@@ -473,8 +441,5 @@ input[type="date"]:before {
   }
   .max-height {
     height: 90%;
-  }
-  .label {
-    transform: scale(0.9);
   }
 }

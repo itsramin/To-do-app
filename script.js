@@ -48,7 +48,7 @@ const btnSearch = document.querySelector(".btn-search");
 const fNTaskRep = document.querySelector(".f-n-task-rep");
 const fETaskRep = document.querySelector(".f-e-task-rep");
 
-const btnTheme = document.querySelector(".btn-theme");
+const themeToggle = document.querySelector(".theme-toggle");
 const prefersDarkScheme = window.matchMedia("(prefers-color-scheme: dark)");
 
 const currentTheme = localStorage.getItem("theme");
@@ -102,7 +102,7 @@ class App {
     fETaskSave.addEventListener("click", this._saveEdit.bind(this));
 
     //theme
-    btnTheme.addEventListener("click", this._changeTheme);
+    themeToggle.addEventListener("click", this._changeTheme);
 
     //
     fNTaskRep.addEventListener("click", this._addNRepeatation);
@@ -118,6 +118,17 @@ class App {
     localStorage.setItem("allCats", JSON.stringify(this.#allCats));
   }
   _getLocalStorage() {
+    //theme
+    if (currentTheme === "dark") {
+      document.body.classList.toggle("dark-theme");
+      document.querySelector(".fa-moon").classList.add("hidden");
+      document.querySelector(".fa-sun").classList.remove("hidden");
+    } else if (currentTheme === "light") {
+      document.body.classList.toggle("light-theme");
+      document.querySelector(".fa-sun").classList.add("hidden");
+      document.querySelector(".fa-moon").classList.remove("hidden");
+    }
+
     // recive all tasks
     const data = JSON.parse(localStorage.getItem("allTasks"));
     if (!data) return;
@@ -134,14 +145,6 @@ class App {
     this._createCatsList(catSelectList);
     this.#currentCat = catSelectList.value;
     this._renderAllTasks(false, this.#allCats[0]);
-
-    //theme
-    if (currentTheme === "dark") {
-      document.body.classList.toggle("dark-theme");
-      btnTheme.checked = true;
-    } else if (currentTheme === "light") {
-      document.body.classList.toggle("light-theme");
-    }
   }
 
   _newCat(e) {
@@ -193,6 +196,9 @@ class App {
     );
     this._renderTask(task);
     this.#allTasks.push(task);
+
+    // delete no task messages
+    document.querySelectorAll(".no-task").forEach((el) => el.remove());
 
     // cleaning form inputs
     document.querySelector(".f-n-task-i-title").value =
@@ -324,8 +330,20 @@ class App {
 
       task.status ? doneCount++ : undoneCount++;
     });
-    tabDoneCount.textContent = doneCount;
-    tabUndoneCount.textContent = undoneCount;
+
+    if (allTasks.length === 0) {
+      let text = `<div class="no-task">All tasks are done!</div>`;
+      let text2 = `<div class="no-task">No task has been done!!</div>`;
+      tasksListUndone.insertAdjacentHTML("afterbegin", text);
+      tasksListDone.insertAdjacentHTML("afterbegin", text2);
+    }
+    if (doneCount === 0 && undoneCount === 0) {
+      tabDoneCount.textContent = "";
+      tabUndoneCount.textContent = "";
+    } else {
+      tabDoneCount.textContent = doneCount;
+      tabUndoneCount.textContent = undoneCount;
+    }
   }
 
   _delCat(e) {
@@ -610,7 +628,10 @@ class App {
       document.body.classList.toggle("dark-theme");
       theme = document.body.classList.contains("dark-theme") ? "dark" : "light";
     }
+
     console.log(theme);
+    document.querySelector(".fa-sun").classList.toggle("hidden");
+    document.querySelector(".fa-moon").classList.toggle("hidden");
 
     localStorage.setItem("theme", theme);
   }
