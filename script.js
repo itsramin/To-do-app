@@ -4,29 +4,6 @@ if (navigator.serviceWorker) {
     scope: "/To-do-app/",
   });
 }
-// let deferredPrompt;
-
-// window.addEventListener("beforeinstallprompt", (e) => {
-//   // Prevent Chrome 67 and earlier from automatically showing the prompt
-//   e.preventDefault();
-//   // Stash the event so it can be triggered later.
-//   deferredPrompt = e;
-//   // Update UI to notify the user they can add to home screen
-
-//   // hide our user interface that shows our A2HS button
-//   addBtn.style.display = "none";
-//   // Show the prompt
-//   deferredPrompt.prompt();
-//   // Wait for the user to respond to the prompt
-//   deferredPrompt.userChoice.then((choiceResult) => {
-//     if (choiceResult.outcome === "accepted") {
-//       console.log("User accepted the A2HS prompt");
-//     } else {
-//       console.log("User dismissed the A2HS prompt");
-//     }
-//     deferredPrompt = null;
-//   });
-// });
 
 //// abbreviations
 // -f : form
@@ -39,11 +16,8 @@ if (navigator.serviceWorker) {
 const catSelectList = document.querySelector(".cat-select-list");
 const catContainer = document.querySelector(".cat-container");
 const fNCat = document.querySelector(".f-n-cat");
-const fNCatB = document.querySelector(".f-n-cat-b");
 const fNCatAdd = document.querySelector(".f-n-cat-add");
 const fNCatDel = document.querySelector(".f-n-cat-del");
-// const fNCatBPlus = document.querySelector(".f-n-cat-b-plus");
-const fNCatI = document.querySelector(".f-n-cat-i");
 
 const tabs = document.querySelector(".tabs");
 const tabDoneCount = document.querySelector(".tab-done-count");
@@ -76,6 +50,7 @@ const fETaskRep = document.querySelector(".f-e-task-rep");
 
 const btnTheme = document.querySelector(".btn-theme");
 const prefersDarkScheme = window.matchMedia("(prefers-color-scheme: dark)");
+
 const currentTheme = localStorage.getItem("theme");
 
 class Task {
@@ -128,6 +103,7 @@ class App {
     fNTaskRep.addEventListener("click", this._addNRepeatation);
     fETaskRep.addEventListener("click", this._addERepeatation.bind(""));
   }
+
   _setLocalStorage() {
     localStorage.setItem("allTasks", JSON.stringify(this.#allTasks));
     localStorage.setItem("allCats", JSON.stringify(this.#allCats));
@@ -151,9 +127,10 @@ class App {
     this._renderAllTasks(false, this.#allCats[0]);
 
     //theme
-    if (currentTheme == "dark") {
+    if (currentTheme === "dark") {
       document.body.classList.toggle("dark-theme");
-    } else if (currentTheme == "light") {
+      btnTheme.checked = true;
+    } else if (currentTheme === "light") {
       document.body.classList.toggle("light-theme");
     }
   }
@@ -581,17 +558,18 @@ class App {
   }
 
   _changeTheme() {
+    let theme;
     if (prefersDarkScheme.matches) {
       document.body.classList.toggle("light-theme");
-      var theme = document.body.classList.contains("light-theme")
+      theme = document.body.classList.contains("light-theme")
         ? "light"
         : "dark";
     } else {
       document.body.classList.toggle("dark-theme");
-      var theme = document.body.classList.contains("dark-theme")
-        ? "dark"
-        : "light";
+      theme = document.body.classList.contains("dark-theme") ? "dark" : "light";
     }
+    console.log(theme);
+
     localStorage.setItem("theme", theme);
   }
   //

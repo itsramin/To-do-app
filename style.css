@@ -2,10 +2,9 @@ body {
   --color-primary: rgba(255, 255, 255, 0.87);
   --color-primary-light: rgba(255, 255, 255, 0.5);
   --color-secondary: #1e88e5;
-  --color-tertiary: rgba(255, 255, 255, 0.87);
+  --color-secondary-light: rgba(31, 137, 229, 0.3);
   --color-red: #ef5350;
   --color-gray: #646464;
-  --color-button: #494949;
 
   --bg-primary: #121212;
   --bg-secondary: #272727;
@@ -17,11 +16,7 @@ body {
 body.light-theme {
   --color-primary: #3d3d3d;
   --color-primary-light: rgba(61, 61, 61, 0.6);
-  --color-secondary: #1e88e5;
-  --color-secondary-light: rgba(31, 137, 229, 0.3);
-  --color-tertiary: #017276;
   --color-red: #e53935;
-  --color-button: #02aab0;
 
   --color-gray: #dadada;
 
@@ -33,7 +28,6 @@ body.light-theme {
   --bg-red: rgba(239, 83, 80, 0.1);
 
   --shadow-primary: rgba(0, 0, 0, 0.2);
-  --shadow-secondary: rgba(0, 0, 0, 0);
 }
 
 @media (prefers-color-scheme: light) {
@@ -41,11 +35,7 @@ body.light-theme {
   body {
     --color-primary: #3d3d3d;
     --color-primary-light: rgba(61, 61, 61, 0.6);
-    --color-secondary: #1e88e5;
-    --color-secondary-light: rgba(31, 137, 229, 0.3);
-    --color-tertiary: #017276;
     --color-red: #e53935;
-    --color-button: #02aab0;
 
     --color-gray: #dadada;
 
@@ -57,16 +47,14 @@ body.light-theme {
     --bg-red: rgba(239, 83, 80, 0.1);
 
     --shadow-primary: rgba(0, 0, 0, 0.2);
-    --shadow-secondary: rgba(0, 0, 0, 0);
   }
   body.dark-theme {
     --color-primary: rgba(255, 255, 255, 0.87);
     --color-primary-light: rgba(255, 255, 255, 0.5);
     --color-secondary: #1e88e5;
-    --color-tertiary: rgba(255, 255, 255, 0.87);
+    --color-secondary-light: rgba(31, 137, 229, 0.3);
     --color-red: #ef5350;
     --color-gray: #646464;
-    --color-button: #494949;
 
     --bg-primary: #121212;
     --bg-secondary: #272727;
@@ -90,7 +78,6 @@ body {
 }
 input,
 select {
-  appearance: menulist-button;
   font-family: inherit;
   color: var(--color-primary);
   background: var(--bg-secondary);
@@ -192,8 +179,6 @@ header {
   display: flex;
   align-items: flex-end;
   justify-content: center;
-  /* -webkit-box-shadow: inset 0px -20px 16px -20px rgb(0 0 0 / 40%);
-  box-shadow: inset 0px -20px 16px -20px rgb(0 0 0 / 40%); */
 }
 .tab-done {
   color: green;
@@ -264,9 +249,6 @@ header {
   display: flex;
   flex-direction: row;
   justify-content: center;
-  /* position: absolute;
-  left: 20vw;
-  top: 67vh; */
 }
 .f-e-task-del {
   background: none;
@@ -382,7 +364,7 @@ header {
 }
 
 .fa-moon {
-  color: rgb(255, 255, 255);
+  color: var(--color-fix-primary);
 }
 
 .fa-sun {
