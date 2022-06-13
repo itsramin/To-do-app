@@ -426,11 +426,16 @@ header {
   border-radius: 50px;
 }
 
+input {
+  appearance: none;
+}
+
 input[type="date"] {
   position: relative;
   appearance: none;
 }
 input[type="date"]::-webkit-calendar-picker-indicator {
+  appearance: none;
   color: transparent;
   background: none;
   z-index: 1;
