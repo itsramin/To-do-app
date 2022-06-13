@@ -140,7 +140,7 @@ header {
   margin-top: -26px;
 }
 .max-height {
-  height: 380px;
+  height: 400px;
 }
 .tasks-lists {
   overflow: auto;
@@ -217,9 +217,14 @@ header {
   color: var(--color-secondary);
   vertical-align: top;
 }
+.box-n-task,
+.box-e-task {
+  height: 100%;
+  margin: 0.8rem;
+}
 .f-n-task,
 .f-e-task {
-  padding: 1rem;
+  height: 100%;
   display: flex;
   flex-direction: column;
   position: relative;
@@ -229,6 +234,9 @@ header {
   display: flex;
   align-items: baseline;
   gap: 10px;
+}
+.f-section:last-child {
+  padding-bottom: 0px;
 }
 .f-n-task-i {
   border: none;
@@ -246,6 +254,12 @@ header {
   user-select: none;
 }
 .f-n-task-b {
+  position: absolute;
+  bottom: 0;
+  margin-left: auto;
+  margin-right: auto;
+  left: 0;
+  right: 0;
   display: flex;
   flex-direction: row;
   justify-content: center;
@@ -266,8 +280,8 @@ header {
 }
 .f-c {
   position: absolute;
-  top: 1rem;
-  right: 1.2rem;
+  top: 0.5rem;
+  right: 0.5rem;
   font-size: 1.2rem;
   color: var(--color-primary);
   cursor: pointer;
@@ -412,7 +426,7 @@ header {
   border-radius: 50px;
 }
 
-/* input[type="date"] {
+input[type="date"] {
   position: relative;
 }
 input[type="date"]::-webkit-calendar-picker-indicator {
@@ -425,14 +439,15 @@ input[type="date"]:before {
   display: block;
   font-family: "FontAwesome";
   content: "\f133";
-  
+
   width: 15px;
   height: 20px;
   position: absolute;
 
   right: 6px;
   color: var(--color-primary);
-} */
+}
+
 @media only screen and (max-width: 600px) {
   body {
     width: 90%;
