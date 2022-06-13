@@ -111,7 +111,11 @@ header {
   height: 40px;
 }
 .cat-box {
-  height: 40px;
+  /* height: 40px; */
+}
+.search-box {
+  /* margin-top: -26px; */
+  /* height: 40px; */
 }
 .cat-container {
   display: flex;
@@ -121,6 +125,15 @@ header {
 
 .f-n-cat-i {
   width: 150px;
+  height: 40px;
+  padding: 0.5rem 1rem;
+  border-radius: 7px;
+  border: 1px solid transparent;
+  border-right: 4px solid transparent;
+  outline: 1px solid var(--color-secondary);
+}
+.f-search-i {
+  width: 200px;
   height: 40px;
   padding: 0.5rem 1rem;
   border-radius: 7px;
@@ -424,10 +437,6 @@ header {
   background-color: var(--bg-red);
   padding: 0.3rem 0.6rem 0.2rem;
   border-radius: 50px;
-}
-
-input {
-  appearance: none;
 }
 
 input[type="date"] {

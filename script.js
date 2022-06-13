@@ -28,6 +28,7 @@ const tasksListUndone = document.querySelector(".tasks-list-undone");
 const tasksListDone = document.querySelector(".tasks-list-done");
 
 const mainBox = document.querySelector(".main-box");
+const searchBox = document.querySelector(".search-box");
 
 const boxNTask = document.querySelector(".box-n-task");
 const fNTaskS = document.querySelector(".f-n-task-s");
@@ -44,6 +45,7 @@ const fETaskDel = document.querySelector(".f-e-task-del");
 const controlBtns = document.querySelector(".control-btns");
 const btnNew = document.querySelector(".btn-new");
 const btnSort = document.querySelector(".btn-sort");
+const btnSearch = document.querySelector(".btn-search");
 
 const fNTaskRep = document.querySelector(".f-n-task-rep");
 const fETaskRep = document.querySelector(".f-e-task-rep");
@@ -52,6 +54,9 @@ const btnTheme = document.querySelector(".btn-theme");
 const prefersDarkScheme = window.matchMedia("(prefers-color-scheme: dark)");
 
 const currentTheme = localStorage.getItem("theme");
+
+const fSearchI = document.querySelector(".f-search-i");
+const searchRes = document.querySelector(".search-results");
 
 class Task {
   date = new Date();
@@ -88,8 +93,10 @@ class App {
     fNTaskS.addEventListener("click", this._newTask.bind(this));
 
     tasksLists.addEventListener("click", this._checkTask.bind(this));
+    searchRes.addEventListener("click", this._checkTask.bind(this));
 
     btnSort.addEventListener("click", this._sortList.bind(this));
+    btnSearch.addEventListener("click", this._hideShowSearchForm.bind(this));
     btnNew.addEventListener("click", this._hideShowFormNew.bind(this));
 
     fETaskC.addEventListener("click", this._hideShowEditForm);
@@ -102,6 +109,10 @@ class App {
     //
     fNTaskRep.addEventListener("click", this._addNRepeatation);
     fETaskRep.addEventListener("click", this._addERepeatation.bind(""));
+
+    //
+    // fSearchI.addEventListener("oninput", this._searchTask.bind(this));
+    fSearchI.oninput = this._searchTask.bind(this);
   }
 
   _setLocalStorage() {
@@ -114,7 +125,7 @@ class App {
     if (!data) return;
     // recive all cats
     const data2 = JSON.parse(localStorage.getItem("allCats"));
-    if (!data2) return;
+    // if (!data2) return;
 
     // save data
     this.#allCats = data2;
@@ -145,6 +156,7 @@ class App {
     this._createCatsList(catSelectList);
     this._createCatsList(fNTaskICat);
     catSelectList.value = newCat;
+    this._changeCat(e);
   }
   _newTask(e) {
     e.preventDefault();
@@ -217,6 +229,7 @@ class App {
   }
   _hideShowEditForm(e) {
     e.preventDefault();
+    if (!searchRes.classList.contains("hidden")) this._hideShowSearchForm(e);
     catContainer.classList.toggle("hidden");
     tasksLists.classList.toggle("hidden");
     tabs.classList.toggle("hidden");
@@ -237,8 +250,24 @@ class App {
       this._createCatsList(fNTaskICat);
     }
   }
+  _hideShowSearchForm(e) {
+    e.preventDefault();
+    catContainer.classList.toggle("hidden");
+    tasksLists.classList.toggle("hidden");
+    tabs.classList.toggle("hidden");
+    searchBox.classList.toggle("hidden");
+    searchRes.classList.toggle("hidden");
+    if (searchBox.classList.contains("hidden")) {
+      mainBox.style.marginTop = "-26px";
+    } else {
+      mainBox.style.marginTop = "0px";
+    }
+    fSearchI.value = "";
+    fSearchI.focus();
+    searchRes.innerHTML = "";
+  }
 
-  _renderTask(task, status = false) {
+  _renderTask(task, status = false, search = false) {
     const options = { month: "numeric", day: "numeric" };
     const intlDate = task.date
       ? new Intl.DateTimeFormat("en-US", options).format(new Date(task.date))
@@ -262,9 +291,16 @@ class App {
         
       </div>
     `;
-    status === false
-      ? tasksListUndone.insertAdjacentHTML("beforeend", html)
-      : tasksListDone.insertAdjacentHTML("beforeend", html);
+
+    if (search) {
+      document
+        .querySelector(".search-results")
+        .insertAdjacentHTML("beforeend", html);
+    } else {
+      status === false
+        ? tasksListUndone.insertAdjacentHTML("beforeend", html)
+        : tasksListDone.insertAdjacentHTML("beforeend", html);
+    }
   }
   _renderAllTasks(sorted = false, cat) {
     // clean 2 tabs
@@ -279,7 +315,8 @@ class App {
           .sort((a, b) => Date.parse(a.date) - Date.parse(b.date))
       : this.#allTasks;
 
-    allTasks = cat ? allTasks.filter((task) => task.cat === cat) : allTasks;
+    // allTasks = cat ? allTasks.filter((task) => task.cat === cat) : allTasks;
+    allTasks = allTasks.filter((task) => task.cat === cat);
     let doneCount = 0;
     let undoneCount = 0;
 
@@ -293,8 +330,8 @@ class App {
     tabUndoneCount.textContent = undoneCount;
   }
 
-  _delCat() {
-    if (catSelectList.value) {
+  _delCat(e) {
+    if (!catSelectList.value === "Main list") {
       if (
         confirm(
           `Are you sure you want to delete "${catSelectList.value}" list?`
@@ -304,11 +341,17 @@ class App {
           this.#allCats.findIndex((cat) => cat === catSelectList.value),
           1
         );
+        this.#allTasks.forEach((task) => {
+          if (task.cat === catSelectList.value) task.cat = "";
+        });
 
         this._setLocalStorage();
         this._createCatsList(catSelectList);
         this._createCatsList(fNTaskICat);
+        this._changeCat(e);
       }
+    } else {
+      alert("You can't delete Main list!");
     }
   }
   _delTask(e) {
@@ -335,9 +378,10 @@ class App {
     let html;
     if (this.#allCats === []) return;
     this.#allCats.forEach((cat) => {
-      let catEl = `<option class="cat-option" value="${cat}">${cat}</option><span>del</span>`;
+      let catEl = `<option class="cat-option" value="${cat}">${cat}</option>`;
       html += catEl;
     });
+    html += `<option class="cat-option" value="">Main list</option>`;
     // console.log(html);
 
     place.insertAdjacentHTML("beforeend", html);
@@ -647,6 +691,13 @@ class App {
         month: "numeric",
         day: "numeric",
       }).format(taskDate);
+  }
+  _searchTask() {
+    searchRes.innerHTML = "";
+    const resTasks = this.#allTasks.filter((task) =>
+      task.title.includes(fSearchI.value)
+    );
+    resTasks.forEach((task) => this._renderTask(task, false, true));
   }
 }
 

@@ -51,7 +51,9 @@
     <div class="container">
       <div class="cat-box">
         <div class="cat-container">
-          <select class="cat-select-list"></select>
+          <select class="cat-select-list">
+            <option value="">Main list</option>
+          </select>
           <form class="f-n-cat hidden">
             <input
               class="f-n-cat-i"
@@ -69,6 +71,16 @@
           </div>
         </div>
       </div>
+      <div class="search-box hidden">
+        <form class="search-form">
+          <input
+            type="text"
+            class="f-search-i"
+            placeholder="Search..."
+            autocomplete="off"
+          />
+        </form>
+      </div>
       <div class="tabs">
         <div class="tab tab-undone tab-active">
           <i class="far fa-list-ul"></i>
@@ -80,6 +92,7 @@
         </div>
       </div>
       <div class="main-box">
+        <div class="search-results hidden"></div>
         <div class="tasks-lists">
           <div class="tasks-list tasks-list-undone"></div>
           <div class="tasks-list tasks-list-done hidden"></div>
@@ -153,11 +166,14 @@
         </div>
       </div>
       <div class="control-btns">
+        <button class="btn btn-sort">
+          <i class="far fa-sort-alt"></i> Sort
+        </button>
         <button class="btn btn-new">
           <i class="far fa-plus"></i> New task
         </button>
-        <button class="btn btn-sort">
-          <i class="far fa-sort-alt"></i> Sort
+        <button class="btn btn-search">
+          <i class="far fa-search"></i> Search
         </button>
       </div>
     </div>
