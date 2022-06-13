@@ -428,6 +428,7 @@ header {
 
 input[type="date"] {
   position: relative;
+  appearance: none;
 }
 input[type="date"]::-webkit-calendar-picker-indicator {
   color: transparent;
