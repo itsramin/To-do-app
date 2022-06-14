@@ -1,63 +1,55 @@
 "use strict";
-if (navigator.serviceWorker) {
-  navigator.serviceWorker.register("/To-do-app/serviceWorker.js");
-}
+// if (navigator.serviceWorker) {
+//   navigator.serviceWorker.register("/To-do-app/serviceWorker.js");
+// }
 
-//// abbreviations
-// -f : form
-// -e : edit
-// -n : new
-// -c : close
-// -i : input
-// -b : button
-
-const catSelectList = document.querySelector(".cat-select-list");
-const catContainer = document.querySelector(".cat-container");
-const fNCat = document.querySelector(".f-n-cat");
-const fNCatAdd = document.querySelector(".f-n-cat-add");
-const fNCatDel = document.querySelector(".f-n-cat-del");
+const selectCategory = document.querySelector(".select--category");
+const boxCat = document.querySelector(".box--cat");
+const formCategory = document.querySelector(".form--category");
+const btnCategoryAdd = document.querySelector(".button--category-add");
+const btnCategoryDel = document.querySelector(".button--category-del");
 
 const tabs = document.querySelector(".tabs");
-const tabDoneCount = document.querySelector(".tab-done-count");
-const tabUndoneCount = document.querySelector(".tab-undone-count");
+const tabsList = document.querySelector(".tabs__list");
+const tabsDoneCount = document.querySelector(".tabs--done-count");
+const tabsUndoneCount = document.querySelector(".tabs--undone-count");
 
-const tasksLists = document.querySelector(".tasks-lists");
-const tasksListUndone = document.querySelector(".tasks-list-undone");
-const tasksListDone = document.querySelector(".tasks-list-done");
+const tabsBodyTasksLists = document.querySelector(".tabs__body--tasks-lists");
+const tabsBodyTasksUndone = document.querySelector(".tabs__body--tasks-undone");
+const tabsBodyTasksDone = document.querySelector(".tabs__body--tasks-done");
 
-const mainBox = document.querySelector(".main-box");
-const searchBox = document.querySelector(".search-box");
+const tabsSection = document.querySelector(".tabs__section");
+const tabsBodySearch = document.querySelector(".tabs__body--search");
 
-const boxNTask = document.querySelector(".box-n-task");
-const fNTaskS = document.querySelector(".f-n-task-s");
+const tabsBodyNew = document.querySelector(".tabs__body--new");
+const btnNewSave = document.querySelector(".button--new-save");
 
-const fNTaskC = document.querySelector(".f-n-task-c");
-const fNTaskICat = document.querySelector(".f-n-task-i-cat");
+const btnNewClose = document.querySelector(".button--new-close");
+const inputNewCat = document.querySelector(".input--new-cat");
 
-const boxEtask = document.querySelector(".box-e-task");
-const fETaskC = document.querySelector(".f-e-task-c");
-const fETaskCat = document.querySelector(".f-e-task-cat");
-const fETaskSave = document.querySelector(".f-e-task-save");
-const fETaskDel = document.querySelector(".f-e-task-del");
+const tabsBodyEdit = document.querySelector(".tabs__body--edit");
+const btnEditClose = document.querySelector(".button--edit-close");
+const inputEditCat = document.querySelector(".input--edit-cat");
+const btnEditSave = document.querySelector(".button--edit-save");
+const btnEditDel = document.querySelector(".button--edit-del");
 
-const controlBtns = document.querySelector(".control-btns");
-const btnNew = document.querySelector(".btn-new");
-const btnSort = document.querySelector(".btn-sort");
-const btnSearch = document.querySelector(".btn-search");
+const buttons = document.querySelector(".buttons");
+const btnNew = document.querySelector(".button--new");
+const btnSort = document.querySelector(".button--sort");
+const btnSearch = document.querySelector(".button--search");
 
-const fNTaskRep = document.querySelector(".f-n-task-rep");
-const fETaskRep = document.querySelector(".f-e-task-rep");
+const btnNewRep = document.querySelector(".button--new-rep");
+const btnEditRep = document.querySelector(".button--edit-rep");
 
-const themeToggle = document.querySelector(".theme-toggle");
+const btnThemeToggle = document.querySelector(".button--theme-toggle");
 const prefersDarkScheme = window.matchMedia("(prefers-color-scheme: dark)");
 
 const currentTheme = localStorage.getItem("theme");
 
-const fSearchI = document.querySelector(".f-search-i");
-const searchRes = document.querySelector(".search-results");
+const inputSearch = document.querySelector(".input--search");
+const tabsBodySearchRes = document.querySelector(".tabs__body--search-res");
 
 class Task {
-  date = new Date();
   id = (Date.now() + "").slice(-10);
   doneDate;
   constructor(title, date, cat, description = "", repeatCount = 0) {
@@ -80,37 +72,37 @@ class App {
   constructor() {
     this._getLocalStorage();
 
-    fNCat.addEventListener("submit", this._newCat.bind(this));
-    fNCatAdd.addEventListener("click", this._hideShowCatForm.bind(this));
-    fNCatDel.addEventListener("click", this._delCat.bind(this));
-    catSelectList.addEventListener("change", this._changeCat.bind(this));
+    formCategory.addEventListener("submit", this._newCat.bind(this));
+    btnCategoryAdd.addEventListener("click", this._hideShowCatForm.bind(this));
+    btnCategoryDel.addEventListener("click", this._delCat.bind(this));
+    selectCategory.addEventListener("change", this._changeCat.bind(this));
 
-    tabs.addEventListener("click", this._changeTab);
+    tabsList.addEventListener("click", this._changeTab.bind(this));
 
-    fNTaskC.addEventListener("click", this._hideShowFormNew);
-    fNTaskS.addEventListener("click", this._newTask.bind(this));
+    btnNewClose.addEventListener("click", this._hideShowFormNew.bind(this));
+    btnNewSave.addEventListener("click", this._newTask.bind(this));
 
-    tasksLists.addEventListener("click", this._checkTask.bind(this));
-    searchRes.addEventListener("click", this._checkTask.bind(this));
+    tabsBodyTasksLists.addEventListener("click", this._checkTask.bind(this));
+    tabsBodySearchRes.addEventListener("click", this._checkTask.bind(this));
 
     btnSort.addEventListener("click", this._sortList.bind(this));
     btnSearch.addEventListener("click", this._hideShowSearchForm.bind(this));
     btnNew.addEventListener("click", this._hideShowFormNew.bind(this));
 
-    fETaskC.addEventListener("click", this._hideShowEditForm);
-    fETaskDel.addEventListener("click", this._delTask.bind(this));
-    fETaskSave.addEventListener("click", this._saveEdit.bind(this));
+    btnEditClose.addEventListener("click", this._hideShowEditForm);
+    btnEditDel.addEventListener("click", this._delTask.bind(this));
+    btnEditSave.addEventListener("click", this._saveEdit.bind(this));
 
     //theme
-    themeToggle.addEventListener("click", this._changeTheme);
+    btnThemeToggle.addEventListener("click", this._changeTheme);
 
     //
-    fNTaskRep.addEventListener("click", this._addNRepeatation);
-    fETaskRep.addEventListener("click", this._addERepeatation.bind(""));
+    btnNewRep.addEventListener("click", this._addNRepeatation);
+    btnEditRep.addEventListener("click", this._addERepeatation.bind(""));
 
     //
-    // fSearchI.addEventListener("oninput", this._searchTask.bind(this));
-    fSearchI.oninput = this._searchTask.bind(this);
+    // inputSearch.addEventListener("oninput", this._searchTask.bind(this));
+    inputSearch.oninput = this._searchTask.bind(this);
   }
 
   _setLocalStorage() {
@@ -142,49 +134,49 @@ class App {
 
     // load localStorage
 
-    this._createCatsList(catSelectList);
-    this.#currentCat = catSelectList.value;
+    this._createCatsList(selectCategory);
+    this.#currentCat = selectCategory.value;
     this._renderAllTasks(false, this.#allCats[0]);
   }
 
   _newCat(e) {
     e.preventDefault();
-    const newCat = document.querySelector(".f-n-cat-i").value;
+    const newCat = document.querySelector(".input--category-title").value;
     if (!newCat) return;
     this.#allCats.push(newCat);
     this._hideShowCatForm(e);
     this._setLocalStorage();
-    this._createCatsList(catSelectList);
-    this._createCatsList(fNTaskICat);
-    catSelectList.value = newCat;
+    this._createCatsList(selectCategory);
+    this._createCatsList(inputNewCat);
+    selectCategory.value = newCat;
     this._changeCat(e);
   }
   _newTask(e) {
     e.preventDefault();
     //alerts
-    if (document.querySelector(".f-n-task-i-title").value === "")
+    if (document.querySelector(".input--new-title").value === "")
       return alert("Please enter a title");
-    if (document.querySelector(".f-n-task-i-rep")?.value <= 0)
+    if (document.querySelector(".input--new-repeat-count")?.value <= 0)
       return alert("Please enter a positive number");
     if (
-      document.querySelector(".f-n-task-i-rep") &&
-      document.querySelector(".f-n-task-i-date").value === ""
+      document.querySelector(".input--new-repeat-count") &&
+      document.querySelector(".input--new-date").value === ""
     )
       return alert("Please enter a date");
 
     // collect data
-    const newTaskTitle = document.querySelector(".f-n-task-i-title").value;
-    const newTaskDate = document.querySelector(".f-n-task-i-date").value;
-    const newTaskCat = document.querySelector(".f-n-task-i-cat").value;
-    const newTaskDescription = document.querySelector(".f-n-task-i-des").value;
-    const repeatPeriod = document.querySelector(".f-n-select-period")?.value;
+    const newTaskTitle = document.querySelector(".input--new-title").value;
+    const newTaskDate = document.querySelector(".input--new-date").value;
+    const newTaskCat = document.querySelector(".input--new-cat").value;
+    const newTaskDescription = document.querySelector(".input--new-des").value;
+    const repeatPeriod = document.querySelector(".select--new-period")?.value;
     let period;
     if (repeatPeriod === "days") period = 1;
     if (repeatPeriod === "weeks") period = 7;
     if (repeatPeriod === "monthes") period = 30;
     if (repeatPeriod === "years") period = 365;
     const newRepeatCount =
-      document.querySelector(".f-n-task-i-rep")?.value * period;
+      document.querySelector(".input--new-repeat-count")?.value * period;
 
     // new task define
     let task = new Task(
@@ -198,22 +190,22 @@ class App {
     this.#allTasks.push(task);
 
     // delete no task messages
-    document.querySelectorAll(".no-task").forEach((el) => el.remove());
+    document.querySelectorAll(".message--no-task").forEach((el) => el.remove());
 
     // cleaning form inputs
-    document.querySelector(".f-n-task-i-title").value =
-      document.querySelector(".f-n-task-i-date").value =
-      document.querySelector(".f-n-task-i-cat").value =
-      document.querySelector(".f-n-task-i-des").value =
+    document.querySelector(".input--new-title").value =
+      document.querySelector(".input--new-date").value =
+      document.querySelector(".input--new-cat").value =
+      document.querySelector(".input--new-des").value =
         "";
-    document.querySelector(".f-n-task-i-rep")
-      ? (document.querySelector(".f-n-task-i-rep").value = "")
+    document.querySelector(".input--new-repeat-count")
+      ? (document.querySelector(".input--new-repeat-count").value = "")
       : "";
-    const el = document.querySelector(".f-section-rep");
+    const el = document.querySelector(".form__field--repeat");
     if (el) el.remove();
 
     // count done and undone tasks
-    tabUndoneCount.textContent = +tabUndoneCount.textContent + 1;
+    tabsUndoneCount.textContent = +tabsUndoneCount.textContent + 1;
 
     // hide new form
     this._hideShowFormNew(e);
@@ -224,61 +216,57 @@ class App {
 
   _hideShowCatForm(e) {
     e.preventDefault();
-    fNCatAdd.classList.toggle("btn-cancel");
-    catSelectList.classList.toggle("hidden");
-    document.querySelector(".f-n-cat").classList.toggle("hidden");
-    // document.querySelector(".f-n-cat-b-label").classList.toggle("hidden");
-    document.querySelector(".f-n-cat-i").value = "";
-    document.querySelector(".f-n-cat-i").focus();
+    btnCategoryAdd.classList.toggle("rotate-z");
+    selectCategory.classList.toggle("hidden");
+    document.querySelector(".form--category").classList.toggle("hidden");
+    document.querySelector(".input--category-title").value = "";
+    document.querySelector(".input--category-title").focus();
   }
   _hideShowEditForm(e) {
     e.preventDefault();
-    if (!searchRes.classList.contains("hidden")) this._hideShowSearchForm(e);
-    catContainer.classList.toggle("hidden");
-    tasksLists.classList.toggle("hidden");
-    tabs.classList.toggle("hidden");
-    controlBtns.classList.toggle("hidden");
-    boxEtask.classList.toggle("hidden");
-    mainBox.classList.toggle("max-height");
+    if (!tabsBodySearchRes.classList.contains("hidden"))
+      this._hideShowSearchForm(e);
+    boxCat.classList.toggle("hidden");
+    tabsBodyTasksLists.classList.toggle("hidden");
+    document.querySelector(".tabs__list").classList.toggle("hidden");
+    buttons.classList.toggle("hidden");
+    tabsBodyEdit.classList.toggle("hidden");
+    tabsSection.classList.toggle("max-height");
   }
   _hideShowFormNew(e) {
     e.preventDefault();
-    catContainer.classList.toggle("hidden");
-    tasksLists.classList.toggle("hidden");
-    tabs.classList.toggle("hidden");
-    controlBtns.classList.toggle("hidden");
-    boxNTask.classList.toggle("hidden");
-    mainBox.classList.toggle("max-height");
-    document.querySelector(".f-n-task-i-title").focus();
-    if (tasksLists.classList.contains("hidden")) {
-      this._createCatsList(fNTaskICat);
-      fNTaskICat.value = this.#currentCat;
+    boxCat.classList.toggle("hidden");
+    tabsBodyTasksLists.classList.toggle("hidden");
+
+    buttons.classList.toggle("hidden");
+    tabsBodyNew.classList.toggle("hidden");
+    tabsSection.classList.toggle("max-height");
+    document.querySelector(".input--new-title").focus();
+
+    if (tabsBodyTasksLists.classList.contains("hidden")) {
+      this._createCatsList(inputNewCat);
+      inputNewCat.value = this.#currentCat;
     }
-    if (!fNCat.classList.contains("hidden")) {
-      fNCat.classList.add("hidden");
-      catSelectList.classList.remove("hidden");
-      fNCatAdd.classList.remove("btn-cancel");
+    if (!formCategory.classList.contains("hidden")) {
+      formCategory.classList.add("hidden");
+      selectCategory.classList.remove("hidden");
+      btnCategoryAdd.classList.remove("rotate-z");
     }
   }
   _hideShowSearchForm(e) {
     e.preventDefault();
-    catContainer.classList.toggle("hidden");
-    tasksLists.classList.toggle("hidden");
-    tabs.classList.toggle("hidden");
-    searchBox.classList.toggle("hidden");
-    searchRes.classList.toggle("hidden");
-    if (searchBox.classList.contains("hidden")) {
-      mainBox.style.marginTop = "-26px";
-    } else {
-      mainBox.style.marginTop = "0px";
-    }
-    fSearchI.value = "";
-    fSearchI.focus();
-    searchRes.innerHTML = "";
-    if (!fNCat.classList.contains("hidden")) {
-      fNCat.classList.add("hidden");
-      catSelectList.classList.remove("hidden");
-      fNCatAdd.classList.remove("btn-cancel");
+    boxCat.classList.toggle("hidden");
+    tabsBodyTasksLists.classList.toggle("hidden");
+    document.querySelector(".tabs__list").classList.toggle("hidden");
+    tabsBodySearch.classList.toggle("hidden");
+    tabsBodySearchRes.classList.toggle("hidden");
+    inputSearch.value = "";
+    inputSearch.focus();
+    tabsBodySearchRes.innerHTML = "";
+    if (!formCategory.classList.contains("hidden")) {
+      formCategory.classList.add("hidden");
+      selectCategory.classList.remove("hidden");
+      btnCategoryAdd.classList.remove("rotate-z");
     }
   }
 
@@ -293,14 +281,18 @@ class App {
       +new Date() / (1000 * 60 * 60 * 24);
 
     let html = `
-      <div class="task-box" data-id="${task.id}">
+      <div class="checkbox__body" data-id="${task.id}">
         <input type="checkbox" ${
           status === false ? "" : "checked"
-        } class="task-checkbox">
+        } class="checkbox__input">
         
-        <div class="task-title">${task.title}</div>
-        ${isLate && !status ? `<div class="task-late">Miss</div>` : ""}
-        <div class="task-date">${
+        <div class="checkbox__label-title">${task.title}</div>
+        ${
+          isLate && !status
+            ? `<div class="checkbox__label-late">Miss</div>`
+            : ""
+        }
+        <div class="checkbox__label-date">${
           status === false ? this._remainDays(task.date) : intlDate
         }</div>
         
@@ -309,18 +301,18 @@ class App {
 
     if (search) {
       document
-        .querySelector(".search-results")
+        .querySelector(".tabs__body--search-res")
         .insertAdjacentHTML("beforeend", html);
     } else {
       status === false
-        ? tasksListUndone.insertAdjacentHTML("beforeend", html)
-        : tasksListDone.insertAdjacentHTML("beforeend", html);
+        ? tabsBodyTasksUndone.insertAdjacentHTML("beforeend", html)
+        : tabsBodyTasksDone.insertAdjacentHTML("beforeend", html);
     }
   }
   _renderAllTasks(sorted = false, cat) {
     // clean 2 tabs
     document
-      .querySelectorAll(".tasks-list")
+      .querySelectorAll(".tabs__body--tasks-list")
       .forEach((list) => (list.innerHTML = ""));
 
     // sort lists
@@ -343,39 +335,39 @@ class App {
     });
 
     if (allTasks.length === 0) {
-      let text = `<div class="no-task">All tasks are done!</div>`;
-      let text2 = `<div class="no-task">No task has been done!!</div>`;
-      tasksListUndone.insertAdjacentHTML("afterbegin", text);
-      tasksListDone.insertAdjacentHTML("afterbegin", text2);
+      let text = `<div class="message--no-task">All tasks are done!</div>`;
+      let text2 = `<div class="message--no-task">No task has been done!!</div>`;
+      tabsBodyTasksUndone.insertAdjacentHTML("afterbegin", text);
+      tabsBodyTasksDone.insertAdjacentHTML("afterbegin", text2);
     }
     if (doneCount === 0 && undoneCount === 0) {
-      tabDoneCount.textContent = "";
-      tabUndoneCount.textContent = "";
+      tabsDoneCount.textContent = "";
+      tabsUndoneCount.textContent = "";
     } else {
-      tabDoneCount.textContent = doneCount;
-      tabUndoneCount.textContent = undoneCount;
+      tabsDoneCount.textContent = doneCount;
+      tabsUndoneCount.textContent = undoneCount;
     }
   }
 
   _delCat(e) {
-    if (!fNCat.classList.contains("hidden")) return;
-    if (catSelectList.value !== "") {
+    if (!formCategory.classList.contains("hidden")) return;
+    if (selectCategory.value !== "") {
       if (
         confirm(
-          `Are you sure you want to delete "${catSelectList.value}" list?`
+          `Are you sure you want to delete "${selectCategory.value}" list?`
         )
       ) {
         this.#allCats.splice(
-          this.#allCats.findIndex((cat) => cat === catSelectList.value),
+          this.#allCats.findIndex((cat) => cat === selectCategory.value),
           1
         );
         this.#allTasks.forEach((task) => {
-          if (task.cat === catSelectList.value) task.cat = "";
+          if (task.cat === selectCategory.value) task.cat = "";
         });
 
         this._setLocalStorage();
-        this._createCatsList(catSelectList);
-        this._createCatsList(fNTaskICat);
+        this._createCatsList(selectCategory);
+        this._createCatsList(inputNewCat);
         this._changeCat(e);
       }
     } else {
@@ -397,8 +389,8 @@ class App {
 
   _changeCat(e) {
     e.preventDefault();
-    catSelectList.blur();
-    this.#currentCat = catSelectList.value;
+    selectCategory.blur();
+    this.#currentCat = selectCategory.value;
     this._renderAllTasks(false, this.#currentCat);
   }
   _createCatsList(place) {
@@ -406,10 +398,10 @@ class App {
     let html;
     if (this.#allCats === []) return;
     this.#allCats.forEach((cat) => {
-      let catEl = `<option class="cat-option" value="${cat}">${cat}</option>`;
+      let catEl = `<option value="${cat}">${cat}</option>`;
       html += catEl;
     });
-    html += `<option class="cat-option" value="">Main list</option>`;
+    html += `<option value="">Main list</option>`;
     // console.log(html);
 
     place.insertAdjacentHTML("beforeend", html);
@@ -418,43 +410,43 @@ class App {
     e.preventDefault();
 
     //alerts
-    if (document.querySelector(".f-n-task-i-title").value === "")
+    if (document.querySelector(".input--new-title").value === "")
       return alert("Please enter a title");
-    if (document.querySelector(".f-n-task-i-rep")?.value <= 0)
+    if (document.querySelector(".input--new-repeat-count")?.value <= 0)
       return alert("Please enter a positive number");
     if (
-      document.querySelector(".f-n-task-i-rep") &&
-      document.querySelector(".f-n-task-i-date").value === ""
+      document.querySelector(".input--new-repeat-count") &&
+      document.querySelector(".input--new-date").value === ""
     )
       return alert("Please enter a date");
 
     //
 
     const task = this.#allTasks.find((task) => task.id === this.#currentId);
-    task.title = document.querySelector(".f-e-task-title").value;
-    task.date = document.querySelector(".f-e-task-date").value;
-    task.cat = document.querySelector(".f-e-task-cat").value;
-    task.description = document.querySelector(".f-e-task-des").value;
-    const repeatPeriod = document.querySelector(".f-e-select-period")?.value;
+    task.title = document.querySelector(".input--edit-title").value;
+    task.date = document.querySelector(".input--edit-date").value;
+    task.cat = document.querySelector(".input--edit-cat").value;
+    task.description = document.querySelector(".input--edit-des").value;
+    const repeatPeriod = document.querySelector(".select--edit-period")?.value;
     let period;
     if (repeatPeriod === "days") period = 1;
     if (repeatPeriod === "weeks") period = 7;
     if (repeatPeriod === "monthes") period = 30;
     if (repeatPeriod === "years") period = 365;
     task.repeatCount =
-      document.querySelector(".f-e-task-i-rep")?.value * period;
+      document.querySelector(".input--edit-repeat-count")?.value * period;
 
     this._setLocalStorage();
     this._renderAllTasks(false, this.#currentCat);
     this._hideShowEditForm(e);
   }
   _checkTask(e) {
-    const taskEl = e.target.closest(".task-box");
+    const taskEl = e.target.closest(".checkbox__body");
     if (!taskEl) return;
     const task = this.#allTasks.find((task) => task.id === taskEl.dataset.id);
 
     // checkbox part
-    if (e.target.classList.contains("task-checkbox")) {
+    if (e.target.classList.contains("checkbox__input")) {
       // change task status
       task.status = !task.status;
 
@@ -495,21 +487,23 @@ class App {
     this._hideShowEditForm(e);
 
     // fill the inputs
-    this._createCatsList(fETaskCat);
-    document.querySelector(".f-e-task-title").value = task.title;
-    document.querySelector(".f-e-task-date").valueAsDate = new Date(task.date);
-    document.querySelector(".f-e-task-des").value = task.description;
+    this._createCatsList(inputEditCat);
+    document.querySelector(".input--edit-title").value = task.title;
+    document.querySelector(".input--edit-date").valueAsDate = new Date(
+      task.date
+    );
+    document.querySelector(".input--edit-des").value = task.description;
     if (task.repeatCount > 0) {
       this._addERepeatation(task.repeatCount, "unRegen");
     } else {
-      if (document.querySelector(".f-section-rep"))
-        document.querySelector(".f-section-rep").remove();
+      if (document.querySelector(".form__field--repeat"))
+        document.querySelector(".form__field--repeat").remove();
     }
-    fETaskCat.value = task.cat;
+    inputEditCat.value = task.cat;
     this.#currentId = task.id;
 
-    if (document.querySelector(".done-date-section"))
-      document.querySelector(".done-date-section").remove();
+    if (document.querySelector(".form__field--done-date"))
+      document.querySelector(".form__field--done-date").remove();
 
     // add complitition to edit form
     if (task.status) {
@@ -517,9 +511,9 @@ class App {
       task.doneDate = new Date(task.doneDate);
 
       let htmlEl = `
-            <div class="f-section done-date-section">
-              <label class="f-l">Compelited on</label>
-              <label class="task-done-date">
+            <div class="form__field form__field--done-date">
+              <label class="form__label">Compelited on</label>
+              <label class="form__label--done-date">
               ${String(task.doneDate.getDate()).padStart(2, 0)}/${String(
         task.doneDate.getMonth() + 1
       ).padStart(2, 0)}/${String(task.doneDate.getFullYear())}
@@ -532,95 +526,24 @@ class App {
   
           `;
       document
-        .querySelector(".f-e-date-section")
+        .querySelector(".field--edit-date")
         .insertAdjacentHTML("afterend", htmlEl);
     }
-
-    // checkbox
-    // if (e.target.classList.contains("task-checkbox")) {
-    //   task.status = !task.status;
-    //   const checkboxAudio = document.querySelector("audio");
-    //   if (task.status) checkboxAudio.play();
-    //   task.doneDate = new Date();
-
-    //   if (task.status && task.repeatCount > 0) {
-    //     let newtask = new Task(
-    //       task.title,
-    //       new Date(
-    //         new Date(task.date).getTime() +
-    //           task.repeatCount * 24 * 60 * 60 * 1000
-    //       ),
-    //       task.cat,
-    //       task.description,
-    //       task.repeatCount
-    //     );
-    //     this._renderTask(newtask);
-    //     this.#allTasks.push(newtask);
-    //   }
-
-    //   this._setLocalStorage();
-    //   this._renderAllTasks(false, this.#currentCat);
-    //   if (!task.status && document.querySelector(".done-date-section")) {
-    //     document.querySelector(".done-date-section").remove();
-    //   }
-    // } else {
-    //   // edit task
-    //   this._hideShowEditForm(e);
-
-    //   this._createCatsList(fETaskCat);
-    //   document.querySelector(".f-e-task-title").value = task.title;
-    //   document.querySelector(".f-e-task-date").valueAsDate = new Date(
-    //     task.date
-    //   );
-    //   document.querySelector(".f-e-task-des").value = task.description;
-    //   if (task.repeatCount > 0) {
-    //     this._addERepeatation(task.repeatCount, "unRegen");
-    //   }
-    //   fETaskCat.value = task.cat;
-    //   this.#currentId = task.id;
-
-    //   // clean complited section
-    //   if (!task.status && document.querySelector(".done-date-section"))
-    //     return document.querySelector(".done-date-section").remove();
-    //   if (task.status) {
-    //     // add done date to task
-    //     task.doneDate = new Date(task.doneDate);
-
-    //     let htmlEl = `
-    //       <div class="f-section done-date-section">
-    //         <label class="f-l">Compelited on</label>
-    //         <label class="task-done-date">
-    //         ${String(task.doneDate.getDate()).padStart(2, 0)}/${String(
-    //       task.doneDate.getMonth() + 1
-    //     ).padStart(2, 0)}/${String(task.doneDate.getFullYear())}
-    //           -
-    //         ${String(task.doneDate.getHours()).padStart(2, 0)}:
-    //         ${String(task.doneDate.getMinutes()).padStart(2, 0)}
-
-    //         </label>
-    //       </div>
-
-    //     `;
-    //     document
-    //       .querySelector(".f-e-date-section")
-    //       .insertAdjacentHTML("afterend", htmlEl);
-    //   }
-    // }
   }
   _changeTab(e) {
-    const target = e.target.closest(".tab");
-    if (!target.classList.contains("tab-active")) {
+    const target = e.target.closest(".tabs__item");
+    if (!target.classList.contains("tabs--active")) {
       // active current tab
       document
-        .querySelectorAll(".tab")
-        .forEach((tab) => tab.classList.remove("tab-active"));
-      target.classList.add("tab-active");
+        .querySelectorAll(".tabs__item")
+        .forEach((tab) => tab.classList.remove("tabs--active"));
+      target.classList.add("tabs--active");
 
       // ;
 
       // show active list
       document
-        .querySelectorAll(".tasks-list")
+        .querySelectorAll(".tabs__body--tasks-list")
         .forEach((list) => list.classList.toggle("hidden"));
     }
   }
@@ -640,8 +563,6 @@ class App {
       document.body.classList.toggle("dark-theme");
       theme = document.body.classList.contains("dark-theme") ? "dark" : "light";
     }
-
-    console.log(theme);
     document.querySelector(".fa-sun").classList.toggle("hidden");
     document.querySelector(".fa-moon").classList.toggle("hidden");
 
@@ -649,18 +570,18 @@ class App {
   }
   //
   _addERepeatation(value, regen = "regen") {
-    const el = document.querySelector(".f-section-rep");
+    const el = document.querySelector(".form__field--repeat");
     if (el) {
       if (regen === "regen") return el.remove();
       el.remove();
     }
     let html = `
-      <div class="f-section f-section-rep">
-        <label class="f-l">Repeat every</label>
-        <input class="f-e-task-i f-e-task-i-rep" type="number" placeholder="" value="${
+      <div class="form__field form__field--repeat">
+        <label class="form__label">Repeat every</label>
+        <input class="input input--repeat-count input--edit-repeat-count" type="number" placeholder="" value="${
           value ? value : ""
         }" />
-        <select class="f-e-select-period">
+        <select class="select--period select--new-period">
           <option value="days">days</option>
           <option value="weeks">weeks</option>
           <option value="monthes">monthes</option>
@@ -672,18 +593,18 @@ class App {
 
     `;
     document
-      .querySelector(".f-e-cat-section")
+      .querySelector(".field--edit-cat")
       .insertAdjacentHTML("beforebegin", html);
   }
   _addNRepeatation() {
-    const el = document.querySelector(".f-section-rep");
+    const el = document.querySelector(".form__field--repeat");
     if (el) return el.remove();
 
     let html = `
-      <div class="f-section f-section-rep">
-        <label class="f-l">Repeat every</label>
-        <input class="f-n-task-i f-n-task-i-rep" type="number" placeholder="" />
-        <select class="f-n-select-period">
+      <div class="form__field form__field--repeat">
+        <label class="form__label">Repeat every</label>
+        <input class="input input--repeat-count input--new-repeat-count" type="number" placeholder="" />
+        <select class="select--period select--new-period ">
           <option value="days">days</option>
           <option value="weeks">weeks</option>
           <option value="monthes">monthes</option>
@@ -694,7 +615,7 @@ class App {
 
     `;
     document
-      .querySelector(".f-n-cat-section")
+      .querySelector(".field--new-cat")
       .insertAdjacentHTML("beforebegin", html);
   }
 
@@ -724,9 +645,9 @@ class App {
       }).format(taskDate);
   }
   _searchTask() {
-    searchRes.innerHTML = "";
+    tabsBodySearchRes.innerHTML = "";
     const resTasks = this.#allTasks.filter((task) =>
-      task.title.includes(fSearchI.value)
+      task.title.includes(inputSearch.value)
     );
     resTasks.forEach((task) => this._renderTask(task, false, true));
   }

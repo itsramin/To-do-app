@@ -1,3 +1,6 @@
+/*------------------------------------*\
+  # Theme colors
+\*------------------------------------*/
 body {
   --color-primary: rgba(255, 255, 255, 0.87);
   --color-primary-light: rgba(255, 255, 255, 0.5);
@@ -65,6 +68,9 @@ body.light-theme {
   }
 }
 
+/*------------------------------------*\
+  # Main Section
+\*------------------------------------*/
 body {
   background: var(--bg-primary);
   font-size: 1rem;
@@ -102,7 +108,34 @@ header {
   margin: 0px auto;
   gap: 25px;
 }
-.cat-select-list {
+.hidden {
+  display: none !important;
+}
+
+/*------------------------------------*\
+  # Theme toggle section
+\*------------------------------------*/
+.fa-moon,
+.fa-sun {
+  color: var(--color-secondary);
+}
+.button--theme-toggle {
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  width: 20px;
+}
+
+/*------------------------------------*\
+  # Category Section
+\*------------------------------------*/
+
+.box--cat {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+.select--category {
   background-color: var(--bg-secondary);
   padding: 0.5rem 0.6rem;
   width: 140px;
@@ -112,13 +145,24 @@ header {
   border-right: 4px solid transparent;
   height: 40px;
 }
-.cat-container {
-  display: flex;
-  flex-direction: row;
-  align-items: center;
+.button--category-add {
+  transition: 0.5s ease-in-out;
 }
-
-.f-n-cat-i {
+.button--category {
+  background: none;
+  border: none;
+  font-size: 1rem;
+  vertical-align: middle;
+  color: var(--color-secondary);
+  cursor: pointer;
+  transition: 0.5s ease-in-out;
+  margin-left: 1rem;
+}
+.rotate-z {
+  transition: 0.5s ease-in-out;
+  transform: rotateZ(45deg);
+}
+.input--category-title {
   width: 150px;
   height: 40px;
   padding: 0.5rem 1rem;
@@ -127,7 +171,11 @@ header {
   border-right: 4px solid transparent;
   outline: 1px solid var(--color-secondary);
 }
-.f-search-i {
+
+/*------------------------------------*\
+  # Search Section
+\*------------------------------------*/
+.input--search {
   width: 200px;
   height: 40px;
   padding: 0.5rem 1rem;
@@ -137,7 +185,10 @@ header {
   outline: 1px solid var(--color-secondary);
 }
 
-.main-box {
+/*------------------------------------*\
+  # tabs Section
+\*------------------------------------*/
+.tabs__section {
   background: var(--bg-secondary);
   width: 100%;
   height: 340px;
@@ -145,35 +196,24 @@ header {
   flex-direction: column;
   border-radius: 10px;
   border: 1px solid var(--color-secondary);
-  margin-top: -26px;
+  margin-top: -1px;
 }
 .max-height {
   height: 400px;
 }
-.tasks-lists {
-  overflow: auto;
-}
-.tasks-lists::-webkit-scrollbar {
-  width: 16px;
-  border-radius: 10px;
-}
-
-.tasks-lists::-webkit-scrollbar-thumb {
-  border: 5px solid transparent;
-  background-color: var(--color-gray);
-  border-radius: 10px;
-  background-clip: padding-box;
-}
 .tabs {
-  width: 90%;
+  width: 100%;
+}
+.tabs__list {
+  width: 100%;
   display: flex;
   flex-direction: row;
-  justify-content: space-around;
+  justify-content: space-evenly;
   user-select: none;
   border-radius: 10px 10px 0 0;
   background: none;
 }
-.tab {
+.tabs__item {
   width: 30%;
   transition: 0.5s opacity;
   border-radius: inherit;
@@ -188,22 +228,85 @@ header {
   align-items: flex-end;
   justify-content: center;
 }
-.tab-done {
+.tabs--done {
   color: green;
 }
-.tab-undone {
+.tabs--undone {
   color: var(--color-primary);
 }
-.tab-active {
+.tabs--active {
   background: var(--bg-secondary);
   border: 1px solid var(--color-secondary);
   border-bottom: none;
   opacity: 1;
 }
-.hidden {
-  display: none;
+.tabs__body {
+  height: 100%;
+  margin: 0.8rem;
 }
-.btn {
+.tabs--count {
+  margin-left: 10px;
+  font-size: 0.8rem;
+  color: var(--color-primary);
+}
+
+/*------------------------------------*\
+  # tasks lists section
+\*------------------------------------*/
+.tabs__body--tasks-lists {
+  overflow: auto;
+}
+.tabs__body--tasks-lists::-webkit-scrollbar {
+  width: 16px;
+  border-radius: 10px;
+}
+.tabs__body--tasks-lists::-webkit-scrollbar-thumb {
+  border: 5px solid transparent;
+  background-color: var(--color-gray);
+  border-radius: 10px;
+  background-clip: padding-box;
+}
+.message--no-task {
+  margin: 2rem 0;
+  text-align: center;
+  color: var(--color-primary-light);
+}
+
+/*------------------------------------*\
+  # chechbox section
+\*------------------------------------*/
+.checkbox__body {
+  margin: 20px 20px 00px 20px;
+  padding-bottom: 20px;
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+  font-size: 1rem;
+  color: var(--color-primary);
+  align-items: flex-end;
+  border-bottom: 1px solid var(--color-gray);
+}
+.checkbox__body:last-child {
+  border-bottom: none;
+}
+.checkbox__label-title {
+  flex-grow: 2;
+}
+.checkbox__label-date {
+  font-size: 0.9rem;
+  color: var(--color-primary-light);
+}
+.checkbox__label-late {
+  font-size: 0.8rem;
+  color: var(--color-red);
+  background-color: var(--bg-red);
+  padding: 0.3rem 0.6rem 0.2rem;
+  border-radius: 50px;
+}
+/*------------------------------------*\
+  # Buttons section
+\*------------------------------------*/
+.button {
   background: var(--color-secondary);
   margin: 0 5px;
   padding: 0.5rem 0.8rem;
@@ -215,44 +318,36 @@ header {
   box-shadow: 0 4px 10px var(--shadow-primary);
   cursor: pointer;
 }
-.control-btns {
+.buttons {
   position: relative;
   top: -45px;
   margin-bottom: -15px;
 }
-.f-l {
+
+/*------------------------------------*\
+  # Task form regular
+\*------------------------------------*/
+.form__label {
   font-family: inherit;
   color: var(--color-secondary);
   vertical-align: top;
 }
-.box-n-task,
-.box-e-task {
-  height: 100%;
-  margin: 0.8rem;
-}
-.f-n-task,
-.f-e-task {
+.form {
   height: 100%;
   display: flex;
   flex-direction: column;
   position: relative;
 }
-.f-section {
+.form__field {
   padding: 9px;
   display: flex;
   align-items: baseline;
   gap: 10px;
 }
-.f-section:last-child {
+.form__field:last-child {
   padding-bottom: 0px;
 }
-.f-n-task-i {
-  border: none;
-  border-bottom: 1px solid;
-  border-color: var(--color-primary);
-  outline: none;
-}
-.f-n-task-s {
+.button--save {
   padding: 0.9rem 2rem;
   color: var(--color-fix-primary);
   background: var(--color-secondary);
@@ -261,7 +356,32 @@ header {
   cursor: pointer;
   user-select: none;
 }
-.f-n-task-b {
+.input {
+  border: none;
+  border-bottom: 1px solid;
+  border-color: var(--color-primary);
+  outline: none;
+}
+.input--des {
+  outline: none;
+  margin-top: 7px;
+}
+.input--repeat-count {
+  width: 40px;
+  overflow: hidden;
+  text-align: center;
+}
+.button--close {
+  position: absolute;
+  top: 0.5rem;
+  right: 0.5rem;
+  font-size: 1.2rem;
+  color: var(--color-primary);
+  cursor: pointer;
+  border: none;
+  background: none;
+}
+.field--btns {
   position: absolute;
   bottom: 0;
   margin-left: auto;
@@ -272,94 +392,7 @@ header {
   flex-direction: row;
   justify-content: center;
 }
-.f-e-task-del {
-  background: none;
-  font-weight: 300;
-  padding: 0.5rem 2rem;
-  text-align: center;
-  border: none;
-  font-size: 0.9rem;
-  color: var(--color-red);
-  cursor: pointer;
-}
-.f-des {
-  outline: none;
-  margin-top: 7px;
-}
-.f-c {
-  position: absolute;
-  top: 0.5rem;
-  right: 0.5rem;
-  font-size: 1.2rem;
-  color: var(--color-primary);
-  cursor: pointer;
-  border: none;
-  background: none;
-}
-.f-n-cat-b {
-  background: none;
-  border: none;
-  font-size: 1rem;
-  vertical-align: middle;
-  color: var(--color-secondary);
-  cursor: pointer;
-  transition: 0.5s ease-in-out;
-  margin-left: 1rem;
-  /* margin-right: 0.3rem; */
-}
-.f-n-cat-b-plus {
-  transition: 0.5s ease-in-out;
-}
-.f-n-cat-b-label {
-  color: var(--color-secondary);
-  font-size: 0.9rem;
-  font-family: Vazirmatn, "Franklin Gothic Medium", "Arial Narrow", Arial,
-    sans-serif;
-}
-.btn-cancel {
-  transition: 0.5s ease-in-out;
-  transform: rotateZ(45deg);
-}
-
-.task-box {
-  margin: 20px 20px 00px 20px;
-  padding-bottom: 20px;
-  display: flex;
-  flex-direction: row;
-  gap: 10px;
-  font-size: 1rem;
-  color: var(--color-primary);
-  align-items: flex-end;
-  border-bottom: 1px solid var(--color-gray);
-}
-.task-box:last-child {
-  border-bottom: none;
-}
-.task-title {
-  flex-grow: 2;
-}
-.task-date {
-  font-size: 0.9rem;
-  color: var(--color-primary-light);
-}
-.task-done-date {
-  font-size: 0.8rem;
-  color: var(--color-primary);
-}
-.tab-count {
-  margin-left: 10px;
-  font-size: 0.8rem;
-  color: var(--color-primary);
-}
-
-.theme-toggle {
-  position: absolute;
-  top: 20px;
-  left: 20px;
-  width: 20px;
-}
-.f-n-task-rep,
-.f-e-task-rep {
+.buttom--rep {
   margin-left: 10px;
   padding: 0.5rem 0.8rem;
   font-weight: 300;
@@ -370,30 +403,12 @@ header {
   user-select: none;
   background: var(--bg-light);
 }
-.f-n-task-i-rep,
-.f-e-task-i-rep {
-  width: 40px;
-  overflow: hidden;
+.select--period {
   text-align: center;
   border: none;
   border-bottom: 1px solid;
   border-color: var(--color-primary);
 }
-.f-e-select-period,
-.f-n-select-period {
-  text-align: center;
-  border: none;
-  border-bottom: 1px solid;
-  border-color: var(--color-primary);
-}
-.task-late {
-  font-size: 0.8rem;
-  color: var(--color-red);
-  background-color: var(--bg-red);
-  padding: 0.3rem 0.6rem 0.2rem;
-  border-radius: 50px;
-}
-
 input[type="date"] {
   position: relative;
   appearance: none;
@@ -412,19 +427,32 @@ input[type="date"]:before {
   width: 15px;
   height: 20px;
   position: absolute;
-
   right: 6px;
   color: var(--color-primary);
 }
-.fa-moon,
-.fa-sun {
-  color: var(--color-secondary);
-}
-.no-task {
-  margin: 2rem 0;
+/*------------------------------------*\
+  # Edit section
+\*------------------------------------*/
+
+.button--edit-del {
+  background: none;
+  font-weight: 300;
+  padding: 0.5rem 2rem;
   text-align: center;
-  color: var(--color-primary-light);
+  border: none;
+  font-size: 0.9rem;
+  color: var(--color-red);
+  cursor: pointer;
 }
+.form__label--done-date {
+  font-size: 0.8rem;
+  color: var(--color-primary);
+}
+
+/*------------------------------------*\
+  # Mobile view
+\*------------------------------------*/
+
 @media only screen and (max-width: 600px) {
   body {
     width: 90%;
@@ -437,7 +465,7 @@ input[type="date"]:before {
   .container {
     height: 85%;
   }
-  .main-box {
+  .tabs__section {
     height: 80%;
   }
   .max-height {
