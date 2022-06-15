@@ -1,7 +1,7 @@
 "use strict";
-// if (navigator.serviceWorker) {
-//   navigator.serviceWorker.register("/To-do-app/serviceWorker.js");
-// }
+if (navigator.serviceWorker) {
+  navigator.serviceWorker.register("/To-do-app/serviceWorker.js");
+}
 
 const selectCategory = document.querySelector(".select--category");
 const boxCat = document.querySelector(".box--cat");
@@ -246,7 +246,7 @@ class App {
     e.preventDefault();
     boxCat.classList.toggle("hidden");
     tabsBodyTasksLists.classList.toggle("hidden");
-
+    document.querySelector(".tabs__list").classList.toggle("hidden");
     buttons.classList.toggle("hidden");
     tabsBodyNew.classList.toggle("hidden");
     tabsSection.classList.toggle("max-height");
@@ -663,8 +663,6 @@ class App {
     resTasks.forEach((task) => this._renderTask(task, false, true));
   }
   _alertError(err) {
-    if (document.querySelector(".message__body--text"))
-      document.querySelector(".message__body--text").remove();
     document.querySelector(".overlay").classList.remove("hidden");
     document.querySelector(".message").classList.remove("hidden");
     let msg;
@@ -690,6 +688,7 @@ class App {
   _closeMessage() {
     document.querySelector(".overlay").classList.add("hidden");
     document.querySelector(".message").classList.add("hidden");
+    document.querySelector(".message__body--text").remove();
   }
 }
 
