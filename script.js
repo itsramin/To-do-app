@@ -1,7 +1,4 @@
 "use strict";
-if (navigator.serviceWorker) {
-  navigator.serviceWorker.register("/To-do-app/serviceWorker.js");
-}
 
 const selectCategory = document.querySelector(".select--category");
 const boxCat = document.querySelector(".box--cat");
@@ -693,3 +690,7 @@ class App {
 }
 
 const app = new App();
+
+if (navigator.serviceWorker) {
+  navigator.serviceWorker.register("/To-do-app/serviceWorker.js");
+}
