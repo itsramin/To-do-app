@@ -1,7 +1,7 @@
 "use strict";
-if (navigator.serviceWorker) {
-  navigator.serviceWorker.register("/To-do-app/serviceWorker.js");
-}
+// if (navigator.serviceWorker) {
+//   navigator.serviceWorker.register("/To-do-app/serviceWorker.js");
+// }
 
 const selectCategory = document.querySelector(".select--category");
 const boxCat = document.querySelector(".box--cat");
@@ -49,6 +49,8 @@ const currentTheme = localStorage.getItem("theme");
 const inputSearch = document.querySelector(".input--search");
 const btnSearchClose = document.querySelector(".button--search-close");
 const tabsBodySearchRes = document.querySelector(".tabs__body--search-res");
+
+const btnMessageClose = document.querySelector(".button--message-close");
 
 class Task {
   id = (Date.now() + "").slice(-10);
@@ -107,6 +109,8 @@ class App {
       this._hideShowSearchForm.bind(this)
     );
     inputSearch.oninput = this._searchTask.bind(this);
+
+    btnMessageClose.addEventListener("click", this._closeMessage);
   }
 
   _setLocalStorage() {
@@ -159,14 +163,15 @@ class App {
     e.preventDefault();
     //alerts
     if (document.querySelector(".input--new-title").value === "")
-      return alert("Please enter a title");
-    if (document.querySelector(".input--new-repeat-count")?.value <= 0)
-      return alert("Please enter a positive number");
+      return this._alertError("no task title");
+
     if (
       document.querySelector(".input--new-repeat-count") &&
       document.querySelector(".input--new-date").value === ""
     )
-      return alert("Please enter a date");
+      return this._alertError("no task date");
+    if (document.querySelector(".input--new-repeat-count")?.value <= 0)
+      return this._alertError("wrong repeat count");
 
     // collect data
     const newTaskTitle = document.querySelector(".input--new-title").value;
@@ -376,7 +381,7 @@ class App {
         this._changeCat(e);
       }
     } else {
-      alert("You can't delete Main list!");
+      return this._alertError("delete main");
     }
   }
   _delTask(e) {
@@ -406,7 +411,7 @@ class App {
       let catEl = `<option value="${cat}">${cat}</option>`;
       html += catEl;
     });
-    html += `<option value="">Main list</option>`;
+    html += `<option value="">Main</option>`;
     // console.log(html);
 
     place.insertAdjacentHTML("beforeend", html);
@@ -416,14 +421,15 @@ class App {
 
     //alerts
     if (document.querySelector(".input--new-title").value === "")
-      return alert("Please enter a title");
-    if (document.querySelector(".input--new-repeat-count")?.value <= 0)
-      return alert("Please enter a positive number");
+      return this._alertError("no task title");
+
     if (
       document.querySelector(".input--new-repeat-count") &&
       document.querySelector(".input--new-date").value === ""
     )
-      return alert("Please enter a date");
+      return this._alertError("no task date");
+    if (document.querySelector(".input--new-repeat-count")?.value <= 0)
+      return this._alertError("wrong repeat count");
 
     //
 
@@ -655,6 +661,35 @@ class App {
       task.title.includes(inputSearch.value)
     );
     resTasks.forEach((task) => this._renderTask(task, false, true));
+  }
+  _alertError(err) {
+    if (document.querySelector(".message__body--text"))
+      document.querySelector(".message__body--text").remove();
+    document.querySelector(".overlay").classList.remove("hidden");
+    document.querySelector(".message").classList.remove("hidden");
+    let msg;
+    switch (err) {
+      case "no task title":
+        msg = "Please enter a title.";
+        break;
+      case "no task date":
+        msg = "Please enter a date.";
+        break;
+      case "wrong repeat count":
+        msg = "Please enter a positive number to repeat count.";
+        break;
+      case "delete main":
+        msg = `You can't delete "Main" category!`;
+        break;
+    }
+    let msgEl = `<div class="message__body--text">${msg}</div>`;
+    document
+      .querySelector(".message__body")
+      .insertAdjacentHTML("beforeend", msgEl);
+  }
+  _closeMessage() {
+    document.querySelector(".overlay").classList.add("hidden");
+    document.querySelector(".message").classList.add("hidden");
   }
 }
 
