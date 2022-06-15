@@ -195,7 +195,7 @@ header {
 \*------------------------------------*/
 .tabs__section {
   background: var(--bg-secondary);
-  height: 400px;
+  height: 50vh;
   display: flex;
   flex-direction: column;
   border-radius: 10px;
@@ -515,12 +515,16 @@ input[type="date"]:before {
   }
   .container {
     /* height: 85%; */
+    height: 50vh;
     width: 90%;
   }
   .tabs__section {
-    height: 20rem;
+    height: 40vh;
   }
   .max-height {
-    height: 25rem;
+    height: 70vh;
+  }
+  .message {
+    width: 60%;
   }
 }
