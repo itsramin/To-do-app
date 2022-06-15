@@ -1,7 +1,7 @@
 "use strict";
-// if (navigator.serviceWorker) {
-//   navigator.serviceWorker.register("/To-do-app/serviceWorker.js");
-// }
+if (navigator.serviceWorker) {
+  navigator.serviceWorker.register("/To-do-app/serviceWorker.js");
+}
 
 const selectCategory = document.querySelector(".select--category");
 const boxCat = document.querySelector(".box--cat");
@@ -47,6 +47,7 @@ const prefersDarkScheme = window.matchMedia("(prefers-color-scheme: dark)");
 const currentTheme = localStorage.getItem("theme");
 
 const inputSearch = document.querySelector(".input--search");
+const btnSearchClose = document.querySelector(".button--search-close");
 const tabsBodySearchRes = document.querySelector(".tabs__body--search-res");
 
 class Task {
@@ -101,7 +102,10 @@ class App {
     btnEditRep.addEventListener("click", this._addERepeatation.bind(""));
 
     //
-    // inputSearch.addEventListener("oninput", this._searchTask.bind(this));
+    btnSearchClose.addEventListener(
+      "click",
+      this._hideShowSearchForm.bind(this)
+    );
     inputSearch.oninput = this._searchTask.bind(this);
   }
 
@@ -257,6 +261,7 @@ class App {
     e.preventDefault();
     boxCat.classList.toggle("hidden");
     tabsBodyTasksLists.classList.toggle("hidden");
+    buttons.classList.toggle("hidden");
     document.querySelector(".tabs__list").classList.toggle("hidden");
     tabsBodySearch.classList.toggle("hidden");
     tabsBodySearchRes.classList.toggle("hidden");

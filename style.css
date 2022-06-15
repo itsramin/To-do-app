@@ -106,7 +106,7 @@ header {
   flex-direction: column;
   align-items: center;
   margin: 0px auto;
-  gap: 25px;
+  gap: 20px;
 }
 .hidden {
   display: none !important;
@@ -175,8 +175,13 @@ header {
 /*------------------------------------*\
   # Search Section
 \*------------------------------------*/
-.input--search {
+
+.form--search {
+  position: relative;
   width: 200px;
+}
+.input--search {
+  width: 170px;
   height: 40px;
   padding: 0.5rem 1rem;
   border-radius: 7px;
@@ -191,7 +196,7 @@ header {
 .tabs__section {
   background: var(--bg-secondary);
   width: 100%;
-  height: 340px;
+  height: 300px;
   display: flex;
   flex-direction: column;
   border-radius: 10px;
@@ -242,7 +247,7 @@ header {
 }
 .tabs__body {
   height: 100%;
-  margin: 0.8rem;
+  /* margin: 0.8rem; */
 }
 .tabs--count {
   margin-left: 10px;
@@ -320,8 +325,6 @@ header {
 }
 .buttons {
   position: relative;
-  top: -45px;
-  margin-bottom: -15px;
 }
 
 /*------------------------------------*\
