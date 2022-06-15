@@ -695,7 +695,7 @@ if (navigator.serviceWorker) {
   navigator.serviceWorker.register("/To-do-app/serviceWorker.js");
 }
 
-const notificationButton = document.getElementById("enableNotifications");
+// const notificationButton = document.getElementById("enableNotifications");
 let swRegistration = null;
 
 initializeApp();
