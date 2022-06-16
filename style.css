@@ -101,6 +101,7 @@ header {
 }
 
 .container {
+  height: calc(100% - 6.5rem);
   width: 350px;
   display: flex;
   flex-direction: column;
@@ -195,7 +196,8 @@ header {
 \*------------------------------------*/
 .tabs__section {
   background: var(--bg-secondary);
-  height: 50vh;
+
+  height: calc(100% - 71px - 40px - 40px);
   display: flex;
   flex-direction: column;
   border-radius: 10px;
@@ -203,7 +205,7 @@ header {
   margin-top: -1px;
 }
 .max-height {
-  height: 400px;
+  height: 420px;
 }
 .tabs {
   width: 100%;
@@ -325,7 +327,9 @@ header {
   cursor: pointer;
 }
 .buttons {
-  padding-bottom: 2rem;
+  position: absolute;
+  bottom: 2rem;
+  /* padding-bottom: 2rem; */
 }
 
 /*------------------------------------*\
@@ -417,6 +421,9 @@ header {
   user-select: none;
   background: var(--bg-light);
 }
+.fa-repeat-alt {
+  vertical-align: middle;
+}
 .select--period {
   text-align: center;
   border: none;
@@ -446,7 +453,14 @@ input[type="date"]:before {
   color: var(--color-secondary);
 }
 /*------------------------------------*\
-  # Edit section
+  # New task section
+\*------------------------------------*/
+
+.input--new-date {
+  width: 6rem;
+}
+/*------------------------------------*\
+  # Edit Task section
 \*------------------------------------*/
 
 .button--edit-del {
@@ -524,15 +538,14 @@ input[type="date"]:before {
     font-size: 2rem;
   }
   .container {
-    /* height: 85%; */
-    height: 50vh;
+    height: calc(100% - 5rem);
     width: 90%;
   }
   .tabs__section {
-    height: 40vh;
+    height: calc(100% - 71px - 40px - 40px);
   }
   .max-height {
-    height: 70vh;
+    height: calc(100% - 40px);
   }
   .message {
     width: 60%;
