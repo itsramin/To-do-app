@@ -332,9 +332,13 @@ header {
   # Task form regular
 \*------------------------------------*/
 .form__label {
-  font-family: inherit;
-  color: var(--color-secondary);
+  color: var(--color-primary-light);
   vertical-align: top;
+  width: 20px;
+}
+.form__label--rep {
+  font-size: 0.9rem;
+  width: 31px;
 }
 .form {
   height: 100%;
@@ -364,12 +368,17 @@ header {
 .input {
   border: none;
   border-bottom: 1px solid;
-  border-color: var(--color-primary);
+  border-color: var(--color-secondary);
+  color: var(--color-secondary);
   outline: none;
 }
 .input--des {
   outline: none;
   margin-top: 7px;
+  padding: 0.3rem;
+  border: none;
+  border: 1px solid var(--color-secondary);
+  background: var(--bg-secondary);
 }
 .input--repeat-count {
   width: 40px;
@@ -403,7 +412,7 @@ header {
   font-weight: 300;
   font-size: 0.9rem;
   border-radius: 50px;
-  color: var(--color-primary);
+  color: var(--color-secondary);
   cursor: pointer;
   user-select: none;
   background: var(--bg-light);
@@ -412,9 +421,10 @@ header {
   text-align: center;
   border: none;
   border-bottom: 1px solid;
-  border-color: var(--color-primary);
+  border-color: var(--color-secondary);
+  color: var(--color-secondary);
 }
-/* input[type="date"] {
+input[type="date"] {
   position: relative;
   appearance: none;
 }
@@ -433,8 +443,8 @@ input[type="date"]:before {
   height: 20px;
   position: absolute;
   right: 6px;
-  color: var(--color-primary);
-} */
+  color: var(--color-secondary);
+}
 /*------------------------------------*\
   # Edit section
 \*------------------------------------*/
@@ -450,8 +460,8 @@ input[type="date"]:before {
   cursor: pointer;
 }
 .form__label--done-date {
-  font-size: 0.8rem;
-  color: var(--color-primary);
+  font-size: 0.9rem;
+  color: var(--color-primary-light);
 }
 
 /*------------------------------------*\

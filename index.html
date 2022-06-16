@@ -45,7 +45,7 @@
     <div class="container">
       <div class="box--cat">
         <select class="select--category">
-          <option value="">Main</option>
+          <option value="Main">Main</option>
         </select>
         <form class="form--category hidden">
           <input
@@ -91,26 +91,43 @@
             <form class="form form--new">
               <i class="far fa-times button--close button--new-close"></i>
               <div class="form__field">
-                <label class="form__label">Title</label>
-                <input class="input input--new-title" type="text" />
+                <!-- <label class="form__label">Title</label> -->
+                <i class="far fa-pen form__label"></i>
+                <input
+                  class="input input--new-title"
+                  type="text"
+                  placeholder="Title"
+                />
               </div>
               <div class="form__field field--new-date">
-                <label class="form__label">Date</label>
-                <input class="input input--new-date" type="date" />
+                <!-- <label class="form__label">Date</label> -->
+                <i class="far fa-calendar form__label"></i>
+                <input
+                  class="input input--new-date"
+                  type="text"
+                  onfocus="(this.type='date')"
+                  placeholder="Date"
+                />
                 <span class="buttom--rep button--new-rep"
                   ><i class="far fa-repeat-alt"></i> repeat</span
                 >
               </div>
               <div class="form__field field--new-cat">
-                <label class="form__label">Category</label>
-                <select class="input input--new-cat"></select>
+                <!-- <label class="form__label">Category</label> -->
+                <i class="far fa-folder-open form__label"></i>
+                <select
+                  class="input input--new-cat"
+                  placeholder="Category"
+                ></select>
               </div>
               <div class="form__field">
-                <label class="form__label">Description</label>
+                <!-- <label class="form__label">Description</label> -->
+                <i class="far fa-quote-left form__label"></i>
                 <textarea
                   class="input--des input--new-des"
                   cols="30"
                   rows="3"
+                  placeholder="Description"
                 ></textarea>
               </div>
               <div class="form__field field--btns">
@@ -122,26 +139,35 @@
             <form class="form form--edit">
               <i class="far fa-times button--close button--edit-close"></i>
               <div class="form__field">
-                <label class="form__label">Title</label>
-                <input class="input input--edit-title" type="text" />
+                <!-- <label class="form__label">Title</label> -->
+                <i class="far fa-pen form__label"></i>
+                <input
+                  class="input input--edit-title"
+                  type="text"
+                  placeholder="Title"
+                />
               </div>
               <div class="form__field field--edit-date">
-                <label class="form__label">Date</label>
+                <!-- <label class="form__label">Date</label> -->
+                <i class="far fa-calendar form__label"></i>
                 <input class="input input--edit-date" type="date" />
                 <span class="buttom--rep button--edit-rep"
                   ><i class="far fa-repeat-alt"></i> repeat</span
                 >
               </div>
               <div class="form__field field--edit-cat">
-                <label class="form__label">Category</label>
+                <!-- <label class="form__label">Category</label> -->
+                <i class="far fa-folder-open form__label"></i>
                 <select class="input input--edit-cat"></select>
               </div>
               <div class="form__field">
-                <label class="form__label">Description</label>
+                <!-- <label class="form__label">Description</label> -->
+                <i class="far fa-quote-left form__label"></i>
                 <textarea
                   class="input--des input--edit-des"
                   cols="30"
                   rows="3"
+                  placeholder="Description"
                 ></textarea>
               </div>
               <div class="form__field field--btns">

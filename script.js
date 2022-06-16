@@ -65,9 +65,9 @@ class Task {
 class App {
   #allTasks = [];
   #sorted = false;
-  #allCats = [];
+  #allCats = ["Main"];
   #currentId;
-  #currentCat;
+  #currentCat = "Main";
 
   constructor() {
     this._getLocalStorage();
@@ -126,6 +126,14 @@ class App {
       document.querySelector(".fa-moon").classList.remove("hidden");
     }
 
+    //
+    if (this.#allTasks.length === 0) {
+      let text = `<div class="message--no-task">All tasks are done !</div>`;
+      let text2 = `<div class="message--no-task">No task has been done !</div>`;
+      tabsBodyTasksUndone.insertAdjacentHTML("afterbegin", text);
+      tabsBodyTasksDone.insertAdjacentHTML("afterbegin", text2);
+    }
+
     // recive all tasks
     const data = JSON.parse(localStorage.getItem("allTasks"));
     if (!data) return;
@@ -138,7 +146,6 @@ class App {
     this.#allTasks = data;
 
     // load localStorage
-
     this._createCatsList(selectCategory);
     this.#currentCat = selectCategory.value;
     this._renderAllTasks(false, this.#allCats[0]);
@@ -148,13 +155,19 @@ class App {
     e.preventDefault();
     const newCat = document.querySelector(".input--category-title").value;
     if (!newCat) return;
-    this.#allCats.push(newCat);
-    this._hideShowCatForm(e);
-    this._setLocalStorage();
-    this._createCatsList(selectCategory);
-    this._createCatsList(inputNewCat);
-    selectCategory.value = newCat;
-    this._changeCat(e);
+    const newCateFormatted =
+      newCat.at(0).toUpperCase() + newCat.slice(1).toLowerCase();
+    if (!this.#allCats.some((cat) => cat === newCateFormatted)) {
+      this.#allCats.push(newCateFormatted);
+      this._hideShowCatForm(e);
+      this._setLocalStorage();
+      this._createCatsList(selectCategory);
+      this._createCatsList(inputNewCat);
+      selectCategory.value = newCateFormatted;
+      this._changeCat(e);
+    } else {
+      this._alertError("duplicate cat");
+    }
   }
   _newTask(e) {
     e.preventDefault();
@@ -163,17 +176,19 @@ class App {
       return this._alertError("no task title");
 
     if (
-      document.querySelector(".input--new-repeat-count") &&
+      document.querySelector(".input--new-repeat-count")?.value > 0 &&
       document.querySelector(".input--new-date").value === ""
     )
       return this._alertError("no task date");
-    if (document.querySelector(".input--new-repeat-count")?.value <= 0)
+    if (document.querySelector(".input--new-repeat-count")?.value < 0)
       return this._alertError("wrong repeat count");
 
     // collect data
     const newTaskTitle = document.querySelector(".input--new-title").value;
     const newTaskDate = document.querySelector(".input--new-date").value;
-    const newTaskCat = document.querySelector(".input--new-cat").value;
+    const newTaskCat = document.querySelector(".input--new-cat").value
+      ? document.querySelector(".input--new-cat").value
+      : "Main";
     const newTaskDescription = document.querySelector(".input--new-des").value;
     const repeatPeriod = document.querySelector(".select--new-period")?.value;
     let period;
@@ -181,8 +196,21 @@ class App {
     if (repeatPeriod === "weeks") period = 7;
     if (repeatPeriod === "monthes") period = 30;
     if (repeatPeriod === "years") period = 365;
-    const newRepeatCount =
-      document.querySelector(".input--new-repeat-count")?.value * period;
+    // let repCount =
+    //   document.querySelector(".input--new-repeat-count")?.value === 0
+    //     ? null
+    //     : document.querySelector(".input--new-repeat-count").value;
+    let repCount;
+    if (
+      !document.querySelector(".input--new-repeat-count") ||
+      document.querySelector(".input--new-repeat-count").value === ""
+    ) {
+      repCount = null;
+    } else {
+      repCount = document.querySelector(".input--new-repeat-count").value;
+    }
+    console.log(repCount);
+    const newRepeatCount = repCount * period;
 
     // new task define
     let task = new Task(
@@ -192,9 +220,9 @@ class App {
       newTaskDescription,
       newRepeatCount
     );
-    this._renderTask(task);
-    this.#allTasks.push(task);
 
+    this.#allTasks.push(task);
+    this._renderAllTasks(false, newTaskCat);
     // delete no task messages
     document.querySelectorAll(".message--no-task").forEach((el) => el.remove());
 
@@ -210,14 +238,13 @@ class App {
     const el = document.querySelector(".form__field--repeat");
     if (el) el.remove();
 
-    // count done and undone tasks
-    tabsUndoneCount.textContent = +tabsUndoneCount.textContent + 1;
-
     // hide new form
     this._hideShowFormNew(e);
 
     // save to localStorage
     this._setLocalStorage();
+
+    selectCategory.value = newTaskCat;
   }
 
   _hideShowCatForm(e) {
@@ -257,6 +284,23 @@ class App {
       formCategory.classList.add("hidden");
       selectCategory.classList.remove("hidden");
       btnCategoryAdd.classList.remove("rotate-z");
+    }
+
+    // cleaning new form inputs
+    if (tabsBodyNew.classList.contains("hidden")) {
+      document.querySelector(".input--new-title").value =
+        document.querySelector(".input--new-date").value =
+        document.querySelector(".input--new-cat").value =
+        document.querySelector(".input--new-des").value =
+          "";
+      document.querySelector(".input--new-repeat-count")
+        ? (document.querySelector(".input--new-repeat-count").value = "")
+        : "";
+
+      document.querySelector(".input--new-date").type = "text";
+      const el = document.querySelector(".form__field--repeat");
+      if (el) el.remove();
+      this._createCatsList(inputNewCat);
     }
   }
   _hideShowSearchForm(e) {
@@ -358,7 +402,7 @@ class App {
 
   _delCat(e) {
     if (!formCategory.classList.contains("hidden")) return;
-    if (selectCategory.value !== "") {
+    if (selectCategory.value !== "Main") {
       if (
         confirm(
           `Are you sure you want to delete "${selectCategory.value}" list?`
@@ -369,7 +413,7 @@ class App {
           1
         );
         this.#allTasks.forEach((task) => {
-          if (task.cat === selectCategory.value) task.cat = "";
+          if (task.cat === selectCategory.value) task.cat = "Main";
         });
 
         this._setLocalStorage();
@@ -403,13 +447,12 @@ class App {
   _createCatsList(place) {
     place.innerHTML = "";
     let html;
-    if (this.#allCats === []) return;
+    // let html = `<option value="Main" disabled selected hidden>Category</option>`;
+
     this.#allCats.forEach((cat) => {
       let catEl = `<option value="${cat}">${cat}</option>`;
       html += catEl;
     });
-    html += `<option value="">Main</option>`;
-    // console.log(html);
 
     place.insertAdjacentHTML("beforeend", html);
   }
@@ -417,15 +460,15 @@ class App {
     e.preventDefault();
 
     //alerts
-    if (document.querySelector(".input--new-title").value === "")
+    if (document.querySelector(".input--edit-title").value === "")
       return this._alertError("no task title");
 
     if (
-      document.querySelector(".input--new-repeat-count") &&
-      document.querySelector(".input--new-date").value === ""
+      document.querySelector(".input--edit-repeat-count") &&
+      document.querySelector(".input--edit-date").value === ""
     )
       return this._alertError("no task date");
-    if (document.querySelector(".input--new-repeat-count")?.value <= 0)
+    if (document.querySelector(".input--edit-repeat-count")?.value <= 0)
       return this._alertError("wrong repeat count");
 
     //
@@ -520,7 +563,7 @@ class App {
 
       let htmlEl = `
             <div class="form__field form__field--done-date">
-              <label class="form__label">Compelited on</label>
+            <i class="far fa-check-circle form__label"></i>
               <label class="form__label--done-date">
               ${String(task.doneDate.getDate()).padStart(2, 0)}/${String(
         task.doneDate.getMonth() + 1
@@ -585,7 +628,7 @@ class App {
     }
     let html = `
       <div class="form__field form__field--repeat">
-        <label class="form__label">Repeat every</label>
+      <i class="far fa-repeat-alt form__label"></i><span class="form__label form__label--rep">Every</span>
         <input class="input input--repeat-count input--edit-repeat-count" type="number" placeholder="" value="${
           value ? value : ""
         }" />
@@ -610,7 +653,7 @@ class App {
 
     let html = `
       <div class="form__field form__field--repeat">
-        <label class="form__label">Repeat every</label>
+      <i class="far fa-repeat-alt form__label"></i><span class="form__label form__label--rep">Every</span>
         <input class="input input--repeat-count input--new-repeat-count" type="number" placeholder="" />
         <select class="select--period select--new-period ">
           <option value="days">days</option>
@@ -676,7 +719,11 @@ class App {
       case "delete main":
         msg = `You can't delete "Main" category!`;
         break;
+      case "duplicate cat":
+        msg = `This category is already exist!`;
+        break;
     }
+
     let msgEl = `<div class="message__body--text">${msg}</div>`;
     document
       .querySelector(".message__body")
@@ -691,69 +738,69 @@ class App {
 
 const app = new App();
 
-if (navigator.serviceWorker) {
-  navigator.serviceWorker.register("/To-do-app/serviceWorker.js");
-}
+// if (navigator.serviceWorker) {
+//   navigator.serviceWorker.register("/To-do-app/serviceWorker.js");
+// }
 
-// const notificationButton = document.getElementById("enableNotifications");
-let swRegistration = null;
+// // const notificationButton = document.getElementById("enableNotifications");
+// let swRegistration = null;
 
-initializeApp();
+// initializeApp();
 
-function initializeApp() {
-  if ("serviceWorker" in navigator && "PushManager" in window) {
-    console.log("Service Worker and Push is supported");
+// function initializeApp() {
+//   if ("serviceWorker" in navigator && "PushManager" in window) {
+//     console.log("Service Worker and Push is supported");
 
-    //Register the service worker
-    navigator.serviceWorker
-      .register("./sw.js")
-      .then((swReg) => {
-        console.log("Service Worker is registered", swReg);
+//     //Register the service worker
+//     navigator.serviceWorker
+//       .register("./sw.js")
+//       .then((swReg) => {
+//         console.log("Service Worker is registered", swReg);
 
-        swRegistration = swReg;
-        initializeUi();
-      })
-      .catch((error) => {
-        console.error("Service Worker Error", error);
-      });
-  } else {
-    console.warn("Push messaging is not supported");
-    notificationButton.textContent = "Push Not Supported";
-  }
-}
+//         swRegistration = swReg;
+//         initializeUi();
+//       })
+//       .catch((error) => {
+//         console.error("Service Worker Error", error);
+//       });
+//   } else {
+//     console.warn("Push messaging is not supported");
+//     notificationButton.textContent = "Push Not Supported";
+//   }
+// }
 
-function initializeUi() {
-  notificationButton.addEventListener("click", () => {
-    displayNotification();
-  });
-}
+// function initializeUi() {
+//   notificationButton.addEventListener("click", () => {
+//     displayNotification();
+//   });
+// }
 
-function displayNotification() {
-  if (window.Notification && Notification.permission === "granted") {
-    notification();
-  }
-  // If the user hasn't told if he wants to be notified or not
-  // Note: because of Chrome, we are not sure the permission property
-  // is set, therefore it's unsafe to check for the "default" value.
-  else if (window.Notification && Notification.permission !== "denied") {
-    Notification.requestPermission((status) => {
-      if (status === "granted") {
-        notification();
-      } else {
-        alert("You denied or dismissed permissions to notifications.");
-      }
-    });
-  } else {
-    // If the user refuses to get notified
-    alert(
-      "You denied permissions to notifications. Please go to your browser or phone setting to allow notifications."
-    );
-  }
-}
+// function displayNotification() {
+//   if (window.Notification && Notification.permission === "granted") {
+//     notification();
+//   }
+//   // If the user hasn't told if he wants to be notified or not
+//   // Note: because of Chrome, we are not sure the permission property
+//   // is set, therefore it's unsafe to check for the "default" value.
+//   else if (window.Notification && Notification.permission !== "denied") {
+//     Notification.requestPermission((status) => {
+//       if (status === "granted") {
+//         notification();
+//       } else {
+//         alert("You denied or dismissed permissions to notifications.");
+//       }
+//     });
+//   } else {
+//     // If the user refuses to get notified
+//     alert(
+//       "You denied permissions to notifications. Please go to your browser or phone setting to allow notifications."
+//     );
+//   }
+// }
 
-function notification() {
-  const options = {
-    body: "Ramiiiiiiiiiiin",
-  };
-  swRegistration.showNotification("PWA Notification!", options);
-}
+// function notification() {
+//   const options = {
+//     body: "Ramiiiiiiiiiiin",
+//   };
+//   swRegistration.showNotification("PWA Notification!", options);
+// }
