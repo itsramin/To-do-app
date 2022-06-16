@@ -740,9 +740,9 @@ class App {
 
 const app = new App();
 
-// if (navigator.serviceWorker) {
-//   navigator.serviceWorker.register("/To-do-app/serviceWorker.js");
-// }
+if (navigator.serviceWorker) {
+  navigator.serviceWorker.register("/To-do-app/serviceWorker.js");
+}
 
 // // const notificationButton = document.getElementById("enableNotifications");
 // let swRegistration = null;
