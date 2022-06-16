@@ -216,7 +216,6 @@ class App {
     } else {
       repCount = document.querySelector(".input--new-repeat-count").value;
     }
-    console.log(repCount);
     const newRepeatCount = repCount * period;
 
     // new task define
@@ -521,6 +520,9 @@ class App {
       // create date of complitition
       task.doneDate = new Date();
 
+      // disappear task
+      taskEl.remove();
+
       // create a new task if there is repeation and the status is done
       if (task.status && task.repeatCount > 0) {
         let newtask = new Task(
@@ -533,7 +535,7 @@ class App {
           task.description,
           task.repeatCount
         );
-        this._renderTask(newtask);
+
         this.#allTasks.push(newtask);
       }
 
@@ -541,7 +543,9 @@ class App {
       this._setLocalStorage();
 
       // render all tasks
-      this._renderAllTasks(false, this.#currentCat);
+      setTimeout(function () {
+        app._renderAllTasks(false, app.#currentCat);
+      }, 1000);
 
       return;
     }
@@ -609,6 +613,8 @@ class App {
       document
         .querySelectorAll(".tabs__body--tasks-list")
         .forEach((list) => list.classList.toggle("hidden"));
+
+      this._renderAllTasks(false, this.#currentCat);
     }
   }
   _sortList() {
