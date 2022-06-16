@@ -554,6 +554,9 @@ input[type="date"]:before {
   .max-height {
     height: 100%;
   }
+  .max-height2 {
+    height: calc(100% - 1rem);
+  }
   .message {
     width: 60%;
   }

@@ -1,6 +1,7 @@
 "use strict";
 
 const header = document.querySelector("header");
+const container = document.querySelector(".container");
 
 const selectCategory = document.querySelector(".select--category");
 const boxCat = document.querySelector(".box--cat");
@@ -273,6 +274,7 @@ class App {
     buttons.classList.toggle("hidden");
     tabsBodyEdit.classList.toggle("hidden");
     tabsSection.classList.toggle("max-height");
+    container.classList.toggle("max-height2");
   }
   _hideShowFormNew(e) {
     e.preventDefault();
@@ -284,6 +286,7 @@ class App {
     buttons.classList.toggle("hidden");
     tabsBodyNew.classList.toggle("hidden");
     tabsSection.classList.toggle("max-height");
+    container.classList.toggle("max-height2");
     document.querySelector(".input--new-title").focus();
 
     if (tabsBodyTasksLists.classList.contains("hidden")) {
