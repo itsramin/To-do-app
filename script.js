@@ -1,5 +1,7 @@
 "use strict";
 
+const header = document.querySelector("header");
+
 const selectCategory = document.querySelector(".select--category");
 const boxCat = document.querySelector(".box--cat");
 const formCategory = document.querySelector(".form--category");
@@ -263,6 +265,8 @@ class App {
     e.preventDefault();
     if (!tabsBodySearchRes.classList.contains("hidden"))
       this._hideShowSearchForm(e);
+    btnThemeToggle.classList.toggle("hidden");
+    header.classList.toggle("hidden");
     boxCat.classList.toggle("hidden");
     tabsBodyTasksLists.classList.toggle("hidden");
     document.querySelector(".tabs__list").classList.toggle("hidden");
@@ -272,6 +276,8 @@ class App {
   }
   _hideShowFormNew(e) {
     e.preventDefault();
+    btnThemeToggle.classList.toggle("hidden");
+    header.classList.toggle("hidden");
     boxCat.classList.toggle("hidden");
     tabsBodyTasksLists.classList.toggle("hidden");
     document.querySelector(".tabs__list").classList.toggle("hidden");
@@ -309,6 +315,8 @@ class App {
   }
   _hideShowSearchForm(e) {
     e.preventDefault();
+    btnThemeToggle.classList.toggle("hidden");
+    header.classList.toggle("hidden");
     boxCat.classList.toggle("hidden");
     tabsBodyTasksLists.classList.toggle("hidden");
     buttons.classList.toggle("hidden");
@@ -631,7 +639,7 @@ class App {
     let html = `
       <div class="form__field form__field--repeat">
       <i class="far fa-repeat-alt form__label"></i><span class="form__label form__label--rep">Every</span>
-        <input class="input input--repeat-count input--edit-repeat-count" type="number" placeholder="" value="${
+        <input class="input input--repeat-count input--edit-repeat-count" type="number" min="1" max="1000" placeholder="" value="${
           value ? value : ""
         }" />
         <select class="select--period select--new-period">
@@ -656,7 +664,7 @@ class App {
     let html = `
       <div class="form__field form__field--repeat">
       <i class="far fa-repeat-alt form__label"></i><span class="form__label form__label--rep">Every</span>
-        <input class="input input--repeat-count input--new-repeat-count" type="number" placeholder="" />
+        <input class="input input--repeat-count input--new-repeat-count" type="number" min="1" max="1000" placeholder="" />
         <select class="select--period select--new-period ">
           <option value="days">days</option>
           <option value="weeks">weeks</option>

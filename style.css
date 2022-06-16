@@ -109,7 +109,6 @@ header {
   flex-direction: column;
   align-items: center;
   margin: 0px auto;
-  gap: 20px;
 }
 .hidden {
   display: none !important;
@@ -192,6 +191,9 @@ header {
   border-right: 4px solid transparent;
   outline: 1px solid var(--color-fix-secondary);
 }
+.tabs__body--search {
+  margin-top: 20px;
+}
 
 /*------------------------------------*\
   # tabs Section
@@ -211,7 +213,7 @@ header {
 }
 .tabs {
   width: 100%;
-
+  margin-top: 20px;
   height: 100%;
 }
 .tabs__list {
