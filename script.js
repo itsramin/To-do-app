@@ -110,6 +110,8 @@ class App {
 
     btnMessageClose.addEventListener("click", this._closeMessage);
     overlay.addEventListener("click", this._closeMessage);
+
+    document.addEventListener("backbutton", this._backButton.bind(this), false);
   }
 
   _setLocalStorage() {
@@ -353,9 +355,7 @@ class App {
     `;
 
     if (search) {
-      document
-        .querySelector(".tabs__body--search-res")
-        .insertAdjacentHTML("beforeend", html);
+      tabsBodySearchRes.insertAdjacentHTML("beforeend", html);
     } else {
       status === false
         ? tabsBodyTasksUndone.insertAdjacentHTML("beforeend", html)
@@ -735,6 +735,14 @@ class App {
     document.querySelector(".overlay").classList.add("hidden");
     document.querySelector(".message").classList.add("hidden");
     document.querySelector(".message__body--text").remove();
+  }
+  _backButton() {
+    if (!tabsBodyNew.classList.contains("hidden"))
+      return this._hideShowFormNew();
+    if (!tabsBodyEdit.classList.contains("hidden"))
+      return this._hideShowEditForm();
+    if (!tabsBodySearchRes.classList.contains("hidden"))
+      return this._hideShowSearchForm();
   }
 }
 
