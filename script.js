@@ -48,6 +48,7 @@ const btnSearchClose = document.querySelector(".button--search-close");
 const tabsBodySearchRes = document.querySelector(".tabs__body--search-res");
 
 const btnMessageClose = document.querySelector(".button--message-close");
+const overlay = document.querySelector(".overlay");
 
 class Task {
   id = (Date.now() + "").slice(-10);
@@ -108,6 +109,7 @@ class App {
     inputSearch.oninput = this._searchTask.bind(this);
 
     btnMessageClose.addEventListener("click", this._closeMessage);
+    overlay.addEventListener("click", this._closeMessage);
   }
 
   _setLocalStorage() {
@@ -703,7 +705,7 @@ class App {
     resTasks.forEach((task) => this._renderTask(task, false, true));
   }
   _alertError(err) {
-    document.querySelector(".overlay").classList.remove("hidden");
+    overlay.classList.remove("hidden");
     document.querySelector(".message").classList.remove("hidden");
     let msg;
     switch (err) {
