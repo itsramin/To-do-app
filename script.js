@@ -40,6 +40,7 @@ const btnSearch = document.querySelector(".button--search");
 
 const btnNewRep = document.querySelector(".button--new-rep");
 const btnEditRep = document.querySelector(".button--edit-rep");
+const btnRep = document.querySelector(".button--rep");
 
 const btnThemeToggle = document.querySelector(".button--theme-toggle");
 const prefersDarkScheme = window.matchMedia("(prefers-color-scheme: dark)");
@@ -101,8 +102,8 @@ class App {
     btnThemeToggle.addEventListener("click", this._changeTheme);
 
     //
-    btnNewRep.addEventListener("click", this._addNRepeatation);
-    btnEditRep.addEventListener("click", this._addERepeatation.bind(""));
+    btnNewRep.addEventListener("click", this._addRepeatation);
+    btnEditRep.addEventListener("click", this._addRepeatation);
 
     //
     btnSearchClose.addEventListener(
@@ -266,7 +267,7 @@ class App {
     if (!tabsBodySearchRes.classList.contains("hidden"))
       this._hideShowSearchForm(e);
     btnThemeToggle.classList.toggle("hidden");
-    header.classList.toggle("hidden");
+
     boxCat.classList.toggle("hidden");
     tabsBodyTasksLists.classList.toggle("hidden");
     document.querySelector(".tabs__list").classList.toggle("hidden");
@@ -278,7 +279,6 @@ class App {
   _hideShowFormNew(e) {
     e.preventDefault();
     btnThemeToggle.classList.toggle("hidden");
-    header.classList.toggle("hidden");
     boxCat.classList.toggle("hidden");
     tabsBodyTasksLists.classList.toggle("hidden");
     document.querySelector(".tabs__list").classList.toggle("hidden");
@@ -496,6 +496,7 @@ class App {
     if (repeatPeriod === "weeks") period = 7;
     if (repeatPeriod === "monthes") period = 30;
     if (repeatPeriod === "years") period = 365;
+
     task.repeatCount =
       document.querySelector(".input--edit-repeat-count")?.value * period;
 
@@ -562,7 +563,7 @@ class App {
     );
     document.querySelector(".input--edit-des").value = task.description;
     if (task.repeatCount > 0) {
-      this._addERepeatation(task.repeatCount, "unRegen");
+      this._addRepeatation(task.repeatCount);
     } else {
       if (document.querySelector(".form__field--repeat"))
         document.querySelector(".form__field--repeat").remove();
@@ -578,24 +579,25 @@ class App {
       // add done date to task
       task.doneDate = new Date(task.doneDate);
 
+      const options = {
+        month: "numeric",
+        day: "numeric",
+        hour: "numeric",
+        minute: "numeric",
+      };
+      const intlDate = new Intl.DateTimeFormat("en-US", options).format(
+        task.doneDate
+      );
+
       let htmlEl = `
             <div class="form__field form__field--done-date">
             <i class="far fa-check-circle form__label"></i>
-              <label class="form__label--done-date">
-              ${String(task.doneDate.getDate()).padStart(2, 0)}/${String(
-        task.doneDate.getMonth() + 1
-      ).padStart(2, 0)}/${String(task.doneDate.getFullYear())}
-                -
-              ${String(task.doneDate.getHours()).padStart(2, 0)}:
-              ${String(task.doneDate.getMinutes()).padStart(2, 0)}
-  
-              </label>
+              <label class="form__label--done-date">Completed on ${intlDate}</label>
             </div>
-  
           `;
       document
-        .querySelector(".field--edit-date")
-        .insertAdjacentHTML("afterend", htmlEl);
+        .querySelector(".field--edit-cat")
+        .insertAdjacentHTML("beforebegin", htmlEl);
     }
   }
   _changeTab(e) {
@@ -639,42 +641,89 @@ class App {
     localStorage.setItem("theme", theme);
   }
   //
-  _addERepeatation(value, regen = "regen") {
+  // _addERepeatation(value, regen = "regen") {
+  //   const el = document.querySelector(".form__field--repeat");
+  //   if (el) {
+  //     if (regen === "regen") return el.remove();
+  //     el.remove();
+  //   }
+  //   let html = `
+  //     <div class="form__field form__field--repeat">
+  //     <i class="far fa-repeat-alt form__label"></i><span class="form__label form__label--rep">Every</span>
+  //       <input class="input input--repeat-count input--edit-repeat-count" type="number" min="1" max="1000" placeholder=""
+  //       value="${value ? value : ""}" />
+  //       <select class="select--period select--new-period">
+  //         <option value="days">days</option>
+  //         <option value="weeks">weeks</option>
+  //         <option value="monthes">monthes</option>
+  //         <option value="years">years</option>
+  //     </select>
+
+  //     </div>
+
+  //   `;
+  //   document
+  //     .querySelector(".field--edit-cat")
+  //     .insertAdjacentHTML("beforebegin", html);
+  // }
+  // _addNRepeatation() {
+  //   const el = document.querySelector(".form__field--repeat");
+  //   if (el) return el.remove();
+
+  //   let html = `
+  //     <div class="form__field form__field--repeat">
+  //     <i class="far fa-repeat-alt form__label"></i><span class="form__label form__label--rep">Every</span>
+  //       <input class="input input--repeat-count input--new-repeat-count" type="number" min="1" max="1000" placeholder="" />
+  //       <select class="select--period select--new-period ">
+  //         <option value="days">days</option>
+  //         <option value="weeks">weeks</option>
+  //         <option value="monthes">monthes</option>
+  //         <option value="years">years</option>
+  //       </select>
+
+  //     </div>
+
+  //   `;
+  //   document
+  //     .querySelector(".field--new-cat")
+  //     .insertAdjacentHTML("beforebegin", html);
+  // }
+  _addRepeatation(value) {
     const el = document.querySelector(".form__field--repeat");
-    if (el) {
-      if (regen === "regen") return el.remove();
-      el.remove();
+
+    let status;
+    if (!tabsBodyNew.classList.contains("hidden")) {
+      status = "new";
+    } else {
+      status = "edit";
     }
-    let html = `
-      <div class="form__field form__field--repeat">
-      <i class="far fa-repeat-alt form__label"></i><span class="form__label form__label--rep">Every</span>
-        <input class="input input--repeat-count input--edit-repeat-count" type="number" min="1" max="1000" placeholder="" value="${
-          value ? value : ""
-        }" />
-        <select class="select--period select--new-period">
-          <option value="days">days</option>
-          <option value="weeks">weeks</option>
-          <option value="monthes">monthes</option>
-          <option value="years">years</option>
-      </select>
-        
-          
-      </div>
 
-    `;
-    document
-      .querySelector(".field--edit-cat")
-      .insertAdjacentHTML("beforebegin", html);
-  }
-  _addNRepeatation() {
-    const el = document.querySelector(".form__field--repeat");
-    if (el) return el.remove();
+    if (value > 0) {
+      if (el) {
+        el.remove();
+      }
+      btnEditRep.innerHTML = `<i class="far fa-times"></i>`;
+      btnEditRep.classList.add("move-repeat");
+    } else {
+      if (el) {
+        btnRep.innerHTML = `<i class="far fa-repeat-alt"></i> repeat</span>`;
+        btnRep.classList.remove("move-repeat");
+        btnEditRep.innerHTML = `<i class="far fa-repeat-alt"></i> repeat</span>`;
+        btnEditRep.classList.remove("move-repeat");
+        return el.remove();
+      }
+      btnRep.innerHTML = `<i class="far fa-times"></i>`;
+      btnRep.classList.add("move-repeat");
+      btnEditRep.innerHTML = `<i class="far fa-times"></i>`;
+      btnEditRep.classList.add("move-repeat");
+    }
 
     let html = `
       <div class="form__field form__field--repeat">
       <i class="far fa-repeat-alt form__label"></i><span class="form__label form__label--rep">Every</span>
-        <input class="input input--repeat-count input--new-repeat-count" type="number" min="1" max="1000" placeholder="" />
-        <select class="select--period select--new-period ">
+        <input class="input input--repeat-count input--${status}-repeat-count" type="number" min="1" max="1000" placeholder=""
+        value= ${value ? value : ""} />
+        <select class="select--period select--${status}-period ">
           <option value="days">days</option>
           <option value="weeks">weeks</option>
           <option value="monthes">monthes</option>
@@ -684,9 +733,10 @@ class App {
       </div>
 
     `;
-    document
-      .querySelector(".field--new-cat")
-      .insertAdjacentHTML("beforebegin", html);
+    let place = !tabsBodyNew.classList.contains("hidden")
+      ? ".field--new-date"
+      : ".field--edit-date";
+    document.querySelector(place).insertAdjacentHTML("afterend", html);
   }
 
   _remainDays(date) {
