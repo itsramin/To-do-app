@@ -35,7 +35,6 @@ body.light-theme {
 }
 
 @media (prefers-color-scheme: light) {
-  /* defaults to dark theme */
   body {
     --color-primary: #3d3d3d;
     --color-primary-light: rgba(61, 61, 61, 0.6);
@@ -78,6 +77,7 @@ body {
   font-size: 1rem;
   font-family: Vazirmatn, "Franklin Gothic Medium", "Arial Narrow", Arial,
     sans-serif;
+  padding-top: 2rem;
 }
 * {
   -webkit-tap-highlight-color: transparent;
@@ -92,23 +92,16 @@ select {
   background: var(--bg-secondary);
 }
 
-header {
-  padding: 2.5rem 0px 1rem;
-  color: var(--color-fix-secondary);
-  font-size: 3rem;
-  font-weight: 500;
-  display: flex;
-  justify-content: center;
-  user-select: none;
-}
-
 .container {
-  height: calc(100% - 167px);
+  height: calc(100% - 105px);
   width: 350px;
   display: flex;
   flex-direction: column;
   align-items: center;
   margin: 0px auto;
+}
+.container--max-height {
+  height: 100%;
 }
 .hidden {
   display: none !important;
@@ -131,20 +124,35 @@ header {
 /*------------------------------------*\
   # Category Section
 \*------------------------------------*/
-
 .box--cat {
   display: flex;
   flex-direction: row;
   align-items: center;
+  justify-content: center;
+  border: 1px solid var(--color-fix-secondary);
+  padding: 1.5rem 0rem 1rem;
+  border-radius: 7px;
+  position: relative;
+  width: 300px;
+}
+.box__title--cat {
+  position: absolute;
+  top: -7px;
+  margin-left: 0;
+  left: 0;
+  text-align: center;
+  color: var(--color-fix-secondary);
+  background-color: var(--bg-primary);
+  padding: 0 1rem;
+  transform: translateX(100%);
 }
 .select--category {
-  background-color: var(--bg-secondary);
+  background-color: var(--bg-primary);
   padding: 0.5rem 0.6rem;
   width: 140px;
-  border-radius: 7px;
-  outline: 1px solid var(--color-fix-secondary);
   border: 1px solid transparent;
   border-right: 4px solid transparent;
+  border-bottom: 1px solid var(--color-fix-secondary);
   height: 40px;
 }
 .button--category-add {
@@ -168,16 +176,15 @@ header {
   width: 150px;
   height: 40px;
   padding: 0.5rem 1rem;
-  border-radius: 7px;
   border: 1px solid transparent;
   border-right: 4px solid transparent;
-  outline: 1px solid var(--color-fix-secondary);
+  outline: none;
+  border-bottom: 1px solid var(--color-fix-secondary);
 }
 
 /*------------------------------------*\
   # Search Section
 \*------------------------------------*/
-
 .form--search {
   position: relative;
   width: 200px;
@@ -200,16 +207,12 @@ header {
 \*------------------------------------*/
 .tabs__section {
   background: var(--bg-secondary);
-
   height: 100%;
   display: flex;
   flex-direction: column;
   border-radius: 10px;
   border: 1px solid var(--color-fix-secondary);
   margin-top: -1px;
-}
-.max-height {
-  height: 420px;
 }
 .tabs {
   width: 100%;
@@ -254,29 +257,22 @@ header {
 }
 .tabs__body {
   height: 100%;
-  /* margin: 0.8rem; */
+  overflow: auto;
+}
+.tabs__body::-webkit-scrollbar {
+  width: 16px;
+  border-radius: 10px;
+}
+.tabs__body::-webkit-scrollbar-thumb {
+  border: 5px solid transparent;
+  background-color: var(--color-gray);
+  border-radius: 10px;
+  background-clip: padding-box;
 }
 .tabs--count {
   margin-left: 10px;
   font-size: 0.8rem;
   color: var(--color-primary);
-}
-
-/*------------------------------------*\
-  # tasks lists section
-\*------------------------------------*/
-.tabs__body--tasks-lists {
-  overflow: auto;
-}
-.tabs__body--tasks-lists::-webkit-scrollbar {
-  width: 16px;
-  border-radius: 10px;
-}
-.tabs__body--tasks-lists::-webkit-scrollbar-thumb {
-  border: 5px solid transparent;
-  background-color: var(--color-gray);
-  border-radius: 10px;
-  background-clip: padding-box;
 }
 .message--no-task {
   margin: 2rem 0;
@@ -333,7 +329,6 @@ header {
 .buttons {
   position: absolute;
   bottom: 1.5rem;
-  /* padding-bottom: 2rem; */
 }
 
 /*------------------------------------*\
@@ -349,7 +344,7 @@ header {
   width: 31px;
 }
 .form {
-  height: 100%;
+  height: calc(100% - 30px);
   display: flex;
   flex-direction: column;
   position: relative;
@@ -361,7 +356,6 @@ header {
   align-items: baseline;
   gap: 10px;
 }
-
 .button--save {
   padding: 0.9rem 2rem;
   border-radius: 5px;
@@ -404,12 +398,12 @@ header {
   background: none;
 }
 .field--btns {
-  position: absolute;
-  bottom: 20px;
+  /* position: absolute;
   margin-left: auto;
   margin-right: auto;
+  bottom: 0px;
   left: 0;
-  right: 0;
+  right: 0; */
   display: flex;
   flex-direction: row;
   justify-content: center;
@@ -466,10 +460,10 @@ input[type="date"]:before {
 /*------------------------------------*\
   # New task section
 \*------------------------------------*/
-
 .input--new-date {
   width: 7rem;
 }
+
 /*------------------------------------*\
   # Edit Task section
 \*------------------------------------*/
@@ -544,25 +538,26 @@ input[type="date"]:before {
     width: 95%;
     margin: 0 auto;
   }
-  header {
-    padding: 1.5rem 0px;
-    font-size: 2rem;
-  }
   .form {
     margin: 6px;
+    height: calc(100% - 12px);
   }
   .container {
-    height: calc(100% - 8rem);
     width: 96%;
+    height: calc(100% - 140px);
   }
-  .tabs__section {
-    height: calc(100% - 71px - 40px - 40px);
-  }
-  .max-height {
+  .container--max-height {
     height: 100%;
   }
-  .max-height2 {
-    height: calc(100% - 1rem);
+  .tabs {
+    height: calc(100% - 40px);
+  }
+  .tabs--min-height {
+    height: calc(100% - 100px);
+  }
+  .box--cat {
+    width: 90%;
+    transform: scale(0.8);
   }
   .message {
     width: 60%;

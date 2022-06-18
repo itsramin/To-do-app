@@ -36,13 +36,13 @@
     <title>Tasks List</title>
   </head>
   <body>
-    <header></header>
     <div class="button--theme-toggle">
       <i class="fas fa-moon"></i>
       <i class="fas fa-sun hidden"></i>
     </div>
     <div class="container">
       <div class="box--cat">
+        <span class="box__title--cat">Category</span>
         <select class="select--category">
           <option value="Main">Main</option>
         </select>
@@ -90,7 +90,6 @@
             <form class="form form--new">
               <i class="far fa-times button--close button--new-close"></i>
               <div class="form__field">
-                <!-- <label class="form__label">Title</label> -->
                 <i class="far fa-pen form__label"></i>
                 <input
                   class="input input--new-title"
@@ -100,7 +99,6 @@
                 />
               </div>
               <div class="form__field field--new-date">
-                <!-- <label class="form__label">Date</label> -->
                 <i class="far fa-calendar form__label"></i>
                 <input
                   class="input input--new-date"
@@ -113,7 +111,6 @@
                 >
               </div>
               <div class="form__field field--new-cat">
-                <!-- <label class="form__label">Category</label> -->
                 <i class="far fa-folder-open form__label"></i>
                 <select
                   class="input input--new-cat"
@@ -121,7 +118,6 @@
                 ></select>
               </div>
               <div class="form__field">
-                <!-- <label class="form__label">Description</label> -->
                 <i class="far fa-quote-left form__label"></i>
                 <textarea
                   class="input--des input--new-des"
@@ -139,7 +135,6 @@
             <form class="form form--edit">
               <i class="far fa-times button--close button--edit-close"></i>
               <div class="form__field">
-                <!-- <label class="form__label">Title</label> -->
                 <i class="far fa-pen form__label"></i>
                 <input
                   class="input input--edit-title"
@@ -148,7 +143,6 @@
                 />
               </div>
               <div class="form__field field--edit-date">
-                <!-- <label class="form__label">Date</label> -->
                 <i class="far fa-calendar form__label"></i>
                 <input class="input input--edit-date" type="date" />
                 <span class="button--rep button--edit-rep"
@@ -156,12 +150,10 @@
                 >
               </div>
               <div class="form__field field--edit-cat">
-                <!-- <label class="form__label">Category</label> -->
                 <i class="far fa-folder-open form__label"></i>
                 <select class="input input--edit-cat"></select>
               </div>
               <div class="form__field">
-                <!-- <label class="form__label">Description</label> -->
                 <i class="far fa-quote-left form__label"></i>
                 <textarea
                   class="input--des input--edit-des"
@@ -182,7 +174,6 @@
           </div>
         </div>
       </div>
-
       <div class="buttons">
         <button class="button button--sort">
           <i class="far fa-sort-alt"></i> Sort

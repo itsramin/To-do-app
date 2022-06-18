@@ -94,10 +94,10 @@ class App {
     // main buttons handlers
     btnSort.addEventListener("click", this._sortList.bind(this));
     btnSearch.addEventListener("click", this._hideShowSearchForm.bind(this));
-    btnNew.addEventListener("click", this._hideShowFormNew.bind(this));
+    btnNew.addEventListener("click", this._hideShowNewForm.bind(this));
 
     // new task form handlers
-    btnNewClose.addEventListener("click", this._hideShowFormNew.bind(this));
+    btnNewClose.addEventListener("click", this._hideShowNewForm.bind(this));
     btnNewSave.addEventListener("click", this._newTask.bind(this));
     btnNewRep.addEventListener("click", this._addRepeatation);
 
@@ -345,7 +345,7 @@ class App {
     if (el) el.remove();
 
     // hide new form
-    this._hideShowFormNew(e);
+    this._hideShowNewForm(e);
 
     // save to localStorage
     this._setLocalStorage();
@@ -353,7 +353,7 @@ class App {
     // set category selection to current category
     selectCategory.value = newTaskCat;
   }
-  _hideShowFormNew(e) {
+  _hideShowNewForm(e) {
     e.preventDefault();
 
     // hide and show sections
@@ -365,8 +365,7 @@ class App {
     tabsBodyNew.classList.toggle("hidden");
 
     // add or remove max-hight
-    tabsSection.classList.toggle("max-height");
-    container.classList.toggle("max-height2");
+    container.classList.toggle("container--max-height");
 
     // focus on title
     document.querySelector(".input--new-title").focus();
@@ -412,8 +411,7 @@ class App {
     tabsBodyEdit.classList.toggle("hidden");
 
     // add or remove max-hight
-    tabsSection.classList.toggle("max-height");
-    container.classList.toggle("max-height2");
+    container.classList.toggle("container--max-height");
 
     // create new category list for edit form from all categories array
     if (tabsBodyTasksLists.classList.contains("hidden")) {
@@ -655,6 +653,10 @@ class App {
     inputSearch.value = "";
     inputSearch.focus();
     tabsBodySearchRes.innerHTML = "";
+
+    // add max and min height
+    container.classList.toggle("container--max-height");
+    tabs.classList.toggle("tabs--min-height");
 
     // remove new category form and styles if user click on new task btn
     if (!formCategory.classList.contains("hidden")) {
