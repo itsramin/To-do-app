@@ -8,9 +8,59 @@
   "orientation": "portrait-primary",
   "icons": [
     {
+      "src": "/To-do-app/icon/icon-36.png",
+      "type": "image/png",
+      "sizes": "36x36"
+    },
+    {
+      "src": "/To-do-app/icon/icon-48.png",
+      "type": "image/png",
+      "sizes": "48x48"
+    },
+    {
+      "src": "/To-do-app/icon/icon-72.png",
+      "type": "image/png",
+      "sizes": "72x72"
+    },
+    {
+      "src": "/To-do-app/icon/icon-96.png",
+      "type": "image/png",
+      "sizes": "96x96"
+    },
+    {
       "src": "/To-do-app/icon/icon-144.png",
       "type": "image/png",
       "sizes": "144x144"
+    },
+    {
+      "src": "/To-do-app/icon/icon-172.png",
+      "type": "image/png",
+      "sizes": "172x172"
+    },
+    {
+      "src": "/To-do-app/icon/icon-192.png",
+      "type": "image/png",
+      "sizes": "192x192"
+    },
+    {
+      "src": "/To-do-app/icon/icon-196.png",
+      "type": "image/png",
+      "sizes": "196x196"
+    },
+    {
+      "src": "/To-do-app/icon/icon-256.png",
+      "type": "image/png",
+      "sizes": "256x256"
+    },
+    {
+      "src": "/To-do-app/icon/icon-512.png",
+      "type": "image/png",
+      "sizes": "512x512"
+    },
+    {
+      "src": "/To-do-app/icon/icon-1024.png",
+      "type": "image/png",
+      "sizes": "1024x1024"
     }
   ]
 }
