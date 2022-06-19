@@ -258,6 +258,7 @@ select {
 .tabs__body {
   height: 100%;
   overflow: auto;
+  justify-content: left;
 }
 .tabs__body::-webkit-scrollbar {
   width: 16px;
@@ -524,7 +525,7 @@ input[type="date"]:before {
   left: 50%;
   transform: translate(-50%, -50%);
   width: 320px;
-  background-color: white;
+  background-color: var(--bg-secondary);
   padding: 1rem 2rem 2rem;
   border-radius: 5px;
   box-shadow: 0 3rem 5rem rgba(0, 0, 0, 0.3);
@@ -548,6 +549,24 @@ input[type="date"]:before {
 }
 .message__body--text {
   color: var(--color-primary);
+}
+.message__buttons {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  gap: 10px;
+  padding-top: 2rem;
+}
+.message__button {
+  padding: 0.5rem 0.8rem;
+  background-color: var(--color-gray);
+  color: var(--color-primary);
+  border-radius: 5px;
+  cursor: pointer;
+}
+.message__button--yes {
+  background-color: var(--color-red);
+  color: var(--color-fix-primary);
 }
 
 /*------------------------------------*\
@@ -575,6 +594,10 @@ input[type="date"]:before {
   }
   .tabs--max-height {
     height: calc(100% - 40px);
+  }
+  .tabs__body {
+    display: flex;
+    justify-content: center;
   }
   .box--cat {
     width: 90%;

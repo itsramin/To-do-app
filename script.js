@@ -505,22 +505,24 @@ class App {
   }
   _delTask(e) {
     e.preventDefault();
-    if (confirm("Are you sure you want to delete this task")) {
-      // delete "THAT" task from all tasks array
-      this.#allTasks.splice(
-        this.#allTasks.findIndex((task) => task.id === this.#currentId),
-        1
-      );
+    this._alertError("confirm to delete task");
 
-      // save all tasks to local storage
-      this._setLocalStorage();
+    // if (confirm("Are you sure you want to delete this task")) {
+    //   // delete "THAT" task from all tasks array
+    //   this.#allTasks.splice(
+    //     this.#allTasks.findIndex((task) => task.id === this.#currentId),
+    //     1
+    //   );
 
-      // show all tasks
-      this._renderAllTasks(false, this.#currentCat);
+    //   // save all tasks to local storage
+    //   this._setLocalStorage();
 
-      // hide edit form
-      this._hideShowEditForm(e);
-    }
+    //   // show all tasks
+    //   this._renderAllTasks(false, this.#currentCat);
+
+    //   // hide edit form
+    //   this._hideShowEditForm(e);
+    // }
   }
   _saveEdit(e) {
     e.preventDefault();
@@ -860,17 +862,43 @@ class App {
       case "duplicate cat":
         msg = `This category is already exist!`;
         break;
+      case "confirm to delete task":
+        msg = `Are you sure you want to delete this task?
+          <div class="message__buttons">
+            <div class="message__button message__button--yes" data-ok="true">Yes</div>
+            <div class="message__button message__button--no" data-ok="false">No</div>
+          </div>
+        `;
+        break;
     }
 
     let msgEl = `<div class="message__body--text">${msg}</div>`;
     document
       .querySelector(".message__body")
       .insertAdjacentHTML("beforeend", msgEl);
+
+    // new Promise((resolve) => {
+    //   document.querySelector(".message__buttons").addEventListener(
+    //     "click",
+    //     function (e) {
+    //       resolve(this._yesOrNo(e));
+    //     }.bind(this)
+    //   );
+    // }).then((res) => {
+    //   if (res) {
+    //     this._delTask(true);
+    //   }
+    // });
   }
   _closeMessage() {
     document.querySelector(".overlay").classList.add("hidden");
     document.querySelector(".message").classList.add("hidden");
     document.querySelector(".message__body--text").remove();
+  }
+  _yesOrNo(e) {
+    const target = e.target;
+    if (!target.classList.contains("message__button")) return;
+    return target.dataset.ok;
   }
 
   // theme functions
