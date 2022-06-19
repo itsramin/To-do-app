@@ -258,7 +258,6 @@ select {
 .tabs__body {
   height: 100%;
   overflow: auto;
-  justify-content: left;
 }
 .tabs__body::-webkit-scrollbar {
   width: 16px;
@@ -594,10 +593,6 @@ input[type="date"]:before {
   }
   .tabs--max-height {
     height: calc(100% - 40px);
-  }
-  .tabs__body {
-    display: flex;
-    justify-content: center;
   }
   .box--cat {
     width: 90%;
