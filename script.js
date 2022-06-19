@@ -31,6 +31,7 @@ const inputNewCat = document.querySelector(".input--new-cat");
 const tabsBodyNew = document.querySelector(".tabs__body--new");
 const btnNewSave = document.querySelector(".button--new-save");
 const btnNewClose = document.querySelector(".button--new-close");
+const btnGCal = document.querySelector(".gcal");
 
 // edit form elements
 const btnEditDel = document.querySelector(".button--edit-del");
@@ -99,13 +100,14 @@ class App {
     // new task form handlers
     btnNewClose.addEventListener("click", this._hideShowNewForm.bind(this));
     btnNewSave.addEventListener("click", this._newTask.bind(this));
-    btnNewRep.addEventListener("click", this._addRepeatation);
+    btnNewRep.addEventListener("click", this._addRepetition);
+    btnGCal.addEventListener("click", this._saveToGcal);
 
     // edit task form handlers
     btnEditClose.addEventListener("click", this._hideShowEditForm);
     btnEditDel.addEventListener("click", this._delTask.bind(this));
     btnEditSave.addEventListener("click", this._saveEdit.bind(this));
-    btnEditRep.addEventListener("click", this._addRepeatation);
+    btnEditRep.addEventListener("click", this._addRepetition);
 
     // theme toggle handler
     btnThemeToggle.addEventListener("click", this._changeTheme);
@@ -302,7 +304,7 @@ class App {
     if (repeatPeriod === "monthes") period = 30;
     if (repeatPeriod === "years") period = 365;
 
-    // calculate repeatation count
+    // calculate repetition count
     let repCount;
     if (
       !document.querySelector(".input--new-repeat-count") ||
@@ -366,6 +368,7 @@ class App {
 
     // add or remove max-hight
     container.classList.toggle("container--max-height");
+    tabs.classList.toggle("tabs--max-height");
 
     // focus on title
     document.querySelector(".input--new-title").focus();
@@ -412,6 +415,7 @@ class App {
 
     // add or remove max-hight
     container.classList.toggle("container--max-height");
+    tabs.classList.toggle("tabs--max-height");
 
     // create new category list for edit form from all categories array
     if (tabsBodyTasksLists.classList.contains("hidden")) {
@@ -533,7 +537,7 @@ class App {
     )
       return this._alertError("no task date");
 
-    // wrong repeatation count
+    // wrong repetition count
     if (document.querySelector(".input--edit-repeat-count")?.value <= 0)
       return this._alertError("wrong repeat count");
 
@@ -544,7 +548,7 @@ class App {
     task.cat = document.querySelector(".input--edit-cat").value;
     task.description = document.querySelector(".input--edit-des").value;
 
-    // calculate repeatation count
+    // calculate repetition count
     const repeatPeriod = document.querySelector(".select--edit-period")?.value;
     let period;
     if (repeatPeriod === "days") period = 1;
@@ -564,7 +568,7 @@ class App {
     // hide edit form
     this._hideShowEditForm(e);
   }
-  _addRepeatation(value) {
+  _addRepetition(value) {
     const el = document.querySelector(".form__field--repeat");
 
     // find the status is "new" or "edit"
@@ -619,6 +623,17 @@ class App {
       : ".field--edit-date";
     document.querySelector(place).insertAdjacentHTML("afterend", html);
   }
+  _saveToGcal() {
+    const title = document.querySelector(".input--new-title").value;
+    const date = new Date(document.querySelector(".input--new-date").value);
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, 0);
+    const day = String(date.getDate()).padStart(2, 0);
+    const des = document.querySelector(".input--new-des").value;
+    // let link = `https://www.google.com/calendar/render?action=TEMPLATE&text=${title}&details=${des}&dates=${year}${month}${day}T110000Z%2F${year}${month}${day}T110100Zhttps://www.google.com/calendar/render?action=TEMPLATE&text=${title}&details=${des}&dates=${year}${month}${day}T110000Z%2F${year}${month}${day}T110100Z`;
+    let link = `https://calendar.google.com/calendar/render?action=TEMPLATE&dates=${year}${month}${day}%2F${year}${month}${day}&details=${des}&location=&text=${title}`;
+    window.open(link, "_blank");
+  }
 
   // Search functions
   _searchTask() {
@@ -652,7 +667,6 @@ class App {
 
     // add max and min height
     container.classList.toggle("container--max-height");
-    tabs.classList.toggle("tabs--min-height");
 
     // remove new category form and styles if user click on new task btn
     if (!formCategory.classList.contains("hidden")) {
@@ -724,7 +738,7 @@ class App {
     );
     document.querySelector(".input--edit-des").value = task.description;
     if (task.repeatCount > 0) {
-      this._addRepeatation(task.repeatCount);
+      this._addRepetition(task.repeatCount);
     } else {
       if (document.querySelector(".form__field--repeat"))
         document.querySelector(".form__field--repeat").remove();
@@ -887,5 +901,3 @@ const app = new App();
 if (navigator.serviceWorker) {
   navigator.serviceWorker.register("/To-do-app/serviceWorker.js");
 }
-
-

@@ -418,6 +418,18 @@ select {
   cursor: pointer;
   user-select: none;
   background: var(--bg-light);
+  transition: 0.5s all;
+  position: relative;
+  width: auto;
+  left: 0px;
+  top: 0px;
+}
+.move-repeat {
+  position: relative;
+  text-align: center;
+  width: 20px;
+  left: 50px;
+  top: 45px;
 }
 .fa-repeat-alt {
   vertical-align: middle;
@@ -429,12 +441,21 @@ select {
   border-color: var(--color-fix-secondary);
   color: var(--color-secondary);
 }
-.move-repeat {
-  position: relative;
-  text-align: center;
-  width: 20px;
-  left: 50px;
-  top: 45px;
+.gcal {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+}
+.field--gcal {
+  color: var(--color-fix-secondary);
+  font-size: 0.9rem;
+  justify-content: center;
+  padding: 1rem;
+}
+.img--gcal {
+  padding-right: 10px;
+  width: 25px;
+  height: 25px;
 }
 input[type="date"] {
   position: relative;
@@ -535,7 +556,7 @@ input[type="date"]:before {
 
 @media only screen and (max-width: 600px) {
   body {
-    width: 95%;
+    width: 96%;
     margin: 0 auto;
   }
   .form {
@@ -550,10 +571,10 @@ input[type="date"]:before {
     height: 100%;
   }
   .tabs {
-    height: calc(100% - 40px);
-  }
-  .tabs--min-height {
     height: calc(100% - 100px);
+  }
+  .tabs--max-height {
+    height: calc(100% - 40px);
   }
   .box--cat {
     width: 90%;

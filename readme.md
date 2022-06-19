@@ -1,6 +1,6 @@
 # Todo app
 
-A simple todo application without any dependencies, working with html, css, javascript.
+A simple todo application without any dependencies, working with html, css and javascript.
 see live [demo](https://itsramin.github.io/To-do-app/).
 
 ## Features
@@ -11,8 +11,9 @@ see live [demo](https://itsramin.github.io/To-do-app/).
 - categories
 - sort by time
 - show missed tasks
+- repetition interval
 - responsive interface
-- repeatation interval
 - search between all tasks
 - save data in local storage
+- add task to Google Calendar
 - show finised and unfinished tasks count
