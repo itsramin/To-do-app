@@ -207,8 +207,18 @@
     </div>
     <div class="message hidden">
       <i class="far fa-times button--close button--message-close"></i>
-      <div class="message__body">
+      <div class="message__top">
         <i class="fas fa-exclamation-triangle"></i>
+      </div>
+      <div class="message__body">
+        <div class="message__buttons hidden">
+          <div class="message__button message__button--yes" data-ok="true">
+            Yes
+          </div>
+          <div class="message__button message__button--no" data-ok="false">
+            No
+          </div>
+        </div>
       </div>
     </div>
     <div class="overlay hidden"></div>

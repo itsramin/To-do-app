@@ -525,8 +525,8 @@ input[type="date"]:before {
   transform: translate(-50%, -50%);
   width: 320px;
   background-color: var(--bg-secondary);
-  padding: 1rem 2rem 2rem;
-  border-radius: 5px;
+  /* padding: 1rem 2rem 2rem; */
+  border-radius: 15px;
   box-shadow: 0 3rem 5rem rgba(0, 0, 0, 0.3);
   z-index: 20;
   font-size: 0.9rem;
@@ -534,19 +534,27 @@ input[type="date"]:before {
 .button--message-close {
   top: 1rem;
   right: 1rem;
+  color: var(--color-fix-primary);
 }
 .message__body {
   display: flex;
   flex-direction: column;
   align-items: center;
 }
+.message__top {
+  border-radius: 14px 14px 0 0;
+  background: var(--color-red);
+  display: flex;
+}
 .fa-exclamation-triangle {
   font-size: 2rem;
-  margin: 1rem 0 1.5rem;
-  color: var(--color-red);
+  margin: 1rem auto;
+  color: var(--color-fix-primary);
   vertical-align: text-bottom;
 }
 .message__body--text {
+  padding: 2rem 1.5rem;
+
   color: var(--color-primary);
 }
 .message__buttons {
@@ -554,7 +562,7 @@ input[type="date"]:before {
   flex-direction: row;
   justify-content: center;
   gap: 10px;
-  padding-top: 2rem;
+  padding-bottom: 2rem;
 }
 .message__button {
   padding: 0.5rem 0.8rem;

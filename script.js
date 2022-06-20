@@ -55,6 +55,7 @@ const prefersDarkScheme = window.matchMedia("(prefers-color-scheme: dark)");
 // message elements
 const overlay = document.querySelector(".overlay");
 const btnMessageClose = document.querySelector(".button--message-close");
+const messageBtns = document.querySelector(".message__buttons");
 
 class Task {
   id = (Date.now() + "").slice(-10);
@@ -106,6 +107,7 @@ class App {
     // edit task form handlers
     btnEditClose.addEventListener("click", this._hideShowEditForm);
     btnEditDel.addEventListener("click", this._delTask.bind(this));
+
     btnEditSave.addEventListener("click", this._saveEdit.bind(this));
     btnEditRep.addEventListener("click", this._addRepetition);
 
@@ -505,24 +507,22 @@ class App {
   }
   _delTask(e) {
     e.preventDefault();
-    this._alertError("confirm to delete task");
+    if (confirm("Are you sure you want to delete this task")) {
+      // delete "THAT" task from all tasks array
+      this.#allTasks.splice(
+        this.#allTasks.findIndex((task) => task.id === this.#currentId),
+        1
+      );
 
-    // if (confirm("Are you sure you want to delete this task")) {
-    //   // delete "THAT" task from all tasks array
-    //   this.#allTasks.splice(
-    //     this.#allTasks.findIndex((task) => task.id === this.#currentId),
-    //     1
-    //   );
+      // save all tasks to local storage
+      this._setLocalStorage();
 
-    //   // save all tasks to local storage
-    //   this._setLocalStorage();
+      // show all tasks
+      this._renderAllTasks(false, this.#currentCat);
 
-    //   // show all tasks
-    //   this._renderAllTasks(false, this.#currentCat);
-
-    //   // hide edit form
-    //   this._hideShowEditForm(e);
-    // }
+      // hide edit form
+      this._hideShowEditForm(e);
+    }
   }
   _saveEdit(e) {
     e.preventDefault();
@@ -837,7 +837,7 @@ class App {
   }
 
   // message functions
-  _alertError(err) {
+  _alertError(err, showBtns) {
     // add an overlay layer to whole view
     overlay.classList.remove("hidden");
 
@@ -864,10 +864,7 @@ class App {
         break;
       case "confirm to delete task":
         msg = `Are you sure you want to delete this task?
-          <div class="message__buttons">
-            <div class="message__button message__button--yes" data-ok="true">Yes</div>
-            <div class="message__button message__button--no" data-ok="false">No</div>
-          </div>
+          
         `;
         break;
     }
@@ -875,30 +872,15 @@ class App {
     let msgEl = `<div class="message__body--text">${msg}</div>`;
     document
       .querySelector(".message__body")
-      .insertAdjacentHTML("beforeend", msgEl);
+      .insertAdjacentHTML("afterbegin", msgEl);
 
-    // new Promise((resolve) => {
-    //   document.querySelector(".message__buttons").addEventListener(
-    //     "click",
-    //     function (e) {
-    //       resolve(this._yesOrNo(e));
-    //     }.bind(this)
-    //   );
-    // }).then((res) => {
-    //   if (res) {
-    //     this._delTask(true);
-    //   }
-    // });
+    if (showBtns) messageBtns.classList.remove("hidden");
   }
   _closeMessage() {
     document.querySelector(".overlay").classList.add("hidden");
     document.querySelector(".message").classList.add("hidden");
     document.querySelector(".message__body--text").remove();
-  }
-  _yesOrNo(e) {
-    const target = e.target;
-    if (!target.classList.contains("message__button")) return;
-    return target.dataset.ok;
+    messageBtns.classList.add("hidden");
   }
 
   // theme functions
