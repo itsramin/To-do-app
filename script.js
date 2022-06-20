@@ -909,5 +909,8 @@ const app = new App();
 
 // service worker
 if (navigator.serviceWorker) {
-  navigator.serviceWorker.register("./serviceWorker.js");
+  navigator.serviceWorker.register("./serviceWorker.js"),
+    {
+      scope: "/To-do-app/",
+    };
 }
