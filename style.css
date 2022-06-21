@@ -91,6 +91,10 @@ select {
   color: var(--color-primary);
   background: var(--bg-secondary);
 }
+input:focus-visible,
+select:focus-visible {
+  outline: none;
+}
 
 .container {
   height: calc(100% - 105px);
