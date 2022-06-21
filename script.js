@@ -264,7 +264,7 @@ class App {
     // clean "place" content
     place.innerHTML = "";
 
-    let html;
+    let html = "";
     this.#allCats.forEach((cat) => {
       html += `<option value="${cat}">${cat}</option>`;
     });
