@@ -54,8 +54,8 @@ const prefersDarkScheme = window.matchMedia("(prefers-color-scheme: dark)");
 
 // message elements
 const overlay = document.querySelector(".overlay");
-const btnMessageClose = document.querySelector(".button--message-close");
 const messageBtns = document.querySelector(".message__buttons");
+const btnMessageClose = document.querySelector(".button--message-close");
 
 class Task {
   id = (Date.now() + "").slice(-10);
