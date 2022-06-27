@@ -3,6 +3,7 @@ export const state = {
   allCats: ["Main", "a"],
   curCat: "Main",
   sort: false,
+  theme: "light",
   task: {},
   search: {
     query: "",
@@ -203,4 +204,13 @@ export const deleteTask = function (id) {
 export const searchTask = function (word) {
   const resTasks = state.allTasks.filter((task) => task.title.includes(word));
   return resTasks;
+};
+
+export const theme = function (prefersDarkScheme) {
+  state.theme = prefersDarkScheme.matches ? "light" : "dark";
+
+  // save current theme to local storage
+  localStorage.setItem("theme", state.theme);
+
+  return state.theme;
 };

@@ -48,7 +48,7 @@ class TaskView extends View {
 
     return data;
   }
-  render(task = undefined) {
+  render(task) {
     this.show();
 
     // ${task ? "edit" : "new"}
@@ -69,7 +69,7 @@ class TaskView extends View {
         <i class="far fa-calendar form__label"></i>
         <input class="input input--date" type="date" name="date" ${
           task?.date ? `value="${task.date}"` : ""
-        } />
+        }/>
         
         <span class="button--rep">
           <i class="far fa-repeat-alt"></i> repeat
@@ -104,7 +104,7 @@ class TaskView extends View {
     // if (task) {
     //   this.repeat(task.repeatCount);
     // }
-    this._parentEl.insertAdjacentHTML("afterbegin", markup);
+    this._parentEl.insertAdjacentHTML("beforeend", markup);
     this._childEl = document.querySelector(".input--cat");
     this.btnRep = document.querySelector(".button--rep");
   }
@@ -112,7 +112,7 @@ class TaskView extends View {
   repeat(repeatCount) {
     // if (!repeatCount) return;
     let html = `
-      <div class="form__field form__field--repeat">
+      <div class="form__field form__field--repeat ">
         <i class="far fa-repeat-alt form__label"></i><span class="form__label form__label--rep">Every</span>
         <input class="input input--repeat-count " type="number" min="1" max="1000" placeholder="" name="repeatCount"
         value="${repeatCount ? repeatCount : ""}" />

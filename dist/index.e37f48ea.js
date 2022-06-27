@@ -549,6 +549,8 @@ var _categoryViewJs = require("./view/categoryView.js");
 var _categoryViewJsDefault = parcelHelpers.interopDefault(_categoryViewJs);
 var _searchViewJs = require("./view/searchView.js");
 var _searchViewJsDefault = parcelHelpers.interopDefault(_searchViewJs);
+var _themeViewJs = require("./view/themeView.js");
+var _themeViewJsDefault = parcelHelpers.interopDefault(_themeViewJs);
 "use strict";
 // class Task {
 //   id = (Date.now() + "").slice(-10);
@@ -1363,6 +1365,12 @@ const controlSort = function() {
     (0, _listViewJsDefault.default).renderAllTasks(_modelJs.state.allTasks, sort, _modelJs.state.curCat);
     _modelJs.sort = sort;
 };
+// theme
+const controlTheme = function() {
+    const theme = (0, _themeViewJsDefault.default).getTheme();
+    const newTheme = _modelJs.theme(theme);
+    (0, _themeViewJsDefault.default).changeTheme(newTheme);
+};
 //////////////////////////
 const init = function() {
     // load data from local storage
@@ -1402,10 +1410,13 @@ const init = function() {
     (0, _searchViewJsDefault.default).addHandlerSearch(controlSearchWord);
     // sort
     (0, _listViewJsDefault.default).addHandlerSort(controlSort);
+    // theme
+    (0, _themeViewJsDefault.default).addHandlerTheme(controlTheme);
 };
 init();
+const test = function() {};
 
-},{"@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3","./view/newTaskView.js":"dlZDs","./view/view.js":"4wVyX","./model.js":"Y4A21","./view/listView.js":"gsaRP","./view/categoryView.js":"iLAn5","./view/editTaskView.js":"aOo6R","./view/taskView.js":"7FIfZ","./view/searchView.js":"blwqv"}],"gkKU3":[function(require,module,exports) {
+},{"@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3","./view/newTaskView.js":"dlZDs","./view/view.js":"4wVyX","./model.js":"Y4A21","./view/listView.js":"gsaRP","./view/categoryView.js":"iLAn5","./view/editTaskView.js":"aOo6R","./view/taskView.js":"7FIfZ","./view/searchView.js":"blwqv","./view/themeView.js":"4BYHh"}],"gkKU3":[function(require,module,exports) {
 exports.interopDefault = function(a) {
     return a && a.__esModule ? a : {
         default: a
@@ -1822,6 +1833,7 @@ parcelHelpers.export(exports, "checkTask", ()=>checkTask);
 parcelHelpers.export(exports, "editTask", ()=>editTask);
 parcelHelpers.export(exports, "deleteTask", ()=>deleteTask);
 parcelHelpers.export(exports, "searchTask", ()=>searchTask);
+parcelHelpers.export(exports, "theme", ()=>theme);
 const state = {
     allTasks: [],
     allCats: [
@@ -1830,6 +1842,7 @@ const state = {
     ],
     curCat: "Main",
     sort: false,
+    theme: "light",
     task: {},
     search: {
         query: "",
@@ -1963,6 +1976,12 @@ const deleteTask = function(id) {
 const searchTask = function(word) {
     const resTasks = state.allTasks.filter((task)=>task.title.includes(word));
     return resTasks;
+};
+const theme = function(prefersDarkScheme) {
+    state.theme = prefersDarkScheme.matches ? "light" : "dark";
+    // save current theme to local storage
+    localStorage.setItem("theme", state.theme);
+    return state.theme;
 };
 
 },{"@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"gsaRP":[function(require,module,exports) {
@@ -2404,7 +2423,7 @@ class TaskView extends (0, _viewJsDefault.default) {
       </div>
       <div class="form__field field--date">
         <i class="far fa-calendar form__label"></i>
-        <input class="input input--date" type="date" name="date" ${task?.date ? `value="${task.date}"` : ""} />
+        <input class="input input--date" type="date" name="date" ${task?.date ? `value="${task.date}"` : ""}/>
         
         <span class="button--rep">
           <i class="far fa-repeat-alt"></i> repeat
@@ -2439,14 +2458,14 @@ class TaskView extends (0, _viewJsDefault.default) {
         // if (task) {
         //   this.repeat(task.repeatCount);
         // }
-        this._parentEl.insertAdjacentHTML("afterbegin", markup);
+        this._parentEl.insertAdjacentHTML("beforeend", markup);
         this._childEl = document.querySelector(".input--cat");
         this.btnRep = document.querySelector(".button--rep");
     }
     repeat(repeatCount) {
         // if (!repeatCount) return;
         let html = `
-      <div class="form__field form__field--repeat">
+      <div class="form__field form__field--repeat ">
         <i class="far fa-repeat-alt form__label"></i><span class="form__label form__label--rep">Every</span>
         <input class="input input--repeat-count " type="number" min="1" max="1000" placeholder="" name="repeatCount"
         value="${repeatCount ? repeatCount : ""}" />
@@ -2538,6 +2557,35 @@ class SearchView extends (0, _viewJsDefault.default) {
     }
 }
 exports.default = new SearchView();
+
+},{"./view.js":"4wVyX","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"4BYHh":[function(require,module,exports) {
+var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
+parcelHelpers.defineInteropFlag(exports);
+var _viewJs = require("./view.js");
+var _viewJsDefault = parcelHelpers.interopDefault(_viewJs);
+class ThemeView extends (0, _viewJsDefault.default) {
+    _parentEl = document.querySelector(".tabs__body--tasks-lists");
+    getTheme() {
+        return this.prefersDarkScheme;
+    }
+    changeTheme(theme) {
+        if (theme === "light") {
+            document.body.classList.toggle("light-theme");
+            theme = document.body.classList.contains("light-theme") ? "light" : "dark";
+        } else {
+            document.body.classList.toggle("dark-theme");
+            theme = document.body.classList.contains("dark-theme") ? "dark" : "light";
+        }
+        // change theme icon
+        document.querySelector(".fa-sun").classList.toggle("hidden");
+        document.querySelector(".fa-moon").classList.toggle("hidden");
+    }
+    // handlers
+    addHandlerTheme(handler) {
+        this.btnThemeToggle.addEventListener("click", handler);
+    }
+}
+exports.default = new ThemeView();
 
 },{"./view.js":"4wVyX","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}]},["fA0o9","aenu9"], "aenu9", "parcelRequirebb28")
 

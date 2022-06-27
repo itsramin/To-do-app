@@ -9,6 +9,7 @@ import * as model from "./model.js";
 import listView from "./view/listView.js";
 import categoryView from "./view/categoryView.js";
 import searchView from "./view/searchView.js";
+import themeView from "./view/themeView.js";
 
 // class Task {
 //   id = (Date.now() + "").slice(-10);
@@ -862,6 +863,7 @@ import searchView from "./view/searchView.js";
 
 const controlNewTask = function () {
   taskView.render();
+
   taskView.updateCategories(model.state.allCats, model.state.curCat);
 };
 const controlAddRepeat = function () {
@@ -976,6 +978,13 @@ const controlSort = function () {
   model.sort = sort;
 };
 
+// theme
+const controlTheme = function () {
+  const theme = themeView.getTheme();
+  const newTheme = model.theme(theme);
+  themeView.changeTheme(newTheme);
+};
+
 //////////////////////////
 const init = function () {
   // load data from local storage
@@ -1032,6 +1041,11 @@ const init = function () {
 
   // sort
   listView.addHandlerSort(controlSort);
+
+  // theme
+  themeView.addHandlerTheme(controlTheme);
 };
 
 init();
+
+const test = function () {};
