@@ -2,6 +2,7 @@ export const state = {
   allTasks: [],
   allCats: ["Main", "a"],
   curCat: "Main",
+  sort: false,
   task: {},
   search: {
     query: "",
@@ -22,19 +23,43 @@ class Task {
   }
 }
 
+// export const newTask = function (data) {
+//   state.curCat = data[2];
+//   const id = data[5];
+//   if (!id) {
+//     let task = new Task(...data);
+//     state.allTasks.push(task);
+//   } else {
+//     const task = state.allTasks.find((task) => task.id === id);
+//     task.title = data[0];
+//     task.date = data[1];
+//     task.cat = data[2];
+//     task.description = data[3];
+//     task.repeatCount = data[4];
+//   }
+
+//   _setLocalStorage();
+//   return state;
+// };
 export const newTask = function (data) {
-  state.curCat = data[2];
-  const id = data[5];
+  state.curCat = data.cat;
+  const id = data.id;
   if (!id) {
-    let task = new Task(...data);
+    let task = new Task(
+      data.title,
+      data.date,
+      data.cat,
+      data.description,
+      data.repeatCount
+    );
     state.allTasks.push(task);
   } else {
     const task = state.allTasks.find((task) => task.id === id);
-    task.title = data[0];
-    task.date = data[1];
-    task.cat = data[2];
-    task.description = data[3];
-    task.repeatCount = data[4];
+    (task.title = data.title),
+      (task.date = data.date),
+      (task.cat = data.cat),
+      (task.description = data.description),
+      (task.repeatCount = data.repeatCount);
   }
 
   _setLocalStorage();

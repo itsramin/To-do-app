@@ -16,6 +16,11 @@ class ListView extends View {
       (taskDate.getTime() - now) / (1000 * 60 * 60 * 24)
     );
 
+    const options =
+      new Date(date).getFullYear() === new Date(Date.now()).getFullYear()
+        ? { month: "numeric", day: "numeric" }
+        : { month: "numeric", day: "numeric", year: "numeric" };
+
     // retrun text or remain days
     if (remDays < -1)
       return new Intl.DateTimeFormat("en-US", {
@@ -30,13 +35,13 @@ class ListView extends View {
         taskDate
       );
     if (remDays >= 7)
-      return new Intl.DateTimeFormat("en-US", {
-        month: "numeric",
-        day: "numeric",
-      }).format(taskDate);
+      return new Intl.DateTimeFormat("en-US", options).format(taskDate);
   }
   _renderTask(task, search = false) {
-    const options = { month: "numeric", day: "numeric" };
+    const options =
+      new Date(task.date).getFullYear() === new Date(Date.now()).getFullYear()
+        ? { month: "numeric", day: "numeric" }
+        : { month: "numeric", day: "numeric", year: "numeric" };
     const intlDate = task.date
       ? new Intl.DateTimeFormat("en-US", options).format(new Date(task.date))
       : "";
@@ -56,7 +61,7 @@ class ListView extends View {
 
         <div class="checkbox__label-date
         ${isLate && !status ? "checkbox__label-late" : ""}">
-        ${status === false ? this._remainDays(task.date) : intlDate}</div>
+        ${!status ? this._remainDays(task.date) : intlDate}</div>
 
       </div>
     `;
@@ -163,6 +168,9 @@ class ListView extends View {
   }
   addHandlerSearchButton(handler) {
     this.btnSearch.addEventListener("click", handler);
+  }
+  addHandlerSort(handler) {
+    this.btnSort.addEventListener("click", handler);
   }
 }
 

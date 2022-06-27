@@ -168,7 +168,7 @@ export default class View {
 
   addHandlerClose(handler) {
     this._parentEl.addEventListener("click", function (e) {
-      const btn = e.target.closest(".fa-times");
+      const btn = e.target.closest(".button--close");
       if (btn) handler();
     });
   }

@@ -1298,6 +1298,11 @@ const controlEditTask = function(id) {
     // console.log(model.editTask(id));
     const task = _modelJs.editTask(id);
     (0, _taskViewJsDefault.default).render(task);
+    if (task.repeatCount > 0) (0, _taskViewJsDefault.default).repeat(task.repeatCount);
+    else {
+        (0, _taskViewJsDefault.default).repeat();
+        (0, _taskViewJsDefault.default).repeat();
+    }
     (0, _taskViewJsDefault.default).updateCategories(_modelJs.state.allCats, task.cat);
 };
 const controlDelete = function(id) {
@@ -1352,6 +1357,12 @@ const controlSearchWord = function() {
 const controlCloseSearch = function() {
     (0, _searchViewJsDefault.default).close();
 };
+// sort
+const controlSort = function() {
+    const sort = !_modelJs.sort;
+    (0, _listViewJsDefault.default).renderAllTasks(_modelJs.state.allTasks, sort, _modelJs.state.curCat);
+    _modelJs.sort = sort;
+};
 //////////////////////////
 const init = function() {
     // load data from local storage
@@ -1389,6 +1400,8 @@ const init = function() {
     (0, _searchViewJsDefault.default).addHandlerCloseSearch(controlCloseSearch);
     //
     (0, _searchViewJsDefault.default).addHandlerSearch(controlSearchWord);
+    // sort
+    (0, _listViewJsDefault.default).addHandlerSort(controlSort);
 };
 init();
 
@@ -1780,7 +1793,7 @@ class View {
     // }
     addHandlerClose(handler) {
         this._parentEl.addEventListener("click", function(e) {
-            const btn = e.target.closest(".fa-times");
+            const btn = e.target.closest(".button--close");
             if (btn) handler();
         });
     }
@@ -1816,6 +1829,7 @@ const state = {
         "a"
     ],
     curCat: "Main",
+    sort: false,
     task: {},
     search: {
         query: "",
@@ -1835,18 +1849,14 @@ class Task {
     }
 }
 const newTask = function(data) {
-    state.curCat = data[2];
-    const id = data[5];
+    state.curCat = data.cat;
+    const id = data.id;
     if (!id) {
-        let task = new Task(...data);
+        let task = new Task(data.title, data.date, data.cat, data.description, data.repeatCount);
         state.allTasks.push(task);
     } else {
         const task1 = state.allTasks.find((task)=>task.id === id);
-        task1.title = data[0];
-        task1.date = data[1];
-        task1.cat = data[2];
-        task1.description = data[3];
-        task1.repeatCount = data[4];
+        task1.title = data.title, task1.date = data.date, task1.cat = data.cat, task1.description = data.description, task1.repeatCount = data.repeatCount;
     }
     _setLocalStorage();
     return state;
@@ -1970,6 +1980,14 @@ class ListView extends (0, _viewJsDefault.default) {
         const taskDate = new Date(date);
         // calculate days between task's date and now
         const remDays = Math.trunc((taskDate.getTime() - now) / 86400000);
+        const options = new Date(date).getFullYear() === new Date(Date.now()).getFullYear() ? {
+            month: "numeric",
+            day: "numeric"
+        } : {
+            month: "numeric",
+            day: "numeric",
+            year: "numeric"
+        };
         // retrun text or remain days
         if (remDays < -1) return new Intl.DateTimeFormat("en-US", {
             month: "numeric",
@@ -1981,15 +1999,16 @@ class ListView extends (0, _viewJsDefault.default) {
         if (remDays < 7) return new Intl.DateTimeFormat("en-US", {
             weekday: "short"
         }).format(taskDate);
-        if (remDays >= 7) return new Intl.DateTimeFormat("en-US", {
-            month: "numeric",
-            day: "numeric"
-        }).format(taskDate);
+        if (remDays >= 7) return new Intl.DateTimeFormat("en-US", options).format(taskDate);
     }
     _renderTask(task, search = false) {
-        const options = {
+        const options = new Date(task.date).getFullYear() === new Date(Date.now()).getFullYear() ? {
             month: "numeric",
             day: "numeric"
+        } : {
+            month: "numeric",
+            day: "numeric",
+            year: "numeric"
         };
         const intlDate = task.date ? new Intl.DateTimeFormat("en-US", options).format(new Date(task.date)) : "";
         const status = task.status;
@@ -2002,7 +2021,7 @@ class ListView extends (0, _viewJsDefault.default) {
 
         <div class="checkbox__label-date
         ${isLate && !status ? "checkbox__label-late" : ""}">
-        ${status === false ? this._remainDays(task.date) : intlDate}</div>
+        ${!status ? this._remainDays(task.date) : intlDate}</div>
 
       </div>
     `;
@@ -2084,6 +2103,9 @@ class ListView extends (0, _viewJsDefault.default) {
     }
     addHandlerSearchButton(handler) {
         this.btnSearch.addEventListener("click", handler);
+    }
+    addHandlerSort(handler) {
+        this.btnSort.addEventListener("click", handler);
     }
 }
 exports.default = new ListView();
@@ -2325,90 +2347,144 @@ class TaskView extends (0, _viewJsDefault.default) {
     // _parentEl = document.querySelector(".tabs__body--new");
     _parentEl = document.querySelector(".tabs__body--task");
     _childEl = document.querySelector(".input--cat");
+    // save() {
+    //   const title = document.querySelector(".input--title").value;
+    //   const date = document.querySelector(".input--date").value;
+    //   const cat = document.querySelector(".input--cat").value
+    //     ? document.querySelector(".input--cat").value
+    //     : "Main";
+    //   const description = document.querySelector(".input--des").value;
+    //   const repeatPeriod = document.querySelector(".select--period")?.value;
+    //   let period;
+    //   if (repeatPeriod === "days") period = 1;
+    //   if (repeatPeriod === "weeks") period = 7;
+    //   if (repeatPeriod === "monthes") period = 30;
+    //   if (repeatPeriod === "years") period = 365;
+    //   // calculate repetition count
+    //   let repCount;
+    //   if (
+    //     !document.querySelector(".input--repeat-count") ||
+    //     document.querySelector(".input--repeat-count").value === ""
+    //   ) {
+    //     repCount = null;
+    //   } else {
+    //     repCount = document.querySelector(".input--repeat-count").value;
+    //   }
+    //   const repeatCount = repCount * period;
+    //   const id = document.querySelector(".form").dataset?.id;
+    //   const taskData = [title, date, cat, description, repeatCount, id];
+    //   return taskData;
+    // }
     save() {
-        const title = document.querySelector(".input--title").value;
-        const date = document.querySelector(".input--date").value;
-        const cat = document.querySelector(".input--cat").value ? document.querySelector(".input--cat").value : "Main";
-        const description = document.querySelector(".input--des").value;
-        const repeatPeriod = document.querySelector(".select--period")?.value;
-        let period;
-        if (repeatPeriod === "days") period = 1;
-        if (repeatPeriod === "weeks") period = 7;
-        if (repeatPeriod === "monthes") period = 30;
-        if (repeatPeriod === "years") period = 365;
-        // calculate repetition count
-        let repCount;
-        if (!document.querySelector(".input--repeat-count") || document.querySelector(".input--repeat-count").value === "") repCount = null;
-        else repCount = document.querySelector(".input--repeat-count").value;
-        const repeatCount = repCount * period;
-        const id = document.querySelector(".form").dataset?.id;
-        const taskData = [
-            title,
-            date,
-            cat,
-            description,
-            repeatCount,
-            id
+        const form = document.querySelector(".form--task");
+        const dataArr = [
+            ...new FormData(form)
         ];
-        return taskData;
+        const data = Object.fromEntries(dataArr);
+        data.id = document.querySelector(".form--task").dataset?.id;
+        // const [title, date, cat, description] = data;
+        // const taskData = [title, date, cat, description, repeatCount, id];
+        return data;
     }
-    render(task = "") {
+    render(task) {
         this.show();
         // ${task ? "edit" : "new"}
         const markup = `
-    <form class="form form" data-id="${task ? task.id : ""}">
-        <i class="far fa-times button--close"></i>
-        <div class="form__field">
+    <form class="form form--task" data-id="${task ? task.id : ""}">
+      <i class="far fa-times button--close"></i>
+      <div class="form__field">
         <i class="far fa-pen form__label"></i>
         <input
             class="input input--title"
             type="text"
             placeholder="Title"
+            name="title"
             value="${task ? task.title : ""}"
         />
-        </div>
-        <div class="form__field field-date">
+      </div>
+      <div class="form__field field--date">
         <i class="far fa-calendar form__label"></i>
-        <input class="input input--date" type="date" ${task?.date ? `value="${task.date}"` : ``} />
-        <span class="button--rep"
-            ><i class="far fa-repeat-alt"></i> repeat</span
-        >
-        </div>
-        <div class="form__field field-cat">
+        <input class="input input--date" type="date" name="date" ${task?.date ? `value="${task.date}"` : ""} />
+        
+        <span class="button--rep">
+          <i class="far fa-repeat-alt"></i> repeat
+        </span>
+      </div>
+      <div class="form__field field--cat">
         <i class="far fa-folder-open form__label"></i>
-        <select class="input input--cat">
+        <select class="input input--cat" name="cat">
         </select>
-        </div>
-        <div class="form__field">
+        
+      </div>
+      <div class="form__field">
         <i class="far fa-quote-left form__label"></i>
         <textarea
             class="input--des"
             cols="30"
             rows="3"
-            placeholder="Description"
+            placeholder="Description" name="description"
             
         >${task ? task.description : ""}</textarea>
-        </div>
-        <div class="form__field field--btns">
+      </div>
+      <div class="form__field field--btns">
         <input
             class="button--save"
             type="submit"
             value="Save"
         />
-        ${task ? `<button class="button--del">Delete task</button>
-        </div>` : ""}
-        
+        ${task ? `<button class="button--del">Delete task</button>` : ""}
+      </div>
     </form>
     `;
+        // if (task) {
+        //   this.repeat(task.repeatCount);
+        // }
         this._parentEl.insertAdjacentHTML("afterbegin", markup);
         this._childEl = document.querySelector(".input--cat");
+        this.btnRep = document.querySelector(".button--rep");
+    }
+    repeat(repeatCount) {
+        // if (!repeatCount) return;
+        let html = `
+      <div class="form__field form__field--repeat">
+        <i class="far fa-repeat-alt form__label"></i><span class="form__label form__label--rep">Every</span>
+        <input class="input input--repeat-count " type="number" min="1" max="1000" placeholder="" name="repeatCount"
+        value="${repeatCount ? repeatCount : ""}" />
+        <select class="select--period ">
+          <option value="days">days</option>
+          <option value="weeks">weeks</option>
+          <option value="monthes">monthes</option>
+          <option value="years">years</option>
+        </select>
+      </div>
+    `;
+        if (repeatCount >= 0) {
+            this.btnRep.innerHTML = `<i class="far fa-times"></i>`;
+            document.querySelector(".field--date").insertAdjacentHTML("afterend", html);
+        } else if (this.btnRep.innerHTML === `<i class="far fa-times"></i>`) {
+            this.btnRep.innerHTML = `<i class="far fa-repeat-alt"></i> repeat</span>`;
+            document.querySelector(".form__field--repeat")?.remove();
+        } else {
+            this.btnRep.innerHTML = `<i class="far fa-times"></i>`;
+            document.querySelector(".field--date").insertAdjacentHTML("afterend", html);
+        }
+        this.btnRep.classList.toggle("move-repeat");
+    }
+    // handlers
+    addHandlerRepeat(handler) {
+        this._parentEl.addEventListener("click", function(e) {
+            e.preventDefault();
+            const btn = e.target.closest(".button--rep");
+            if (!btn) return;
+            handler();
+        });
     }
     addHandlerSave(handler) {
         this._parentEl.addEventListener("click", function(e) {
             e.preventDefault();
             const btn = e.target.closest(".button--save");
             if (!btn) return;
-            handler();
+            if (document.querySelector(".input--title").value !== "") handler();
         });
     }
     addHandlerDelete(handler) {
@@ -2418,64 +2494,6 @@ class TaskView extends (0, _viewJsDefault.default) {
             if (!btn) return;
             const id = e.target.closest(".form").dataset.id;
             handler(id);
-        });
-    }
-    //   repeat(value) {
-    //     const el = document.querySelector(".form__field--repeat");
-    //     // find the status is "new" or "edit"
-    //     let status;
-    //     if (!this.tabsBodyNew.classList.contains("hidden")) {
-    //       status = "new";
-    //     } else {
-    //       status = "edit";
-    //     }
-    //     // change repeat btn style and text
-    //     if (value > 0) {
-    //       if (el) {
-    //         el.remove();
-    //       }
-    //       this.btnEditRep.innerHTML = `<i class="far fa-times"></i>`;
-    //       this.btnEditRep.classList.add("move-repeat");
-    //     } else {
-    //       if (el) {
-    //         this.btnNewRep.innerHTML = `<i class="far fa-repeat-alt"></i> repeat</span>`;
-    //         this.btnNewRep.classList.remove("move-repeat");
-    //         this.btnEditRep.innerHTML = `<i class="far fa-repeat-alt"></i> repeat</span>`;
-    //         this.btnEditRep.classList.remove("move-repeat");
-    //         return el.remove();
-    //       }
-    //       this.btnNewRep.innerHTML = `<i class="far fa-times"></i>`;
-    //       this.btnNewRep.classList.add("move-repeat");
-    //       this.btnEditRep.innerHTML = `<i class="far fa-times"></i>`;
-    //       this.btnEditRep.classList.add("move-repeat");
-    //     }
-    //     // element of repeation
-    //     let html = `
-    //               <div class="form__field form__field--repeat">
-    //               <i class="far fa-repeat-alt form__label"></i><span class="form__label form__label--rep">Every</span>
-    //                 <input class="input input--repeat-count input--${status}-repeat-count" type="number" min="1" max="1000" placeholder=""
-    //                 value="${value ? value : ""}" />
-    //                 <select class="select--period select--${status}-period ">
-    //                   <option value="days">days</option>
-    //                   <option value="weeks">weeks</option>
-    //                   <option value="monthes">monthes</option>
-    //                   <option value="years">years</option>
-    //                 </select>
-    //               </div>
-    //             `;
-    //     // find exact place to implement
-    //     let place = !this.tabsBodyNew.classList.contains("hidden")
-    //       ? ".field--new-date"
-    //       : ".field--edit-date";
-    //     document.querySelector(place).insertAdjacentHTML("afterend", html);
-    //   }
-    // handlers
-    addHandlerRepeat(handler) {
-        this._parentEl.addEventListener("click", function(e) {
-            e.preventDefault();
-            const btn = e.target.closest(".button--new-rep");
-            if (!btn) return;
-            handler();
         });
     }
 }

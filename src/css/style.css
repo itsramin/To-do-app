@@ -377,6 +377,9 @@ select:focus-visible {
   color: var(--color-secondary);
   outline: none;
 }
+.input--date {
+  width: 7rem;
+}
 .input--des {
   outline: none;
   margin-top: 7px;
@@ -485,9 +488,6 @@ input[type="date"]:before {
 /*------------------------------------*\
   # New task section
 \*------------------------------------*/
-.input--new-date {
-  width: 7rem;
-}
 
 /*------------------------------------*\
   # Edit Task section

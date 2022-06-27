@@ -894,7 +894,14 @@ const controlCheckTask = function (id) {
 const controlEditTask = function (id) {
   // console.log(model.editTask(id));
   const task = model.editTask(id);
+
   taskView.render(task);
+  if (task.repeatCount > 0) {
+    taskView.repeat(task.repeatCount);
+  } else {
+    taskView.repeat();
+    taskView.repeat();
+  }
   taskView.updateCategories(model.state.allCats, task.cat);
 };
 
@@ -962,6 +969,13 @@ const controlCloseSearch = function () {
   searchView.close();
 };
 
+// sort
+const controlSort = function () {
+  const sort = !model.sort;
+  listView.renderAllTasks(model.state.allTasks, sort, model.state.curCat);
+  model.sort = sort;
+};
+
 //////////////////////////
 const init = function () {
   // load data from local storage
@@ -1015,6 +1029,9 @@ const init = function () {
 
   //
   searchView.addHandlerSearch(controlSearchWord);
+
+  // sort
+  listView.addHandlerSort(controlSort);
 };
 
 init();
