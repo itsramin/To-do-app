@@ -1,7 +1,7 @@
 import View from "./view.js";
 
 class ListView extends View {
-  //   _parentEl = document.querySelector(".tabs__body--tasks-lists");
+  _parentEl = document.querySelector(".tabs__body--tasks-lists");
 
   _remainDays(date) {
     // if there is no date, return nothing
@@ -35,11 +35,12 @@ class ListView extends View {
         day: "numeric",
       }).format(taskDate);
   }
-  _renderTask(task, status = false, search = false) {
+  _renderTask(task, search = false) {
     const options = { month: "numeric", day: "numeric" };
     const intlDate = task.date
       ? new Intl.DateTimeFormat("en-US", options).format(new Date(task.date))
       : "";
+    const status = task.status;
 
     const isLate =
       +new Date(task.date) / (1000 * 60 * 60 * 24) + 1 <
@@ -62,7 +63,7 @@ class ListView extends View {
     // console.log(tabsBodyTasksUndone);
     // ${status === false ? this._remainDays(task.date) : intlDate}</div>
     if (search) {
-      tabsBodySearchRes.insertAdjacentHTML("beforeend", html);
+      this.tabsBodySearchRes.insertAdjacentHTML("beforeend", html);
     } else {
       status === false
         ? this.tabsBodyTasksUndone.insertAdjacentHTML("beforeend", html)
@@ -87,7 +88,7 @@ class ListView extends View {
 
     // show all tasks
     allTasks.forEach((task) => {
-      this._renderTask(task, task.status);
+      this._renderTask(task);
 
       // calc done count and undone count
       task.status ? doneCount++ : undoneCount++;
@@ -127,11 +128,41 @@ class ListView extends View {
     }
   }
 
+  // handlers
   addHandlerChangeTab(handler) {
     this.tabsList.addEventListener("click", function (e) {
       e.preventDefault();
       handler(e);
     });
+  }
+  addHandlerCheck(handler) {
+    this._parentEl.addEventListener("click", function (e) {
+      const btn = e.target.closest(".checkbox__input");
+      if (!btn) return;
+      const id = e.target.closest(".checkbox__body").dataset.id;
+
+      // play audio if status is done
+      const checkboxAudio = document.querySelector("audio");
+      if (btn.checked) checkboxAudio.play();
+
+      handler(id);
+    });
+  }
+  addHandlerEdit(handler) {
+    this._parentEl.addEventListener("click", function (e) {
+      if (e.target.classList.contains("checkbox__input")) return;
+      const btn = e.target.closest(".checkbox__body");
+      if (!btn) return;
+      const id = e.target.closest(".checkbox__body").dataset.id;
+
+      handler(id);
+    });
+  }
+  addHandlerNewButton(handler) {
+    this.btnNew.addEventListener("click", handler);
+  }
+  addHandlerSearchButton(handler) {
+    this.btnSearch.addEventListener("click", handler);
   }
 }
 

@@ -23,12 +23,25 @@ class Task {
 }
 
 export const newTask = function (data) {
-  let task = new Task(...data);
-  state.allTasks.push(task);
+  state.curCat = data[2];
+  const id = data[5];
+  if (!id) {
+    let task = new Task(...data);
+    state.allTasks.push(task);
+  } else {
+    const task = state.allTasks.find((task) => task.id === id);
+    task.title = data[0];
+    task.date = data[1];
+    task.cat = data[2];
+    task.description = data[3];
+    task.repeatCount = data[4];
+  }
+
   _setLocalStorage();
   return state;
 };
 
+// category section
 export const newCat = function (newCat) {
   // formate new category to capital
   const newCateFormatted =
@@ -136,4 +149,33 @@ export const getLocalStorage = function () {
 
   //   // set current category to categoy selection value
   //   this.#currentCat = selectCategory.value;
+};
+
+//
+export const checkTask = function (id) {
+  const task = state.allTasks.find((task) => task.id === id);
+  task.status = !task.status;
+
+  // save in local storage
+  _setLocalStorage();
+};
+
+export const editTask = function (id) {
+  const task = state.allTasks.find((task) => task.id === id);
+  return task;
+};
+
+export const deleteTask = function (id) {
+  if (confirm("Are you sure you want to delete this task?")) {
+    const index = state.allTasks.findIndex((task) => task.id === id);
+    state.allTasks.splice(index, 1);
+
+    _setLocalStorage();
+    return true;
+  }
+};
+
+export const searchTask = function (word) {
+  const resTasks = state.allTasks.filter((task) => task.title.includes(word));
+  return resTasks;
 };

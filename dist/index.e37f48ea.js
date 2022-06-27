@@ -538,11 +538,17 @@ var _viewJs = require("./view/view.js");
 var _viewJsDefault = parcelHelpers.interopDefault(_viewJs);
 var _newTaskViewJs = require("./view/newTaskView.js");
 var _newTaskViewJsDefault = parcelHelpers.interopDefault(_newTaskViewJs);
+var _editTaskViewJs = require("./view/editTaskView.js");
+var _editTaskViewJsDefault = parcelHelpers.interopDefault(_editTaskViewJs);
+var _taskViewJs = require("./view/taskView.js");
+var _taskViewJsDefault = parcelHelpers.interopDefault(_taskViewJs);
 var _modelJs = require("./model.js");
 var _listViewJs = require("./view/listView.js");
 var _listViewJsDefault = parcelHelpers.interopDefault(_listViewJs);
 var _categoryViewJs = require("./view/categoryView.js");
 var _categoryViewJsDefault = parcelHelpers.interopDefault(_categoryViewJs);
+var _searchViewJs = require("./view/searchView.js");
+var _searchViewJsDefault = parcelHelpers.interopDefault(_searchViewJs);
 "use strict";
 // class Task {
 //   id = (Date.now() + "").slice(-10);
@@ -1263,23 +1269,42 @@ var _categoryViewJsDefault = parcelHelpers.interopDefault(_categoryViewJs);
 // }
 // const app = new App();
 const controlNewTask = function() {
-    (0, _newTaskViewJsDefault.default).render();
-    (0, _newTaskViewJsDefault.default).updateCategories(_modelJs.state.allCats, _modelJs.state.curCat);
+    (0, _taskViewJsDefault.default).render();
+    (0, _taskViewJsDefault.default).updateCategories(_modelJs.state.allCats, _modelJs.state.curCat);
 };
 const controlAddRepeat = function() {
-    (0, _newTaskViewJsDefault.default).repeat();
+    (0, _taskViewJsDefault.default).repeat();
 };
 const controlClose = function() {
-    (0, _newTaskViewJsDefault.default).close();
+    (0, _taskViewJsDefault.default).close();
 };
 const controlSaveTask = function() {
-    const data = (0, _newTaskViewJsDefault.default).save();
-    (0, _newTaskViewJsDefault.default).close();
-    (0, _listViewJsDefault.default).renderAllTasks(_modelJs.newTask(data).allTasks, false, _modelJs.state.curCat);
+    const data = (0, _taskViewJsDefault.default).save();
+    (0, _taskViewJsDefault.default).close();
+    _modelJs.newTask(data);
+    (0, _categoryViewJsDefault.default).changeCat(_modelJs.state.curCat);
+    (0, _listViewJsDefault.default).renderAllTasks(_modelJs.state.allTasks, false, _modelJs.state.curCat);
 };
 const controlChangeTab = function(e) {
     (0, _listViewJsDefault.default).changeTab(e);
     (0, _listViewJsDefault.default).renderAllTasks(_modelJs.state.allTasks, false, _modelJs.state.curCat);
+};
+const controlCheckTask = function(id) {
+    _modelJs.checkTask(id);
+    // show all tasks on selected category
+    (0, _listViewJsDefault.default).renderAllTasks(_modelJs.state.allTasks, false, _modelJs.state.curCat);
+};
+const controlEditTask = function(id) {
+    // console.log(model.editTask(id));
+    const task = _modelJs.editTask(id);
+    (0, _taskViewJsDefault.default).render(task);
+    (0, _taskViewJsDefault.default).updateCategories(_modelJs.state.allCats, task.cat);
+};
+const controlDelete = function(id) {
+    if (_modelJs.deleteTask(id)) {
+        (0, _taskViewJsDefault.default).close();
+        (0, _listViewJsDefault.default).renderAllTasks(_modelJs.state.allTasks, false, _modelJs.state.curCat);
+    }
 };
 // category section
 const controlNewCategory = function() {
@@ -1311,6 +1336,22 @@ const controlDelCat = function(cat) {
     (0, _categoryViewJsDefault.default).updateCategories(_modelJs.state.allCats, _modelJs.state.curCat);
     controlChangeCat();
 };
+// search section
+const controlSearchBtn = function() {
+    (0, _searchViewJsDefault.default).render();
+};
+const controlSearchWord = function() {
+    const word = (0, _searchViewJsDefault.default).searchWord();
+    if (!word) return;
+    const data = _modelJs.searchTask(word);
+    console.log(data);
+    data.forEach((task)=>{
+        (0, _listViewJsDefault.default)._renderTask(task, true);
+    });
+};
+const controlCloseSearch = function() {
+    (0, _searchViewJsDefault.default).close();
+};
 //////////////////////////
 const init = function() {
     // load data from local storage
@@ -1329,17 +1370,29 @@ const init = function() {
     // delete cat
     (0, _categoryViewJsDefault.default).addHandlerDelCat(controlDelCat);
     // new task form
-    (0, _newTaskViewJsDefault.default).addHandlerRender(controlNewTask);
+    (0, _listViewJsDefault.default).addHandlerNewButton(controlNewTask);
     // add repeat section
-    (0, _newTaskViewJsDefault.default).addHandlerRepeat(controlAddRepeat);
+    (0, _taskViewJsDefault.default).addHandlerRepeat(controlAddRepeat);
     // close form
-    (0, _newTaskViewJsDefault.default).addHandlerClose(controlClose);
+    (0, _taskViewJsDefault.default).addHandlerClose(controlClose);
     // save new task
-    (0, _newTaskViewJsDefault.default).addHandlerSave(controlSaveTask);
+    (0, _taskViewJsDefault.default).addHandlerSave(controlSaveTask);
+    // check task
+    (0, _listViewJsDefault.default).addHandlerCheck(controlCheckTask);
+    // edit task
+    (0, _listViewJsDefault.default).addHandlerEdit(controlEditTask);
+    // delete task
+    (0, _taskViewJsDefault.default).addHandlerDelete(controlDelete);
+    // search btn
+    (0, _listViewJsDefault.default).addHandlerSearchButton(controlSearchBtn);
+    //close search
+    (0, _searchViewJsDefault.default).addHandlerCloseSearch(controlCloseSearch);
+    //
+    (0, _searchViewJsDefault.default).addHandlerSearch(controlSearchWord);
 };
 init();
 
-},{"@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3","./view/newTaskView.js":"dlZDs","./view/view.js":"4wVyX","./model.js":"Y4A21","./view/listView.js":"gsaRP","./view/categoryView.js":"iLAn5"}],"gkKU3":[function(require,module,exports) {
+},{"@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3","./view/newTaskView.js":"dlZDs","./view/view.js":"4wVyX","./model.js":"Y4A21","./view/listView.js":"gsaRP","./view/categoryView.js":"iLAn5","./view/editTaskView.js":"aOo6R","./view/taskView.js":"7FIfZ","./view/searchView.js":"blwqv"}],"gkKU3":[function(require,module,exports) {
 exports.interopDefault = function(a) {
     return a && a.__esModule ? a : {
         default: a
@@ -1375,19 +1428,78 @@ parcelHelpers.defineInteropFlag(exports);
 var _viewJs = require("./view.js");
 var _viewJsDefault = parcelHelpers.interopDefault(_viewJs);
 class TaskView extends (0, _viewJsDefault.default) {
-    _parentEl = document.querySelector(".tabs__body--new");
-    _childEl = document.querySelector(".input--new-cat");
-    render() {
-        this.hide();
-        this._clearInputs();
-        this._parentEl.classList.remove("hidden");
-        this._parentEl.classList.remove("hidden");
-        // add or remove max-hight
-        this.container.classList.add("container--max-height");
-        this.tabs.classList.add("tabs--max-height");
-        // focus on title
-        document.querySelector(".input--new-title").focus();
-    }
+    // _parentEl = document.querySelector(".tabs__body--new");
+    _parentEl = document.querySelector(".tabs__body--task");
+    _childEl = document.querySelector(".input--cat");
+    // show() {
+    //   this.hide();
+    //   this._parentEl.classList.remove("hidden");
+    //   // add or remove max-hight
+    //   this.container.classList.add("container--max-height");
+    //   this.tabs.classList.add("tabs--max-height");
+    // }
+    // render(task = "") {
+    //   // this.hide();
+    //   // this._clearInputs();
+    //   // this._parentEl.classList.remove("hidden");
+    //   // this._parentEl.classList.remove("hidden");
+    //   // // add or remove max-hight
+    //   // this.container.classList.add("container--max-height");
+    //   // this.tabs.classList.add("tabs--max-height");
+    //   // // focus on title
+    //   // document.querySelector(".input--new-title").focus();
+    //   // //////////////////////////////////////////
+    //   // new codes
+    //   this.show();
+    //   this._parentEl.innerHTML = "";
+    //   const markup = `
+    //   <form class="form form--edit" data-id="${task ? task.id : ""}">
+    //       <i class="far fa-times button--close button--edit-close"></i>
+    //       <div class="form__field">
+    //       <i class="far fa-pen form__label"></i>
+    //       <input
+    //           class="input input--edit-title"
+    //           type="text"
+    //           placeholder="Title"
+    //           value="${task ? task.title : ""}"
+    //       />
+    //       </div>
+    //       <div class="form__field field--edit-date">
+    //       <i class="far fa-calendar form__label"></i>
+    //       <input class="input input--edit-date" type="date" value="${
+    //         task ? task.date : ""
+    //       }"/>
+    //       <span class="button--rep button--edit-rep"
+    //           ><i class="far fa-repeat-alt"></i> repeat</span
+    //       >
+    //       </div>
+    //       <div class="form__field field--edit-cat">
+    //       <i class="far fa-folder-open form__label"></i>
+    //       <select class="input input--edit-cat">
+    //       </select>
+    //       </div>
+    //       <div class="form__field">
+    //       <i class="far fa-quote-left form__label"></i>
+    //       <textarea
+    //           class="input--des input--edit-des"
+    //           cols="30"
+    //           rows="3"
+    //           placeholder="Description"
+    //       >${task ? task.description : ""}</textarea>
+    //       </div>
+    //       <div class="form__field field--btns">
+    //       <input
+    //           class="button--save button--edit-save"
+    //           type="submit"
+    //           value="Save"
+    //       />
+    //       <button class="button--edit-del">Delete task</button>
+    //       </div>
+    //   </form>
+    //   `;
+    //   this._parentEl.insertAdjacentHTML("afterbegin", markup);
+    //   // this._childEl = document.querySelector(".input--edit-cat");
+    // }
     _clearInputs() {
         // cleaning form inputs
         document.querySelector(".input--new-title").value = document.querySelector(".input--new-date").value = document.querySelector(".input--new-cat").value = document.querySelector(".input--new-des").value = "";
@@ -1395,12 +1507,39 @@ class TaskView extends (0, _viewJsDefault.default) {
         const el = document.querySelector(".form__field--repeat");
         if (el) el.remove();
     }
+    // save() {
+    //   const title = document.querySelector(".input--new-title").value;
+    //   const date = document.querySelector(".input--new-date").value;
+    //   const cat = document.querySelector(".input--new-cat").value
+    //     ? document.querySelector(".input--new-cat").value
+    //     : "Main";
+    //   const description = document.querySelector(".input--new-des").value;
+    //   const repeatPeriod = document.querySelector(".select--new-period")?.value;
+    //   let period;
+    //   if (repeatPeriod === "days") period = 1;
+    //   if (repeatPeriod === "weeks") period = 7;
+    //   if (repeatPeriod === "monthes") period = 30;
+    //   if (repeatPeriod === "years") period = 365;
+    //   // calculate repetition count
+    //   let repCount;
+    //   if (
+    //     !document.querySelector(".input--new-repeat-count") ||
+    //     document.querySelector(".input--new-repeat-count").value === ""
+    //   ) {
+    //     repCount = null;
+    //   } else {
+    //     repCount = document.querySelector(".input--new-repeat-count").value;
+    //   }
+    //   const repeatCount = repCount * period;
+    //   const taskData = [title, date, cat, description, repeatCount];
+    //   return taskData;
+    // }
     save() {
-        const title = document.querySelector(".input--new-title").value;
-        const date = document.querySelector(".input--new-date").value;
-        const cat = document.querySelector(".input--new-cat").value ? document.querySelector(".input--new-cat").value : "Main";
-        const description = document.querySelector(".input--new-des").value;
-        const repeatPeriod = document.querySelector(".select--new-period")?.value;
+        const title = document.querySelector(".input--title").value;
+        const date = document.querySelector(".input--date").value;
+        const cat = document.querySelector(".input--cat").value ? document.querySelector(".input--cat").value : "Main";
+        const description = document.querySelector(".input--des").value;
+        const repeatPeriod = document.querySelector(".select--period")?.value;
         let period;
         if (repeatPeriod === "days") period = 1;
         if (repeatPeriod === "weeks") period = 7;
@@ -1408,8 +1547,8 @@ class TaskView extends (0, _viewJsDefault.default) {
         if (repeatPeriod === "years") period = 365;
         // calculate repetition count
         let repCount;
-        if (!document.querySelector(".input--new-repeat-count") || document.querySelector(".input--new-repeat-count").value === "") repCount = null;
-        else repCount = document.querySelector(".input--new-repeat-count").value;
+        if (!document.querySelector(".input--repeat-count") || document.querySelector(".input--repeat-count").value === "") repCount = null;
+        else repCount = document.querySelector(".input--repeat-count").value;
         const repeatCount = repCount * period;
         const taskData = [
             title,
@@ -1468,14 +1607,21 @@ class TaskView extends (0, _viewJsDefault.default) {
     addHandlerRender(handler) {
         this.btnNew.addEventListener("click", handler);
     }
-    addHandlerSave(handler) {
-        this.btnNewSave.addEventListener("click", function(e) {
+    // addHandlerSave(handler) {
+    //   this._parentEl.addEventListener("click", function (e) {
+    //     e.preventDefault();
+    //     const btn = e.target.closest(".button--new-save");
+    //     if (!btn) return;
+    //     handler();
+    //   });
+    // }
+    addHandlerRepeat(handler) {
+        this._parentEl.addEventListener("click", function(e) {
             e.preventDefault();
+            const btn = e.target.closest(".button--new-rep");
+            if (!btn) return;
             handler();
         });
-    }
-    addHandlerRepeat(handler) {
-        this.btnNewRep.addEventListener("click", handler);
     }
 }
 exports.default = new TaskView();
@@ -1535,14 +1681,6 @@ class View {
     //
     _parentEl;
     _childEl;
-    hide() {
-        this.btnThemeToggle.classList.add("hidden");
-        this.boxCat.classList.add("hidden");
-        this.tabsBodyTasksLists.classList.add("hidden");
-        document.querySelector(".tabs__list").classList.add("hidden");
-        this.buttons.classList.add("hidden");
-        this.tabsBodyNew.classList.add("hidden");
-    }
     close() {
         // show default section
         this.btnThemeToggle.classList.remove("hidden");
@@ -1551,16 +1689,104 @@ class View {
         this.tabsList.classList.remove("hidden");
         this.buttons.classList.remove("hidden");
         // hide sections
-        this.tabsBodyNew.classList.add("hidden");
+        // this.tabsBodyNew.classList.add("hidden");
+        // this.tabsBodyEdit.classList.add("hidden");
+        this._parentEl.classList.add("hidden");
+        this._childEl.classList.add("hidden");
+        // clean elemets
+        this._parentEl.innerHTML = "";
         // add or remove max-hight
         this.container.classList.remove("container--max-height");
         this.tabs.classList.remove("tabs--max-height");
     }
+    show() {
+        // hide rest parts
+        this.btnThemeToggle.classList.add("hidden");
+        this.boxCat.classList.add("hidden");
+        this.tabsBodyTasksLists.classList.add("hidden");
+        this.tabsList.classList.add("hidden");
+        this.buttons.classList.add("hidden");
+        this.tabsBodyNew.classList.add("hidden");
+        // show parent element
+        this._parentEl.classList.remove("hidden");
+        // add or remove max-hight
+        this.container.classList.add("container--max-height");
+        this.tabs.classList.add("tabs--max-height");
+    }
+    // render with new and edit tags
+    // render(task = "") {
+    //   this.show();
+    //   this._parentEl.innerHTML = "";
+    //   // ${task ? "edit" : "new"}
+    //   const markup = `
+    //   <form class="form form--${task ? "edit" : "new"}" data-id="${
+    //     task ? task.id : ""
+    //   }">
+    //       <i class="far fa-times button--close button--${
+    //         task ? "edit" : "new"
+    //       }-close"></i>
+    //       <div class="form__field">
+    //       <i class="far fa-pen form__label"></i>
+    //       <input
+    //           class="input input--${task ? "edit" : "new"}-title"
+    //           type="text"
+    //           placeholder="Title"
+    //           value="${task ? task.title : ""}"
+    //       />
+    //       </div>
+    //       <div class="form__field field--${task ? "edit" : "new"}-date">
+    //       <i class="far fa-calendar form__label"></i>
+    //       <input class="input input--${task ? "edit" : "new"}-date"  ${
+    //     task
+    //       ? `type="date" value="${task.date}`
+    //       : `type="text"
+    //     onfocus="(this.type='date')"
+    //     placeholder="Date"`
+    //   } "/>
+    //       <span class="button--rep button--${task ? "edit" : "new"}-rep"
+    //           ><i class="far fa-repeat-alt"></i> repeat</span
+    //       >
+    //       </div>
+    //       <div class="form__field field--${task ? "edit" : "new"}-cat">
+    //       <i class="far fa-folder-open form__label"></i>
+    //       <select class="input input--${task ? "edit" : "new"}-cat">
+    //       </select>
+    //       </div>
+    //       <div class="form__field">
+    //       <i class="far fa-quote-left form__label"></i>
+    //       <textarea
+    //           class="input--des input--${task ? "edit" : "new"}-des"
+    //           cols="30"
+    //           rows="3"
+    //           placeholder="Description"
+    //       >${task ? task.description : ""}</textarea>
+    //       </div>
+    //       <div class="form__field field--btns">
+    //       <input
+    //           class="button--save button--${task ? "edit" : "new"}-save"
+    //           type="submit"
+    //           value="Save"
+    //       />
+    //       ${
+    //         task
+    //           ? `<button class="button--edit-del">Delete task</button>
+    //       </div>`
+    //           : ""
+    //       }
+    //   </form>
+    //   `;
+    //   this._parentEl.insertAdjacentHTML("afterbegin", markup);
+    //   if (task) this._childEl = document.querySelector(".input--edit-cat");
+    // }
     addHandlerClose(handler) {
-        this._parentEl.querySelector(".fa-times").addEventListener("click", handler);
+        this._parentEl.addEventListener("click", function(e) {
+            const btn = e.target.closest(".fa-times");
+            if (btn) handler();
+        });
     }
     updateCategories(cats, curCate) {
         // clean "place" content
+        if (!this._childEl) return;
         this._childEl.innerHTML = "";
         let html = "";
         cats.forEach((cat)=>{
@@ -1579,6 +1805,10 @@ parcelHelpers.export(exports, "newTask", ()=>newTask);
 parcelHelpers.export(exports, "newCat", ()=>newCat);
 parcelHelpers.export(exports, "delCat", ()=>delCat);
 parcelHelpers.export(exports, "getLocalStorage", ()=>getLocalStorage);
+parcelHelpers.export(exports, "checkTask", ()=>checkTask);
+parcelHelpers.export(exports, "editTask", ()=>editTask);
+parcelHelpers.export(exports, "deleteTask", ()=>deleteTask);
+parcelHelpers.export(exports, "searchTask", ()=>searchTask);
 const state = {
     allTasks: [],
     allCats: [
@@ -1605,8 +1835,19 @@ class Task {
     }
 }
 const newTask = function(data) {
-    let task = new Task(...data);
-    state.allTasks.push(task);
+    state.curCat = data[2];
+    const id = data[5];
+    if (!id) {
+        let task = new Task(...data);
+        state.allTasks.push(task);
+    } else {
+        const task1 = state.allTasks.find((task)=>task.id === id);
+        task1.title = data[0];
+        task1.date = data[1];
+        task1.cat = data[2];
+        task1.description = data[3];
+        task1.repeatCount = data[4];
+    }
     _setLocalStorage();
     return state;
 };
@@ -1691,6 +1932,28 @@ const getLocalStorage = function() {
 //   // set current category to categoy selection value
 //   this.#currentCat = selectCategory.value;
 };
+const checkTask = function(id) {
+    const task3 = state.allTasks.find((task)=>task.id === id);
+    task3.status = !task3.status;
+    // save in local storage
+    _setLocalStorage();
+};
+const editTask = function(id) {
+    const task4 = state.allTasks.find((task)=>task.id === id);
+    return task4;
+};
+const deleteTask = function(id) {
+    if (confirm("Are you sure you want to delete this task?")) {
+        const index = state.allTasks.findIndex((task)=>task.id === id);
+        state.allTasks.splice(index, 1);
+        _setLocalStorage();
+        return true;
+    }
+};
+const searchTask = function(word) {
+    const resTasks = state.allTasks.filter((task)=>task.title.includes(word));
+    return resTasks;
+};
 
 },{"@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"gsaRP":[function(require,module,exports) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
@@ -1698,7 +1961,7 @@ parcelHelpers.defineInteropFlag(exports);
 var _viewJs = require("./view.js");
 var _viewJsDefault = parcelHelpers.interopDefault(_viewJs);
 class ListView extends (0, _viewJsDefault.default) {
-    //   _parentEl = document.querySelector(".tabs__body--tasks-lists");
+    _parentEl = document.querySelector(".tabs__body--tasks-lists");
     _remainDays(date) {
         // if there is no date, return nothing
         if (!date) return "";
@@ -1723,12 +1986,13 @@ class ListView extends (0, _viewJsDefault.default) {
             day: "numeric"
         }).format(taskDate);
     }
-    _renderTask(task, status = false, search = false) {
+    _renderTask(task, search = false) {
         const options = {
             month: "numeric",
             day: "numeric"
         };
         const intlDate = task.date ? new Intl.DateTimeFormat("en-US", options).format(new Date(task.date)) : "";
+        const status = task.status;
         const isLate = +new Date(task.date) / 86400000 + 1 < +new Date() / 86400000;
         let html = `
       <div class="checkbox__body" data-id="${task.id}">
@@ -1744,7 +2008,7 @@ class ListView extends (0, _viewJsDefault.default) {
     `;
         // console.log(tabsBodyTasksUndone);
         // ${status === false ? this._remainDays(task.date) : intlDate}</div>
-        if (search) tabsBodySearchRes.insertAdjacentHTML("beforeend", html);
+        if (search) this.tabsBodySearchRes.insertAdjacentHTML("beforeend", html);
         else status === false ? this.tabsBodyTasksUndone.insertAdjacentHTML("beforeend", html) : this.tabsBodyTasksDone.insertAdjacentHTML("beforeend", html);
     }
     renderAllTasks(tasks, sorted = false, cat = "Main") {
@@ -1758,7 +2022,7 @@ class ListView extends (0, _viewJsDefault.default) {
         let undoneCount = 0;
         // show all tasks
         allTasks.forEach((task)=>{
-            this._renderTask(task, task.status);
+            this._renderTask(task);
             // calc done count and undone count
             task.status ? doneCount++ : undoneCount++;
         });
@@ -1788,11 +2052,38 @@ class ListView extends (0, _viewJsDefault.default) {
             document.querySelectorAll(".tabs__body--tasks-list").forEach((list)=>list.classList.toggle("hidden"));
         }
     }
+    // handlers
     addHandlerChangeTab(handler) {
         this.tabsList.addEventListener("click", function(e) {
             e.preventDefault();
             handler(e);
         });
+    }
+    addHandlerCheck(handler) {
+        this._parentEl.addEventListener("click", function(e) {
+            const btn = e.target.closest(".checkbox__input");
+            if (!btn) return;
+            const id = e.target.closest(".checkbox__body").dataset.id;
+            // play audio if status is done
+            const checkboxAudio = document.querySelector("audio");
+            if (btn.checked) checkboxAudio.play();
+            handler(id);
+        });
+    }
+    addHandlerEdit(handler) {
+        this._parentEl.addEventListener("click", function(e) {
+            if (e.target.classList.contains("checkbox__input")) return;
+            const btn = e.target.closest(".checkbox__body");
+            if (!btn) return;
+            const id = e.target.closest(".checkbox__body").dataset.id;
+            handler(id);
+        });
+    }
+    addHandlerNewButton(handler) {
+        this.btnNew.addEventListener("click", handler);
+    }
+    addHandlerSearchButton(handler) {
+        this.btnSearch.addEventListener("click", handler);
     }
 }
 exports.default = new ListView();
@@ -1871,6 +2162,364 @@ class CategoryView extends (0, _viewJsDefault.default) {
     }
 }
 exports.default = new CategoryView();
+
+},{"./view.js":"4wVyX","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"aOo6R":[function(require,module,exports) {
+var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
+parcelHelpers.defineInteropFlag(exports);
+var _viewJs = require("./view.js");
+var _viewJsDefault = parcelHelpers.interopDefault(_viewJs);
+class EditView extends (0, _viewJsDefault.default) {
+    //   _parentEl = document.querySelector(".tabs__body--edit");
+    _parentEl = document.querySelector(".tabs__body--task");
+    _childEl;
+    _data;
+    //   render(task) {
+    //     this.show();
+    //     this._parentEl.innerHTML = "";
+    //     const markup = `
+    //     <form class="form form--edit" data-id="${task.id}">
+    //         <i class="far fa-times button--close button--edit-close"></i>
+    //         <div class="form__field">
+    //         <i class="far fa-pen form__label"></i>
+    //         <input
+    //             class="input input--edit-title"
+    //             type="text"
+    //             placeholder="Title"
+    //             value="${task.title}"
+    //         />
+    //         </div>
+    //         <div class="form__field field--edit-date">
+    //         <i class="far fa-calendar form__label"></i>
+    //         <input class="input input--edit-date" type="date" value="${task.date}"/>
+    //         <span class="button--rep button--edit-rep"
+    //             ><i class="far fa-repeat-alt"></i> repeat</span
+    //         >
+    //         </div>
+    //         <div class="form__field field--edit-cat">
+    //         <i class="far fa-folder-open form__label"></i>
+    //         <select class="input input--edit-cat">
+    //         </select>
+    //         </div>
+    //         <div class="form__field">
+    //         <i class="far fa-quote-left form__label"></i>
+    //         <textarea
+    //             class="input--des input--edit-des"
+    //             cols="30"
+    //             rows="3"
+    //             placeholder="Description"
+    //         >${task.description}</textarea>
+    //         </div>
+    //         <div class="form__field field--btns">
+    //         <input
+    //             class="button--save button--edit-save"
+    //             type="submit"
+    //             value="Save"
+    //         />
+    //         <button class="button--edit-del">Delete task</button>
+    //         </div>
+    //     </form>
+    //     `;
+    //     this._parentEl.insertAdjacentHTML("afterbegin", markup);
+    //     this._childEl = document.querySelector(".input--edit-cat");
+    //   }
+    delete() {}
+    save() {
+        const title = document.querySelector(".input--new-title").value;
+        const date = document.querySelector(".input--new-date").value;
+        const cat = document.querySelector(".input--new-cat").value ? document.querySelector(".input--new-cat").value : "Main";
+        const description = document.querySelector(".input--new-des").value;
+        const repeatPeriod = document.querySelector(".select--new-period")?.value;
+        let period;
+        if (repeatPeriod === "days") period = 1;
+        if (repeatPeriod === "weeks") period = 7;
+        if (repeatPeriod === "monthes") period = 30;
+        if (repeatPeriod === "years") period = 365;
+        // calculate repetition count
+        let repCount;
+        if (!document.querySelector(".input--new-repeat-count") || document.querySelector(".input--new-repeat-count").value === "") repCount = null;
+        else repCount = document.querySelector(".input--new-repeat-count").value;
+        const repeatCount = repCount * period;
+        const taskData = [
+            title,
+            date,
+            cat,
+            description,
+            repeatCount
+        ];
+        return taskData;
+    }
+    repeat(value) {
+        const el = document.querySelector(".form__field--repeat");
+        // find the status is "new" or "edit"
+        let status;
+        if (!this.tabsBodyNew.classList.contains("hidden")) status = "new";
+        else status = "edit";
+        // change repeat btn style and text
+        if (value > 0) {
+            if (el) el.remove();
+            this.btnEditRep.innerHTML = `<i class="far fa-times"></i>`;
+            this.btnEditRep.classList.add("move-repeat");
+        } else {
+            if (el) {
+                this.btnNewRep.innerHTML = `<i class="far fa-repeat-alt"></i> repeat</span>`;
+                this.btnNewRep.classList.remove("move-repeat");
+                this.btnEditRep.innerHTML = `<i class="far fa-repeat-alt"></i> repeat</span>`;
+                this.btnEditRep.classList.remove("move-repeat");
+                return el.remove();
+            }
+            this.btnNewRep.innerHTML = `<i class="far fa-times"></i>`;
+            this.btnNewRep.classList.add("move-repeat");
+            this.btnEditRep.innerHTML = `<i class="far fa-times"></i>`;
+            this.btnEditRep.classList.add("move-repeat");
+        }
+        // element of repeation
+        let html = `
+              <div class="form__field form__field--repeat">
+              <i class="far fa-repeat-alt form__label"></i><span class="form__label form__label--rep">Every</span>
+                <input class="input input--repeat-count input--${status}-repeat-count" type="number" min="1" max="1000" placeholder=""
+                value="${value ? value : ""}" />
+                <select class="select--period select--${status}-period ">
+                  <option value="days">days</option>
+                  <option value="weeks">weeks</option>
+                  <option value="monthes">monthes</option>
+                  <option value="years">years</option>
+                </select>
+        
+              </div>
+        
+            `;
+        // find exact place to implement
+        let place = !this.tabsBodyNew.classList.contains("hidden") ? ".field--new-date" : ".field--edit-date";
+        document.querySelector(place).insertAdjacentHTML("afterend", html);
+    }
+    // handlers
+    addHandlerSave(handler) {
+        this._parentEl.addEventListener("click", function(e) {
+            e.preventDefault();
+            const btn = e.target.closest(".button--edit-save");
+            if (!btn) return;
+            handler();
+        });
+    }
+    addHandlerRepeat(handler) {
+        this.btnNewRep.addEventListener("click", handler);
+    }
+    addHandlerDelete(handler) {
+        this._parentEl.addEventListener("click", function(e) {
+            e.preventDefault();
+            const btn = e.target.closest(".button--edit-del");
+            if (!btn) return;
+            const id = e.target.closest(".form--edit").dataset.id;
+            handler(id);
+        });
+    }
+}
+exports.default = new EditView();
+
+},{"./view.js":"4wVyX","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"7FIfZ":[function(require,module,exports) {
+var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
+parcelHelpers.defineInteropFlag(exports);
+var _viewJs = require("./view.js");
+var _viewJsDefault = parcelHelpers.interopDefault(_viewJs);
+class TaskView extends (0, _viewJsDefault.default) {
+    // _parentEl = document.querySelector(".tabs__body--new");
+    _parentEl = document.querySelector(".tabs__body--task");
+    _childEl = document.querySelector(".input--cat");
+    save() {
+        const title = document.querySelector(".input--title").value;
+        const date = document.querySelector(".input--date").value;
+        const cat = document.querySelector(".input--cat").value ? document.querySelector(".input--cat").value : "Main";
+        const description = document.querySelector(".input--des").value;
+        const repeatPeriod = document.querySelector(".select--period")?.value;
+        let period;
+        if (repeatPeriod === "days") period = 1;
+        if (repeatPeriod === "weeks") period = 7;
+        if (repeatPeriod === "monthes") period = 30;
+        if (repeatPeriod === "years") period = 365;
+        // calculate repetition count
+        let repCount;
+        if (!document.querySelector(".input--repeat-count") || document.querySelector(".input--repeat-count").value === "") repCount = null;
+        else repCount = document.querySelector(".input--repeat-count").value;
+        const repeatCount = repCount * period;
+        const id = document.querySelector(".form").dataset?.id;
+        const taskData = [
+            title,
+            date,
+            cat,
+            description,
+            repeatCount,
+            id
+        ];
+        return taskData;
+    }
+    render(task = "") {
+        this.show();
+        // ${task ? "edit" : "new"}
+        const markup = `
+    <form class="form form" data-id="${task ? task.id : ""}">
+        <i class="far fa-times button--close"></i>
+        <div class="form__field">
+        <i class="far fa-pen form__label"></i>
+        <input
+            class="input input--title"
+            type="text"
+            placeholder="Title"
+            value="${task ? task.title : ""}"
+        />
+        </div>
+        <div class="form__field field-date">
+        <i class="far fa-calendar form__label"></i>
+        <input class="input input--date" type="date" ${task?.date ? `value="${task.date}"` : ``} />
+        <span class="button--rep"
+            ><i class="far fa-repeat-alt"></i> repeat</span
+        >
+        </div>
+        <div class="form__field field-cat">
+        <i class="far fa-folder-open form__label"></i>
+        <select class="input input--cat">
+        </select>
+        </div>
+        <div class="form__field">
+        <i class="far fa-quote-left form__label"></i>
+        <textarea
+            class="input--des"
+            cols="30"
+            rows="3"
+            placeholder="Description"
+            
+        >${task ? task.description : ""}</textarea>
+        </div>
+        <div class="form__field field--btns">
+        <input
+            class="button--save"
+            type="submit"
+            value="Save"
+        />
+        ${task ? `<button class="button--del">Delete task</button>
+        </div>` : ""}
+        
+    </form>
+    `;
+        this._parentEl.insertAdjacentHTML("afterbegin", markup);
+        this._childEl = document.querySelector(".input--cat");
+    }
+    addHandlerSave(handler) {
+        this._parentEl.addEventListener("click", function(e) {
+            e.preventDefault();
+            const btn = e.target.closest(".button--save");
+            if (!btn) return;
+            handler();
+        });
+    }
+    addHandlerDelete(handler) {
+        this._parentEl.addEventListener("click", function(e) {
+            e.preventDefault();
+            const btn = e.target.closest(".button--del");
+            if (!btn) return;
+            const id = e.target.closest(".form").dataset.id;
+            handler(id);
+        });
+    }
+    //   repeat(value) {
+    //     const el = document.querySelector(".form__field--repeat");
+    //     // find the status is "new" or "edit"
+    //     let status;
+    //     if (!this.tabsBodyNew.classList.contains("hidden")) {
+    //       status = "new";
+    //     } else {
+    //       status = "edit";
+    //     }
+    //     // change repeat btn style and text
+    //     if (value > 0) {
+    //       if (el) {
+    //         el.remove();
+    //       }
+    //       this.btnEditRep.innerHTML = `<i class="far fa-times"></i>`;
+    //       this.btnEditRep.classList.add("move-repeat");
+    //     } else {
+    //       if (el) {
+    //         this.btnNewRep.innerHTML = `<i class="far fa-repeat-alt"></i> repeat</span>`;
+    //         this.btnNewRep.classList.remove("move-repeat");
+    //         this.btnEditRep.innerHTML = `<i class="far fa-repeat-alt"></i> repeat</span>`;
+    //         this.btnEditRep.classList.remove("move-repeat");
+    //         return el.remove();
+    //       }
+    //       this.btnNewRep.innerHTML = `<i class="far fa-times"></i>`;
+    //       this.btnNewRep.classList.add("move-repeat");
+    //       this.btnEditRep.innerHTML = `<i class="far fa-times"></i>`;
+    //       this.btnEditRep.classList.add("move-repeat");
+    //     }
+    //     // element of repeation
+    //     let html = `
+    //               <div class="form__field form__field--repeat">
+    //               <i class="far fa-repeat-alt form__label"></i><span class="form__label form__label--rep">Every</span>
+    //                 <input class="input input--repeat-count input--${status}-repeat-count" type="number" min="1" max="1000" placeholder=""
+    //                 value="${value ? value : ""}" />
+    //                 <select class="select--period select--${status}-period ">
+    //                   <option value="days">days</option>
+    //                   <option value="weeks">weeks</option>
+    //                   <option value="monthes">monthes</option>
+    //                   <option value="years">years</option>
+    //                 </select>
+    //               </div>
+    //             `;
+    //     // find exact place to implement
+    //     let place = !this.tabsBodyNew.classList.contains("hidden")
+    //       ? ".field--new-date"
+    //       : ".field--edit-date";
+    //     document.querySelector(place).insertAdjacentHTML("afterend", html);
+    //   }
+    // handlers
+    addHandlerRepeat(handler) {
+        this._parentEl.addEventListener("click", function(e) {
+            e.preventDefault();
+            const btn = e.target.closest(".button--new-rep");
+            if (!btn) return;
+            handler();
+        });
+    }
+}
+exports.default = new TaskView();
+
+},{"./view.js":"4wVyX","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"blwqv":[function(require,module,exports) {
+var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
+parcelHelpers.defineInteropFlag(exports);
+var _viewJs = require("./view.js");
+var _viewJsDefault = parcelHelpers.interopDefault(_viewJs);
+class SearchView extends (0, _viewJsDefault.default) {
+    // _parentEl = document.querySelector(".tabs__body--new");
+    _parentEl = document.querySelector(".tabs__body--search-res");
+    _childEl = document.querySelector(".box--search");
+    render() {
+        this.show();
+        this._childEl = document.querySelector(".box--search");
+        this._childEl.classList.remove("hidden");
+        document.querySelector(".input--search").focus();
+        document.querySelector(".input--search").value = "";
+    }
+    searchWord() {
+        // clean past data from html
+        this.tabsBodySearchRes.innerHTML = "";
+        return this.inputSearch.value;
+    // find all tasks match the search word
+    // if (this.inputSearch.value !== "") {
+    //   //   const resTasks = this.#allTasks.filter((task) =>
+    //   //     task.title.includes(inputSearch.value)
+    //   //   );
+    //   //   resTasks.forEach((task) => this._renderTask(task, false, true));
+    // }
+    }
+    addHandlerSearch(handler) {
+        this.inputSearch.oninput = handler;
+    }
+    addHandlerCloseSearch(handler) {
+        this._childEl.addEventListener("click", function(e) {
+            const btn = e.target.closest(".fa-times");
+            if (btn) handler();
+        });
+    }
+}
+exports.default = new SearchView();
 
 },{"./view.js":"4wVyX","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}]},["fA0o9","aenu9"], "aenu9", "parcelRequirebb28")
 

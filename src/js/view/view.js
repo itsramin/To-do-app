@@ -60,14 +60,6 @@ export default class View {
   _parentEl;
   _childEl;
 
-  hide() {
-    this.btnThemeToggle.classList.add("hidden");
-    this.boxCat.classList.add("hidden");
-    this.tabsBodyTasksLists.classList.add("hidden");
-    document.querySelector(".tabs__list").classList.add("hidden");
-    this.buttons.classList.add("hidden");
-    this.tabsBodyNew.classList.add("hidden");
-  }
   close() {
     // show default section
     this.btnThemeToggle.classList.remove("hidden");
@@ -77,20 +69,113 @@ export default class View {
     this.buttons.classList.remove("hidden");
 
     // hide sections
-    this.tabsBodyNew.classList.add("hidden");
+    // this.tabsBodyNew.classList.add("hidden");
+    // this.tabsBodyEdit.classList.add("hidden");
+    this._parentEl.classList.add("hidden");
+    this._childEl.classList.add("hidden");
+
+    // clean elemets
+    this._parentEl.innerHTML = "";
 
     // add or remove max-hight
     this.container.classList.remove("container--max-height");
     this.tabs.classList.remove("tabs--max-height");
   }
+  show() {
+    // hide rest parts
+    this.btnThemeToggle.classList.add("hidden");
+    this.boxCat.classList.add("hidden");
+    this.tabsBodyTasksLists.classList.add("hidden");
+    this.tabsList.classList.add("hidden");
+    this.buttons.classList.add("hidden");
+    this.tabsBodyNew.classList.add("hidden");
+
+    // show parent element
+    this._parentEl.classList.remove("hidden");
+
+    // add or remove max-hight
+    this.container.classList.add("container--max-height");
+    this.tabs.classList.add("tabs--max-height");
+  }
+  // render with new and edit tags
+  // render(task = "") {
+  //   this.show();
+  //   this._parentEl.innerHTML = "";
+
+  //   // ${task ? "edit" : "new"}
+  //   const markup = `
+  //   <form class="form form--${task ? "edit" : "new"}" data-id="${
+  //     task ? task.id : ""
+  //   }">
+  //       <i class="far fa-times button--close button--${
+  //         task ? "edit" : "new"
+  //       }-close"></i>
+  //       <div class="form__field">
+  //       <i class="far fa-pen form__label"></i>
+  //       <input
+  //           class="input input--${task ? "edit" : "new"}-title"
+  //           type="text"
+  //           placeholder="Title"
+  //           value="${task ? task.title : ""}"
+  //       />
+  //       </div>
+  //       <div class="form__field field--${task ? "edit" : "new"}-date">
+  //       <i class="far fa-calendar form__label"></i>
+  //       <input class="input input--${task ? "edit" : "new"}-date"  ${
+  //     task
+  //       ? `type="date" value="${task.date}`
+  //       : `type="text"
+  //     onfocus="(this.type='date')"
+  //     placeholder="Date"`
+  //   } "/>
+  //       <span class="button--rep button--${task ? "edit" : "new"}-rep"
+  //           ><i class="far fa-repeat-alt"></i> repeat</span
+  //       >
+  //       </div>
+  //       <div class="form__field field--${task ? "edit" : "new"}-cat">
+  //       <i class="far fa-folder-open form__label"></i>
+  //       <select class="input input--${task ? "edit" : "new"}-cat">
+  //       </select>
+  //       </div>
+  //       <div class="form__field">
+  //       <i class="far fa-quote-left form__label"></i>
+  //       <textarea
+  //           class="input--des input--${task ? "edit" : "new"}-des"
+  //           cols="30"
+  //           rows="3"
+  //           placeholder="Description"
+
+  //       >${task ? task.description : ""}</textarea>
+  //       </div>
+  //       <div class="form__field field--btns">
+  //       <input
+  //           class="button--save button--${task ? "edit" : "new"}-save"
+  //           type="submit"
+  //           value="Save"
+  //       />
+  //       ${
+  //         task
+  //           ? `<button class="button--edit-del">Delete task</button>
+  //       </div>`
+  //           : ""
+  //       }
+
+  //   </form>
+  //   `;
+  //   this._parentEl.insertAdjacentHTML("afterbegin", markup);
+  //   if (task) this._childEl = document.querySelector(".input--edit-cat");
+  // }
 
   addHandlerClose(handler) {
-    this._parentEl
-      .querySelector(".fa-times")
-      .addEventListener("click", handler);
+    this._parentEl.addEventListener("click", function (e) {
+      const btn = e.target.closest(".fa-times");
+      if (btn) handler();
+    });
   }
   updateCategories(cats, curCate) {
     // clean "place" content
+    if (!this._childEl) return;
+
     this._childEl.innerHTML = "";
 
     let html = "";

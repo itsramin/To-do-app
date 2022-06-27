@@ -3,9 +3,12 @@
 /// new codes
 import View from "./view/view.js";
 import newTaskView from "./view/newTaskView.js";
+import editTaskView from "./view/editTaskView.js";
+import taskView from "./view/taskView.js";
 import * as model from "./model.js";
 import listView from "./view/listView.js";
 import categoryView from "./view/categoryView.js";
+import searchView from "./view/searchView.js";
 
 // class Task {
 //   id = (Date.now() + "").slice(-10);
@@ -858,31 +861,48 @@ import categoryView from "./view/categoryView.js";
 // const app = new App();
 
 const controlNewTask = function () {
-  newTaskView.render();
-  newTaskView.updateCategories(model.state.allCats, model.state.curCat);
+  taskView.render();
+  taskView.updateCategories(model.state.allCats, model.state.curCat);
 };
 const controlAddRepeat = function () {
-  newTaskView.repeat();
+  taskView.repeat();
 };
 
 const controlClose = function () {
-  newTaskView.close();
+  taskView.close();
 };
 
 const controlSaveTask = function () {
-  const data = newTaskView.save();
-  newTaskView.close();
-
-  listView.renderAllTasks(
-    model.newTask(data).allTasks,
-    false,
-    model.state.curCat
-  );
+  const data = taskView.save();
+  taskView.close();
+  model.newTask(data);
+  categoryView.changeCat(model.state.curCat);
+  listView.renderAllTasks(model.state.allTasks, false, model.state.curCat);
 };
 
 const controlChangeTab = function (e) {
   listView.changeTab(e);
   listView.renderAllTasks(model.state.allTasks, false, model.state.curCat);
+};
+
+const controlCheckTask = function (id) {
+  model.checkTask(id);
+  // show all tasks on selected category
+  listView.renderAllTasks(model.state.allTasks, false, model.state.curCat);
+};
+
+const controlEditTask = function (id) {
+  // console.log(model.editTask(id));
+  const task = model.editTask(id);
+  taskView.render(task);
+  taskView.updateCategories(model.state.allCats, task.cat);
+};
+
+const controlDelete = function (id) {
+  if (model.deleteTask(id)) {
+    taskView.close();
+    listView.renderAllTasks(model.state.allTasks, false, model.state.curCat);
+  }
 };
 
 // category section
@@ -923,6 +943,25 @@ const controlDelCat = function (cat) {
   controlChangeCat();
 };
 
+// search section
+const controlSearchBtn = function () {
+  searchView.render();
+};
+const controlSearchWord = function () {
+  const word = searchView.searchWord();
+  if (!word) return;
+  const data = model.searchTask(word);
+  console.log(data);
+
+  data.forEach((task) => {
+    listView._renderTask(task, true);
+  });
+};
+
+const controlCloseSearch = function () {
+  searchView.close();
+};
+
 //////////////////////////
 const init = function () {
   // load data from local storage
@@ -948,16 +987,34 @@ const init = function () {
   categoryView.addHandlerDelCat(controlDelCat);
 
   // new task form
-  newTaskView.addHandlerRender(controlNewTask);
+  listView.addHandlerNewButton(controlNewTask);
 
   // add repeat section
-  newTaskView.addHandlerRepeat(controlAddRepeat);
+  taskView.addHandlerRepeat(controlAddRepeat);
 
   // close form
-  newTaskView.addHandlerClose(controlClose);
+  taskView.addHandlerClose(controlClose);
 
   // save new task
-  newTaskView.addHandlerSave(controlSaveTask);
+  taskView.addHandlerSave(controlSaveTask);
+
+  // check task
+  listView.addHandlerCheck(controlCheckTask);
+
+  // edit task
+  listView.addHandlerEdit(controlEditTask);
+
+  // delete task
+  taskView.addHandlerDelete(controlDelete);
+
+  // search btn
+  listView.addHandlerSearchButton(controlSearchBtn);
+
+  //close search
+  searchView.addHandlerCloseSearch(controlCloseSearch);
+
+  //
+  searchView.addHandlerSearch(controlSearchWord);
 };
 
 init();

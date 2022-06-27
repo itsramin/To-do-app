@@ -461,35 +461,11 @@ input:focus-visible, select:focus-visible {
   padding-right: 10px;
 }
 
-input[type="date"] {
-  appearance: none;
-  position: relative;
-}
-
-input[type="date"]::-webkit-calendar-picker-indicator {
-  appearance: none;
-  color: #0000;
-  z-index: 1;
-  background: none;
-}
-
-input[type="date"]:before {
-  content: "";
-  width: 15px;
-  height: 20px;
-  color: var(--color-secondary);
-  background: none;
-  font-family: "Font Awesome 5 Pro";
-  display: block;
-  position: absolute;
-  right: 6px;
-}
-
 .input--new-date {
   width: 7rem;
 }
 
-.button--edit-del {
+.button--del {
   text-align: center;
   color: var(--color-red);
   cursor: pointer;

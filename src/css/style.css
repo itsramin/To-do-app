@@ -461,7 +461,7 @@ select:focus-visible {
   width: 25px;
   height: 25px;
 }
-input[type="date"] {
+/* input[type="date"] {
   position: relative;
   appearance: none;
 }
@@ -481,7 +481,7 @@ input[type="date"]:before {
   position: absolute;
   right: 6px;
   color: var(--color-secondary);
-}
+} */
 /*------------------------------------*\
   # New task section
 \*------------------------------------*/
@@ -493,7 +493,7 @@ input[type="date"]:before {
   # Edit Task section
 \*------------------------------------*/
 
-.button--edit-del {
+.button--del {
   background: none;
   font-weight: 300;
   padding: 0.5rem 1rem;
