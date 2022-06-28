@@ -2,7 +2,7 @@
   "name": "to-do-app",
   "version": "1.0.0",
   "description": "A simple todo application without any dependencies, working with html, css and javascript.\r see live [demo](https://itsramin.github.io/To-do-app/).",
-  "abc": "index.html",
+  "default": "index.html",
   "scripts": {
     "start": "parcel index.html",
     "build": "parcel build index.html"

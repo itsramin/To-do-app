@@ -3,26 +3,23 @@ import View from "./view.js";
 class ThemeView extends View {
   _parentEl = document.querySelector(".tabs__body--tasks-lists");
 
-  getTheme() {
-    return this.prefersDarkScheme;
-  }
   changeTheme(theme) {
     if (theme === "light") {
-      document.body.classList.toggle("light-theme");
-      theme = document.body.classList.contains("light-theme")
-        ? "light"
-        : "dark";
+      document.body.classList.add("light-theme");
+      document.body.classList.remove("dark-theme");
+      // change theme icon
+      document.querySelector(".fa-sun").classList.add("hidden");
+      document.querySelector(".fa-moon").classList.remove("hidden");
     } else {
-      document.body.classList.toggle("dark-theme");
-      theme = document.body.classList.contains("dark-theme") ? "dark" : "light";
+      document.body.classList.remove("light-theme");
+      document.body.classList.add("dark-theme");
+      // change theme icon
+      document.querySelector(".fa-sun").classList.remove("hidden");
+      document.querySelector(".fa-moon").classList.add("hidden");
     }
-    // change theme icon
-    document.querySelector(".fa-sun").classList.toggle("hidden");
-    document.querySelector(".fa-moon").classList.toggle("hidden");
   }
 
   // handlers
-
   addHandlerTheme(handler) {
     this.btnThemeToggle.addEventListener("click", handler);
   }

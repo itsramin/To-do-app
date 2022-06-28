@@ -338,7 +338,7 @@ input:focus-visible, select:focus-visible {
   font-size: .9rem;
 }
 
-.form {
+.form--task {
   height: calc(100% - 30px);
   flex-direction: column;
   margin: 15px;
@@ -349,7 +349,7 @@ input:focus-visible, select:focus-visible {
 .form__field {
   align-items: baseline;
   gap: 10px;
-  padding: 9px;
+  padding: 10px;
   display: flex;
 }
 
@@ -416,11 +416,14 @@ input:focus-visible, select:focus-visible {
   background: var(--bg-light);
   width: auto;
   border-radius: 50px;
+  justify-content: center;
+  gap: 5px;
   margin-left: 10px;
-  padding: .5rem .8rem;
-  font-size: .9rem;
+  padding: .4rem .8rem .3rem;
+  font-size: .8rem;
   font-weight: 300;
   transition: all .5s;
+  display: flex;
   position: relative;
   top: 0;
   left: 0;
@@ -563,7 +566,7 @@ input:focus-visible, select:focus-visible {
     margin: 0 auto;
   }
 
-  .form {
+  .form-task {
     height: calc(100% - 12px);
     margin: 6px;
   }

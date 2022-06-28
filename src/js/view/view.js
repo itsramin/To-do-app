@@ -24,21 +24,21 @@ export default class View {
   btnSearchClose = document.querySelector(".button--search-close");
   tabsBodySearchRes = document.querySelector(".tabs__body--search-res");
 
-  // new form elements
-  btnNewRep = document.querySelector(".button--new-rep");
-  inputNewCat = document.querySelector(".input--new-cat");
-  tabsBodyNew = document.querySelector(".tabs__body--new");
-  btnNewSave = document.querySelector(".button--new-save");
-  btnNewClose = document.querySelector(".button--new-close");
-  btnGCal = document.querySelector(".gcal");
+  // // new form elements
+  // btnNewRep = document.querySelector(".button--new-rep");
+  // inputNewCat = document.querySelector(".input--new-cat");
+  // tabsBodyNew = document.querySelector(".tabs__body--new");
+  // btnNewSave = document.querySelector(".button--new-save");
+  // btnNewClose = document.querySelector(".button--new-close");
+  // btnGCal = document.querySelector(".gcal");
 
-  // edit form elements
-  btnEditDel = document.querySelector(".button--edit-del");
-  btnEditRep = document.querySelector(".button--edit-rep");
-  inputEditCat = document.querySelector(".input--edit-cat");
-  tabsBodyEdit = document.querySelector(".tabs__body--edit");
-  btnEditSave = document.querySelector(".button--edit-save");
-  btnEditClose = document.querySelector(".button--edit-close");
+  // // edit form elements
+  // btnEditDel = document.querySelector(".button--edit-del");
+  // btnEditRep = document.querySelector(".button--edit-rep");
+  // inputEditCat = document.querySelector(".input--edit-cat");
+  // tabsBodyEdit = document.querySelector(".tabs__body--edit");
+  // btnEditSave = document.querySelector(".button--edit-save");
+  // btnEditClose = document.querySelector(".button--edit-close");
 
   // main buttons elements
   buttons = document.querySelector(".buttons");
@@ -47,7 +47,6 @@ export default class View {
   btnSearch = document.querySelector(".button--search");
 
   // theme elements
-  currentTheme = localStorage.getItem("theme");
   btnThemeToggle = document.querySelector(".button--theme-toggle");
   prefersDarkScheme = window.matchMedia("(prefers-color-scheme: dark)");
 
@@ -88,7 +87,7 @@ export default class View {
     this.tabsBodyTasksLists.classList.add("hidden");
     this.tabsList.classList.add("hidden");
     this.buttons.classList.add("hidden");
-    this.tabsBodyNew.classList.add("hidden");
+    // this.tabsBodyNew.classList.add("hidden");
 
     // show parent element
     this._parentEl.classList.remove("hidden");

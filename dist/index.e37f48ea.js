@@ -1273,6 +1273,8 @@ var _themeViewJsDefault = parcelHelpers.interopDefault(_themeViewJs);
 const controlNewTask = function() {
     (0, _taskViewJsDefault.default).render();
     (0, _taskViewJsDefault.default).updateCategories(_modelJs.state.allCats, _modelJs.state.curCat);
+    // gcal
+    (0, _taskViewJsDefault.default).addHandlerGcal(controlGcal);
 };
 const controlAddRepeat = function() {
     (0, _taskViewJsDefault.default).repeat();
@@ -1367,18 +1369,25 @@ const controlSort = function() {
 };
 // theme
 const controlTheme = function() {
-    const theme = (0, _themeViewJsDefault.default).getTheme();
-    const newTheme = _modelJs.theme(theme);
+    const newTheme = _modelJs.theme();
     (0, _themeViewJsDefault.default).changeTheme(newTheme);
+};
+//gcal
+const controlGcal = function() {
+    (0, _taskViewJsDefault.default).saveToGcal();
 };
 //////////////////////////
 const init = function() {
     // load data from local storage
     _modelJs.getLocalStorage();
+    // change theme depending on last theme
+    (0, _themeViewJsDefault.default).changeTheme(_modelJs.state.theme);
     // show all tasks unsorted, category = "Main"
     (0, _listViewJsDefault.default).renderAllTasks(_modelJs.state.allTasks, false, _modelJs.state.curCat);
     // update all categories
     (0, _categoryViewJsDefault.default).updateCategories(_modelJs.state.allCats, _modelJs.state.curCat);
+    // new task form
+    (0, _listViewJsDefault.default).addHandlerNewButton(controlNewTask);
     // change tab
     (0, _listViewJsDefault.default).addHandlerChangeTab(controlChangeTab);
     // change cat
@@ -1388,8 +1397,6 @@ const init = function() {
     (0, _categoryViewJsDefault.default).addHandlerSaveCat(controlSaveCat);
     // delete cat
     (0, _categoryViewJsDefault.default).addHandlerDelCat(controlDelCat);
-    // new task form
-    (0, _listViewJsDefault.default).addHandlerNewButton(controlNewTask);
     // add repeat section
     (0, _taskViewJsDefault.default).addHandlerRepeat(controlAddRepeat);
     // close form
@@ -1412,9 +1419,10 @@ const init = function() {
     (0, _listViewJsDefault.default).addHandlerSort(controlSort);
     // theme
     (0, _themeViewJsDefault.default).addHandlerTheme(controlTheme);
+// // gcal
+// taskView.addHandlerGcal(controlGcal);
 };
 init();
-const test = function() {};
 
 },{"@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3","./view/newTaskView.js":"dlZDs","./view/view.js":"4wVyX","./model.js":"Y4A21","./view/listView.js":"gsaRP","./view/categoryView.js":"iLAn5","./view/editTaskView.js":"aOo6R","./view/taskView.js":"7FIfZ","./view/searchView.js":"blwqv","./view/themeView.js":"4BYHh"}],"gkKU3":[function(require,module,exports) {
 exports.interopDefault = function(a) {
@@ -1675,27 +1683,26 @@ class View {
     tabsBodySearch = document.querySelector(".tabs__body--search");
     btnSearchClose = document.querySelector(".button--search-close");
     tabsBodySearchRes = document.querySelector(".tabs__body--search-res");
-    // new form elements
-    btnNewRep = document.querySelector(".button--new-rep");
-    inputNewCat = document.querySelector(".input--new-cat");
-    tabsBodyNew = document.querySelector(".tabs__body--new");
-    btnNewSave = document.querySelector(".button--new-save");
-    btnNewClose = document.querySelector(".button--new-close");
-    btnGCal = document.querySelector(".gcal");
-    // edit form elements
-    btnEditDel = document.querySelector(".button--edit-del");
-    btnEditRep = document.querySelector(".button--edit-rep");
-    inputEditCat = document.querySelector(".input--edit-cat");
-    tabsBodyEdit = document.querySelector(".tabs__body--edit");
-    btnEditSave = document.querySelector(".button--edit-save");
-    btnEditClose = document.querySelector(".button--edit-close");
+    // // new form elements
+    // btnNewRep = document.querySelector(".button--new-rep");
+    // inputNewCat = document.querySelector(".input--new-cat");
+    // tabsBodyNew = document.querySelector(".tabs__body--new");
+    // btnNewSave = document.querySelector(".button--new-save");
+    // btnNewClose = document.querySelector(".button--new-close");
+    // btnGCal = document.querySelector(".gcal");
+    // // edit form elements
+    // btnEditDel = document.querySelector(".button--edit-del");
+    // btnEditRep = document.querySelector(".button--edit-rep");
+    // inputEditCat = document.querySelector(".input--edit-cat");
+    // tabsBodyEdit = document.querySelector(".tabs__body--edit");
+    // btnEditSave = document.querySelector(".button--edit-save");
+    // btnEditClose = document.querySelector(".button--edit-close");
     // main buttons elements
     buttons = document.querySelector(".buttons");
     btnNew = document.querySelector(".button--new");
     btnSort = document.querySelector(".button--sort");
     btnSearch = document.querySelector(".button--search");
     // theme elements
-    currentTheme = localStorage.getItem("theme");
     btnThemeToggle = document.querySelector(".button--theme-toggle");
     prefersDarkScheme = window.matchMedia("(prefers-color-scheme: dark)");
     // message elements
@@ -1730,7 +1737,7 @@ class View {
         this.tabsBodyTasksLists.classList.add("hidden");
         this.tabsList.classList.add("hidden");
         this.buttons.classList.add("hidden");
-        this.tabsBodyNew.classList.add("hidden");
+        // this.tabsBodyNew.classList.add("hidden");
         // show parent element
         this._parentEl.classList.remove("hidden");
         // add or remove max-hight
@@ -1837,8 +1844,7 @@ parcelHelpers.export(exports, "theme", ()=>theme);
 const state = {
     allTasks: [],
     allCats: [
-        "Main",
-        "a"
+        "Main"
     ],
     curCat: "Main",
     sort: false,
@@ -1864,8 +1870,13 @@ class Task {
 const newTask = function(data) {
     state.curCat = data.cat;
     const id = data.id;
+    let period;
+    if (data.period === "days") period = 1;
+    if (data.period === "weeks") period = 7;
+    if (data.period === "monthes") period = 30;
+    if (data.period === "years") period = 365;
     if (!id) {
-        let task = new Task(data.title, data.date, data.cat, data.description, data.repeatCount);
+        let task = new Task(data.title, data.date, data.cat, data.description, data.repeatCount * period);
         state.allTasks.push(task);
     } else {
         const task1 = state.allTasks.find((task)=>task.id === id);
@@ -1881,16 +1892,8 @@ const newCat = function(newCat1) {
     if (!state.allCats.some((cat)=>cat === newCateFormatted)) {
         // add new category to all categories array
         state.allCats.push(newCateFormatted);
-        //   // hide category from
-        //   this._hideShowCatForm(e);
         // save to local storage
         _setLocalStorage();
-        //   // create new category list
-        //   this._createCatsList(selectCategory);
-        // // set category selection to new category
-        // this.selectCategory.value = newCateFormatted;
-        // // show new category tasks
-        // this.changeCat();
         return newCateFormatted;
     } else //   this._alertError("duplicate cat");
     console.log("duplicate cat");
@@ -1924,23 +1927,8 @@ const _setLocalStorage = function() {
     localStorage.setItem("allCats", JSON.stringify(state.allCats));
 };
 const getLocalStorage = function() {
-    //  get last theme color from local storage and set it to site's theme
-    //   if (currentTheme === "dark") {
-    //     document.body.classList.toggle("dark-theme");
-    //     document.querySelector(".fa-moon").classList.add("hidden");
-    //     document.querySelector(".fa-sun").classList.remove("hidden");
-    //   } else if (currentTheme === "light") {
-    //     document.body.classList.toggle("light-theme");
-    //     document.querySelector(".fa-sun").classList.add("hidden");
-    //     document.querySelector(".fa-moon").classList.remove("hidden");
-    //   }
-    //   // show messages for empty lists
-    //   if (this.#allTasks.length === 0) {
-    //     let textMsg = `<div class="message--no-task">All tasks are done !</div>`;
-    //     let textMsg2 = `<div class="message--no-task">No task has been done !</div>`;
-    //     tabsBodyTasksUndone.insertAdjacentHTML("afterbegin", textMsg);
-    //     tabsBodyTasksDone.insertAdjacentHTML("afterbegin", textMsg2);
-    //   }
+    const themeDate = localStorage.getItem("theme");
+    state.theme = themeDate ? themeDate : "light";
     // recive all tasks from local storage
     const data = JSON.parse(localStorage.getItem("allTasks"));
     if (!data) return;
@@ -1977,8 +1965,8 @@ const searchTask = function(word) {
     const resTasks = state.allTasks.filter((task)=>task.title.includes(word));
     return resTasks;
 };
-const theme = function(prefersDarkScheme) {
-    state.theme = prefersDarkScheme.matches ? "light" : "dark";
+const theme = function() {
+    state.theme = state.theme === "dark" ? "light" : "dark";
     // save current theme to local storage
     localStorage.setItem("theme", state.theme);
     return state.theme;
@@ -2409,7 +2397,7 @@ class TaskView extends (0, _viewJsDefault.default) {
         this.show();
         // ${task ? "edit" : "new"}
         const markup = `
-    <form class="form form--task" data-id="${task ? task.id : ""}">
+    <form class="form--task" data-id="${task ? task.id : ""}">
       <i class="far fa-times button--close"></i>
       <div class="form__field">
         <i class="far fa-pen form__label"></i>
@@ -2423,10 +2411,10 @@ class TaskView extends (0, _viewJsDefault.default) {
       </div>
       <div class="form__field field--date">
         <i class="far fa-calendar form__label"></i>
-        <input class="input input--date" type="date" name="date" ${task?.date ? `value="${task.date}"` : ""}/>
+        <input class="input input--date" type="date" name="date" ${task?.date ? `value="${task.date}"` : ""}> </input>
         
         <span class="button--rep">
-          <i class="far fa-repeat-alt"></i> repeat
+          <i class="far fa-repeat-alt"></i> <span>repeat</span>
         </span>
       </div>
       <div class="form__field field--cat">
@@ -2444,6 +2432,16 @@ class TaskView extends (0, _viewJsDefault.default) {
             placeholder="Description" name="description"
             
         >${task ? task.description : ""}</textarea>
+      </div>
+      <div class="form__field field--gcal">
+        <div class="gcal">
+          <img
+            src="./src/media/icon/gcal.png"
+            alt="google calendar"
+            class="img--gcal"
+          />
+          Add to Google Calendar
+        </div>
       </div>
       <div class="form__field field--btns">
         <input
@@ -2469,7 +2467,7 @@ class TaskView extends (0, _viewJsDefault.default) {
         <i class="far fa-repeat-alt form__label"></i><span class="form__label form__label--rep">Every</span>
         <input class="input input--repeat-count " type="number" min="1" max="1000" placeholder="" name="repeatCount"
         value="${repeatCount ? repeatCount : ""}" />
-        <select class="select--period ">
+        <select class="select--period" name="period" >
           <option value="days">days</option>
           <option value="weeks">weeks</option>
           <option value="monthes">monthes</option>
@@ -2489,10 +2487,21 @@ class TaskView extends (0, _viewJsDefault.default) {
         }
         this.btnRep.classList.toggle("move-repeat");
     }
+    saveToGcal() {
+        const title = document.querySelector(".input--title").value;
+        const date = new Date(document.querySelector(".input--date").value);
+        const year = date.getFullYear();
+        const month = String(date.getMonth() + 1).padStart(2, 0);
+        const day = String(date.getDate()).padStart(2, 0);
+        const des = document.querySelector(".input--des").value;
+        // let link = `https://www.google.com/calendar/render?action=TEMPLATE&text=${title}&details=${des}&dates=${year}${month}${day}T110000Z%2F${year}${month}${day}T110100Zhttps://www.google.com/calendar/render?action=TEMPLATE&text=${title}&details=${des}&dates=${year}${month}${day}T110000Z%2F${year}${month}${day}T110100Z`;
+        let link = `https://calendar.google.com/calendar/render?action=TEMPLATE&dates=${year}${month}${day}%2F${year}${month}${day}&details=${des}&location=&text=${title}`;
+        window.open(link, "_blank");
+    }
     // handlers
     addHandlerRepeat(handler) {
         this._parentEl.addEventListener("click", function(e) {
-            e.preventDefault();
+            // e.preventDefault();
             const btn = e.target.closest(".button--rep");
             if (!btn) return;
             handler();
@@ -2500,7 +2509,7 @@ class TaskView extends (0, _viewJsDefault.default) {
     }
     addHandlerSave(handler) {
         this._parentEl.addEventListener("click", function(e) {
-            e.preventDefault();
+            // e.preventDefault();
             const btn = e.target.closest(".button--save");
             if (!btn) return;
             if (document.querySelector(".input--title").value !== "") handler();
@@ -2508,11 +2517,19 @@ class TaskView extends (0, _viewJsDefault.default) {
     }
     addHandlerDelete(handler) {
         this._parentEl.addEventListener("click", function(e) {
-            e.preventDefault();
+            // e.preventDefault();
             const btn = e.target.closest(".button--del");
             if (!btn) return;
             const id = e.target.closest(".form").dataset.id;
             handler(id);
+        });
+    }
+    addHandlerGcal(handler) {
+        this._parentEl.addEventListener("click", function(e) {
+            // e.preventDefault();
+            const btn = e.target.closest(".gcal");
+            if (!btn) return;
+            handler();
         });
     }
 }
@@ -2565,20 +2582,20 @@ var _viewJs = require("./view.js");
 var _viewJsDefault = parcelHelpers.interopDefault(_viewJs);
 class ThemeView extends (0, _viewJsDefault.default) {
     _parentEl = document.querySelector(".tabs__body--tasks-lists");
-    getTheme() {
-        return this.prefersDarkScheme;
-    }
     changeTheme(theme) {
         if (theme === "light") {
-            document.body.classList.toggle("light-theme");
-            theme = document.body.classList.contains("light-theme") ? "light" : "dark";
+            document.body.classList.add("light-theme");
+            document.body.classList.remove("dark-theme");
+            // change theme icon
+            document.querySelector(".fa-sun").classList.add("hidden");
+            document.querySelector(".fa-moon").classList.remove("hidden");
         } else {
-            document.body.classList.toggle("dark-theme");
-            theme = document.body.classList.contains("dark-theme") ? "dark" : "light";
+            document.body.classList.remove("light-theme");
+            document.body.classList.add("dark-theme");
+            // change theme icon
+            document.querySelector(".fa-sun").classList.remove("hidden");
+            document.querySelector(".fa-moon").classList.add("hidden");
         }
-        // change theme icon
-        document.querySelector(".fa-sun").classList.toggle("hidden");
-        document.querySelector(".fa-moon").classList.toggle("hidden");
     }
     // handlers
     addHandlerTheme(handler) {

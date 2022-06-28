@@ -41,6 +41,7 @@ class TaskView extends View {
     const form = document.querySelector(".form--task");
     const dataArr = [...new FormData(form)];
     const data = Object.fromEntries(dataArr);
+
     data.id = document.querySelector(".form--task").dataset?.id;
 
     // const [title, date, cat, description] = data;
@@ -53,7 +54,7 @@ class TaskView extends View {
 
     // ${task ? "edit" : "new"}
     const markup = `
-    <form class="form form--task" data-id="${task ? task.id : ""}">
+    <form class="form--task" data-id="${task ? task.id : ""}">
       <i class="far fa-times button--close"></i>
       <div class="form__field">
         <i class="far fa-pen form__label"></i>
@@ -69,10 +70,10 @@ class TaskView extends View {
         <i class="far fa-calendar form__label"></i>
         <input class="input input--date" type="date" name="date" ${
           task?.date ? `value="${task.date}"` : ""
-        }/>
+        }> </input>
         
         <span class="button--rep">
-          <i class="far fa-repeat-alt"></i> repeat
+          <i class="far fa-repeat-alt"></i> <span>repeat</span>
         </span>
       </div>
       <div class="form__field field--cat">
@@ -90,6 +91,16 @@ class TaskView extends View {
             placeholder="Description" name="description"
             
         >${task ? task.description : ""}</textarea>
+      </div>
+      <div class="form__field field--gcal">
+        <div class="gcal">
+          <img
+            src="./src/media/icon/gcal.png"
+            alt="google calendar"
+            class="img--gcal"
+          />
+          Add to Google Calendar
+        </div>
       </div>
       <div class="form__field field--btns">
         <input
@@ -116,7 +127,7 @@ class TaskView extends View {
         <i class="far fa-repeat-alt form__label"></i><span class="form__label form__label--rep">Every</span>
         <input class="input input--repeat-count " type="number" min="1" max="1000" placeholder="" name="repeatCount"
         value="${repeatCount ? repeatCount : ""}" />
-        <select class="select--period ">
+        <select class="select--period" name="period" >
           <option value="days">days</option>
           <option value="weeks">weeks</option>
           <option value="monthes">monthes</option>
@@ -142,11 +153,23 @@ class TaskView extends View {
     }
     this.btnRep.classList.toggle("move-repeat");
   }
+
+  saveToGcal() {
+    const title = document.querySelector(".input--title").value;
+    const date = new Date(document.querySelector(".input--date").value);
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, 0);
+    const day = String(date.getDate()).padStart(2, 0);
+    const des = document.querySelector(".input--des").value;
+    // let link = `https://www.google.com/calendar/render?action=TEMPLATE&text=${title}&details=${des}&dates=${year}${month}${day}T110000Z%2F${year}${month}${day}T110100Zhttps://www.google.com/calendar/render?action=TEMPLATE&text=${title}&details=${des}&dates=${year}${month}${day}T110000Z%2F${year}${month}${day}T110100Z`;
+    let link = `https://calendar.google.com/calendar/render?action=TEMPLATE&dates=${year}${month}${day}%2F${year}${month}${day}&details=${des}&location=&text=${title}`;
+    window.open(link, "_blank");
+  }
   // handlers
 
   addHandlerRepeat(handler) {
     this._parentEl.addEventListener("click", function (e) {
-      e.preventDefault();
+      // e.preventDefault();
       const btn = e.target.closest(".button--rep");
       if (!btn) return;
       handler();
@@ -154,7 +177,7 @@ class TaskView extends View {
   }
   addHandlerSave(handler) {
     this._parentEl.addEventListener("click", function (e) {
-      e.preventDefault();
+      // e.preventDefault();
       const btn = e.target.closest(".button--save");
       if (!btn) return;
       if (document.querySelector(".input--title").value !== "") handler();
@@ -162,11 +185,20 @@ class TaskView extends View {
   }
   addHandlerDelete(handler) {
     this._parentEl.addEventListener("click", function (e) {
-      e.preventDefault();
+      // e.preventDefault();
       const btn = e.target.closest(".button--del");
       if (!btn) return;
       const id = e.target.closest(".form").dataset.id;
       handler(id);
+    });
+  }
+  addHandlerGcal(handler) {
+    this._parentEl.addEventListener("click", function (e) {
+      // e.preventDefault();
+      const btn = e.target.closest(".gcal");
+      if (!btn) return;
+
+      handler();
     });
   }
 }

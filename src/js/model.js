@@ -1,6 +1,6 @@
 export const state = {
   allTasks: [],
-  allCats: ["Main", "a"],
+  allCats: ["Main"],
   curCat: "Main",
   sort: false,
   theme: "light",
@@ -45,13 +45,20 @@ class Task {
 export const newTask = function (data) {
   state.curCat = data.cat;
   const id = data.id;
+
+  let period;
+  if (data.period === "days") period = 1;
+  if (data.period === "weeks") period = 7;
+  if (data.period === "monthes") period = 30;
+  if (data.period === "years") period = 365;
+
   if (!id) {
     let task = new Task(
       data.title,
       data.date,
       data.cat,
       data.description,
-      data.repeatCount
+      data.repeatCount * period
     );
     state.allTasks.push(task);
   } else {
@@ -78,20 +85,8 @@ export const newCat = function (newCat) {
     // add new category to all categories array
     state.allCats.push(newCateFormatted);
 
-    //   // hide category from
-    //   this._hideShowCatForm(e);
-
     // save to local storage
     _setLocalStorage();
-
-    //   // create new category list
-    //   this._createCatsList(selectCategory);
-
-    // // set category selection to new category
-    // this.selectCategory.value = newCateFormatted;
-
-    // // show new category tasks
-    // this.changeCat();
 
     return newCateFormatted;
   } else {
@@ -139,24 +134,8 @@ const _setLocalStorage = function () {
   localStorage.setItem("allCats", JSON.stringify(state.allCats));
 };
 export const getLocalStorage = function () {
-  //  get last theme color from local storage and set it to site's theme
-  //   if (currentTheme === "dark") {
-  //     document.body.classList.toggle("dark-theme");
-  //     document.querySelector(".fa-moon").classList.add("hidden");
-  //     document.querySelector(".fa-sun").classList.remove("hidden");
-  //   } else if (currentTheme === "light") {
-  //     document.body.classList.toggle("light-theme");
-  //     document.querySelector(".fa-sun").classList.add("hidden");
-  //     document.querySelector(".fa-moon").classList.remove("hidden");
-  //   }
-
-  //   // show messages for empty lists
-  //   if (this.#allTasks.length === 0) {
-  //     let textMsg = `<div class="message--no-task">All tasks are done !</div>`;
-  //     let textMsg2 = `<div class="message--no-task">No task has been done !</div>`;
-  //     tabsBodyTasksUndone.insertAdjacentHTML("afterbegin", textMsg);
-  //     tabsBodyTasksDone.insertAdjacentHTML("afterbegin", textMsg2);
-  //   }
+  const themeDate = localStorage.getItem("theme");
+  state.theme = themeDate ? themeDate : "light";
 
   // recive all tasks from local storage
   const data = JSON.parse(localStorage.getItem("allTasks"));
@@ -206,8 +185,8 @@ export const searchTask = function (word) {
   return resTasks;
 };
 
-export const theme = function (prefersDarkScheme) {
-  state.theme = prefersDarkScheme.matches ? "light" : "dark";
+export const theme = function () {
+  state.theme = state.theme === "dark" ? "light" : "dark";
 
   // save current theme to local storage
   localStorage.setItem("theme", state.theme);

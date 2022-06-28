@@ -865,6 +865,9 @@ const controlNewTask = function () {
   taskView.render();
 
   taskView.updateCategories(model.state.allCats, model.state.curCat);
+
+  // gcal
+  taskView.addHandlerGcal(controlGcal);
 };
 const controlAddRepeat = function () {
   taskView.repeat();
@@ -980,9 +983,13 @@ const controlSort = function () {
 
 // theme
 const controlTheme = function () {
-  const theme = themeView.getTheme();
-  const newTheme = model.theme(theme);
+  const newTheme = model.theme();
   themeView.changeTheme(newTheme);
+};
+
+//gcal
+const controlGcal = function () {
+  taskView.saveToGcal();
 };
 
 //////////////////////////
@@ -990,11 +997,17 @@ const init = function () {
   // load data from local storage
   model.getLocalStorage();
 
+  // change theme depending on last theme
+  themeView.changeTheme(model.state.theme);
+
   // show all tasks unsorted, category = "Main"
   listView.renderAllTasks(model.state.allTasks, false, model.state.curCat);
 
   // update all categories
   categoryView.updateCategories(model.state.allCats, model.state.curCat);
+
+  // new task form
+  listView.addHandlerNewButton(controlNewTask);
 
   // change tab
   listView.addHandlerChangeTab(controlChangeTab);
@@ -1008,9 +1021,6 @@ const init = function () {
 
   // delete cat
   categoryView.addHandlerDelCat(controlDelCat);
-
-  // new task form
-  listView.addHandlerNewButton(controlNewTask);
 
   // add repeat section
   taskView.addHandlerRepeat(controlAddRepeat);
@@ -1044,8 +1054,9 @@ const init = function () {
 
   // theme
   themeView.addHandlerTheme(controlTheme);
+
+  // // gcal
+  // taskView.addHandlerGcal(controlGcal);
 };
 
 init();
-
-const test = function () {};
