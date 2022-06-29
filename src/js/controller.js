@@ -1,9 +1,7 @@
 "use strict";
 
 /// new codes
-import View from "./view/view.js";
-import newTaskView from "./view/newTaskView.js";
-import editTaskView from "./view/editTaskView.js";
+
 import taskView from "./view/taskView.js";
 import * as model from "./model.js";
 import listView from "./view/listView.js";
@@ -929,7 +927,7 @@ const controlSaveCat = function () {
 
   // check new category in model
   const newCatModel = model.newCat(newCat);
-  if (!newCatModel) return;
+  if (!newCatModel) return categoryView.renderError("duplicate cat");
 
   // update category list
   categoryView.updateCategories(model.state.allCats, model.state.curCat);
@@ -952,6 +950,8 @@ const controlChangeCat = function (cat = "Main") {
 };
 const controlDelCat = function (cat) {
   model.delCat(cat);
+
+  if (!model.delCat(cat)) return categoryView.renderError("delete main");
   categoryView.updateCategories(model.state.allCats, model.state.curCat);
 
   controlChangeCat();
@@ -1054,9 +1054,12 @@ const init = function () {
   taskView.addHandlerGcal(controlGcal);
 
   // save new task
-  taskView.addHandlerSave(controlSaveTask);
+  taskView.addHandlerSave(controlSaveTask, taskView.renderError);
   // delete task
   taskView.addHandlerDelete(controlDelete);
+
+  // task close errors
+  taskView.addHandlerCloseError(taskView.closeError);
 };
 
 init();

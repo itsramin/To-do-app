@@ -51,12 +51,6 @@ export const newTask = function (data) {
   state.curCat = data.cat;
   const id = data.id;
 
-  // let period;
-  // if (data.period === "days") period = 1;
-  // if (data.period === "weeks") period = 7;
-  // if (data.period === "monthes") period = 30;
-  // if (data.period === "years") period = 365;
-
   if (!id) {
     let task = new Task(
       data.title,
@@ -99,7 +93,7 @@ export const newCat = function (newCat) {
     return newCateFormatted;
   } else {
     //   this._alertError("duplicate cat");
-    console.log("duplicate cat");
+    return false;
   }
 };
 export const delCat = function (cat) {
@@ -117,22 +111,11 @@ export const delCat = function (cat) {
         if (task.cat === cat) task.cat = "Main";
       });
 
-      //   // save to local storage
+      // save to local storage
       _setLocalStorage();
-
-      //   // create new category list
-      //   this._createCatsList(selectCategory);
-
-      //   // create new category list for new and edit forms
-      //   this._createCatsList(inputNewCat);
-      //   this._createCatsList(inputEditCat);
-
-      //   // show category tasks
-      //   this._changeCat(e);
     }
   } else {
-    // return this._alertError("delete main");
-    console.log("erorr delete cat");
+    return false;
   }
 };
 

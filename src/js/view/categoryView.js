@@ -50,7 +50,6 @@ class CategoryView extends View {
     //   console.log("duplicate cat");
     // }
   }
-  delCategory(cat) {}
 
   // handlers
   addHandlerChangeCat(handler) {

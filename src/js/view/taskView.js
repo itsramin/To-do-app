@@ -1,7 +1,6 @@
 import View from "./view.js";
 import { formatDate } from "../helper.js";
 class TaskView extends View {
-  // _parentEl = document.querySelector(".tabs__body--new");
   _parentEl = document.querySelector(".tabs__body--task");
   _childEl = document.querySelector(".input--cat");
 
@@ -54,7 +53,7 @@ class TaskView extends View {
 
     // ${task ? "edit" : "new"}
     const markup = `
-    <form class="form--task" data-id="${task ? task.id : ""}">
+    <form class="form--task" data-id=${task ? task.id : ""}>
       <i class="far fa-times button--close"></i>
       <div class="form__field">
         <i class="far fa-pen form__label"></i>
@@ -64,7 +63,9 @@ class TaskView extends View {
             placeholder="Title"
             name="title"
             value="${task ? task.title : ""}"
-        />
+            required
+        >
+        </input>
       </div>
       <div class="form__field field--date">
         <i class="far fa-calendar form__label"></i>
@@ -117,6 +118,7 @@ class TaskView extends View {
         ${task ? `<button class="button--del">Delete task</button>` : ""}
       </div>
     </form>
+
     `;
     // if (task) {
     //   this.repeat(task.repeatCount);
@@ -179,22 +181,38 @@ class TaskView extends View {
     let link = `https://calendar.google.com/calendar/render?action=TEMPLATE&dates=${year}${month}${day}%2F${year}${month}${day}&details=${des}&location=&text=${title}`;
     window.open(link, "_blank");
   }
+
   // handlers
 
   addHandlerRepeat(handler) {
     this._parentEl.addEventListener("click", function (e) {
-      // e.preventDefault();
       const btn = e.target.closest(".button--rep");
       if (!btn) return;
       handler();
     });
   }
-  addHandlerSave(handler) {
+  addHandlerSave(handler, errorHandler) {
     this._parentEl.addEventListener("click", function (e) {
       const btn = e.target.closest(".button--save");
       if (!btn) return;
       e.preventDefault();
-      if (document.querySelector(".input--title").value !== "") handler();
+
+      // no title alert
+      if (document.querySelector(".input--title").value === "")
+        return errorHandler("no task title");
+
+      // no date alert
+      if (
+        document.querySelector(".input--repeat-count")?.value > 0 &&
+        document.querySelector(".input--date").value === ""
+      )
+        return errorHandler("no task date");
+
+      // wrong repeat count
+      if (isNaN(document.querySelector(".input--repeat-count")?.value))
+        return errorHandler("wrong repeat count");
+
+      handler();
     });
   }
   addHandlerDelete(handler) {
@@ -208,7 +226,6 @@ class TaskView extends View {
   }
   addHandlerGcal(handler) {
     this._parentEl.addEventListener("click", function (e) {
-      // e.preventDefault();
       const btn = e.target.closest(".gcal");
       if (!btn) return;
 

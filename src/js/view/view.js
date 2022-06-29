@@ -96,6 +96,50 @@ export default class View {
     this.container.classList.add("container--max-height");
     this.tabs.classList.add("tabs--max-height");
   }
+  renderError(err) {
+    // add an overlay layer to whole view
+    document.querySelector(".overlay").classList.remove("hidden");
+
+    // remove hidden class form message
+    document.querySelector(".message").classList.remove("hidden");
+
+    // switch errors
+    let msg;
+    switch (err) {
+      case "no task title":
+        msg = "Please enter a title.";
+        break;
+      case "no task date":
+        msg = "Please enter a date.";
+        break;
+      case "wrong repeat count":
+        msg = "Please enter a positive number to repeat count.";
+        break;
+      case "delete main":
+        msg = `You can't delete "Main" category!`;
+        break;
+      case "duplicate cat":
+        msg = `This category is already exist!`;
+        break;
+      case "confirm to delete task":
+        msg = `Are you sure you want to delete this task?
+
+        `;
+        break;
+    }
+
+    let msgEl = `<div class="message__body--text">${msg}</div>`;
+    document
+      .querySelector(".message__body")
+      .insertAdjacentHTML("afterbegin", msgEl);
+
+    // if (showBtns) messageBtns.classList.remove("hidden");
+  }
+  closeError() {
+    document.querySelector(".overlay").classList.add("hidden");
+    document.querySelector(".message").classList.add("hidden");
+    document.querySelector(".message__body--text").remove();
+  }
   // render with new and edit tags
   // render(task = "") {
   //   this.show();
@@ -185,5 +229,13 @@ export default class View {
     });
 
     this._childEl.insertAdjacentHTML("beforeend", html);
+  }
+  addHandlerCloseError(handler) {
+    document.addEventListener("click", function (e) {
+      const btn = e.target.closest(".button--message-close");
+      if (!btn) return;
+
+      handler();
+    });
   }
 }
