@@ -5,6 +5,7 @@ export const state = {
   sort: false,
   theme: "light",
   task: {},
+  curId: "",
   search: [],
 };
 
@@ -29,24 +30,6 @@ class Task {
   }
 }
 
-// export const newTask = function (data) {
-//   state.curCat = data[2];
-//   const id = data[5];
-//   if (!id) {
-//     let task = new Task(...data);
-//     state.allTasks.push(task);
-//   } else {
-//     const task = state.allTasks.find((task) => task.id === id);
-//     task.title = data[0];
-//     task.date = data[1];
-//     task.cat = data[2];
-//     task.description = data[3];
-//     task.repeatCount = data[4];
-//   }
-
-//   _setLocalStorage();
-//   return state;
-// };
 export const newTask = function (data) {
   state.curCat = data.cat;
   const id = data.id;
@@ -96,24 +79,24 @@ export const newCat = function (newCat) {
     return false;
   }
 };
+
 export const delCat = function (cat) {
   // check if user is deleting main category
+
   if (cat !== "Main") {
-    if (confirm(`Are you sure you want to delete "${cat}" list?`)) {
-      // delete "THAT" category from all categories array
-      state.allCats.splice(
-        state.allCats.findIndex((c) => c === cat),
-        1
-      );
+    // delete "THAT" category from all categories array
+    state.allCats.splice(
+      state.allCats.findIndex((c) => c === cat),
+      1
+    );
 
-      // set tasks' category was "THAT" category to "main" category
-      state.allTasks.forEach((task) => {
-        if (task.cat === cat) task.cat = "Main";
-      });
-
-      // save to local storage
-      _setLocalStorage();
-    }
+    // set tasks' category was "THAT" category to "main" category
+    state.allTasks.forEach((task) => {
+      if (task.cat === cat) task.cat = "Main";
+    });
+    // save to local storage
+    _setLocalStorage();
+    return true;
   } else {
     return false;
   }
@@ -147,7 +130,6 @@ export const getLocalStorage = function () {
   //   this.#currentCat = selectCategory.value;
 };
 
-//
 export const checkTask = function (id) {
   const task = state.allTasks.find((task) => task.id === id);
   task.status = !task.status;
@@ -182,17 +164,15 @@ export const checkRepeat = function (id) {
 
 export const editTask = function (id) {
   const task = state.allTasks.find((task) => task.id === id);
+  state.curId = id;
   return task;
 };
 
 export const deleteTask = function (id) {
-  if (confirm("Are you sure you want to delete this task?")) {
-    const index = state.allTasks.findIndex((task) => task.id === id);
-    state.allTasks.splice(index, 1);
+  const index = state.allTasks.findIndex((task) => task.id === id);
+  state.allTasks.splice(index, 1);
 
-    _setLocalStorage();
-    return true;
-  }
+  _setLocalStorage();
 };
 
 export const searchTask = function (word) {

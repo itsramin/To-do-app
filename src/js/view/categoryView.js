@@ -71,13 +71,13 @@ class CategoryView extends View {
     this.btnCategoryDel.addEventListener("click", function (e) {
       e.preventDefault();
 
-      const cat = document.querySelector(".select--category").value;
+      // const cat = document.querySelector(".select--category").value;
       // check if "new category" form is visible
       if (
         !document.querySelector(".form--category").classList.contains("hidden")
       )
         return;
-      handler(cat);
+      handler("confirm to delete cat", true);
     });
   }
 }

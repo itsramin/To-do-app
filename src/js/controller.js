@@ -43,11 +43,23 @@ const controlEditTask = function (id) {
   }
   taskView.updateCategories(model.state.allCats, task.cat);
 };
-const controlDelete = function (id) {
-  if (model.deleteTask(id)) {
-    taskView.close();
-    listView.renderAllTasks(model.state.allTasks, false, model.state.curCat);
-  }
+// const controlDelete = function (id) {
+//   if (model.deleteTask(id)) {
+//     taskView.close();
+//     listView.renderAllTasks(model.state.allTasks, false, model.state.curCat);
+//   }
+// };
+const controlDelete = function () {
+  if (!model.state.curId) return;
+  model.deleteTask(model.state.curId);
+  taskView.close();
+  taskView.closeMessage();
+  listView.renderAllTasks(model.state.allTasks, false, model.state.curCat);
+  // taskView.renderMessage();
+  // if () {
+  //   taskView.close();
+  //   listView.renderAllTasks(model.state.allTasks, false, model.state.curCat);
+  // }
 };
 const controlGcal = function () {
   taskView.saveToGcal();
@@ -75,7 +87,7 @@ const controlSaveCat = function () {
 
   // check new category in model
   const newCatModel = model.newCat(newCat);
-  if (!newCatModel) return categoryView.renderError("duplicate cat");
+  if (!newCatModel) return categoryView.renderMessage("duplicate cat");
 
   // update category list
   categoryView.updateCategories(model.state.allCats, model.state.curCat);
@@ -86,7 +98,7 @@ const controlSaveCat = function () {
   // hide new category form
   categoryView.showCatForm();
 };
-const controlChangeCat = function (cat = "Main") {
+const controlChangeCat = function (cat) {
   // change category
   categoryView.changeCat(cat);
 
@@ -96,13 +108,18 @@ const controlChangeCat = function (cat = "Main") {
   // show all tasks on selected category
   listView.renderAllTasks(model.state.allTasks, false, model.state.curCat);
 };
-const controlDelCat = function (cat) {
-  model.delCat(cat);
+const controlDelCat = function () {
+  if (model.state.curId) return;
+  const cat = model.state.curCat;
+  if (model.delCat(cat)) {
+    categoryView.closeMessage();
+    model.state.curCat = "Main";
+    categoryView.updateCategories(model.state.allCats, model.state.curCat);
 
-  if (!model.delCat(cat)) return categoryView.renderError("delete main");
-  categoryView.updateCategories(model.state.allCats, model.state.curCat);
-
-  controlChangeCat();
+    controlChangeCat(model.state.curCat);
+  } else {
+    return categoryView.renderMessage("delete main");
+  }
 };
 
 // search section
@@ -164,7 +181,8 @@ const init = function () {
   categoryView.addHandlerSaveCat(controlSaveCat);
 
   // delete cat
-  categoryView.addHandlerDelCat(controlDelCat);
+  categoryView.addHandlerDelCat(categoryView.renderMessage);
+  categoryView.addHandlerCheckAnswer(controlDelCat, categoryView.closeMessage);
 
   // add repeat section
   taskView.addHandlerRepeat(controlAddRepeat);
@@ -197,13 +215,14 @@ const init = function () {
   taskView.addHandlerGcal(controlGcal);
 
   // save new task
-  taskView.addHandlerSave(controlSaveTask, taskView.renderError);
+  taskView.addHandlerSave(controlSaveTask, taskView.renderMessage);
 
   // delete task
-  taskView.addHandlerDelete(controlDelete);
+  taskView.addHandlerDelete(taskView.renderMessage);
+  taskView.addHandlerCheckAnswer(controlDelete, taskView.closeMessage);
 
   // task close errors
-  taskView.addHandlerCloseError(taskView.closeError);
+  taskView.addHandlercloseMessage(taskView.closeMessage);
 };
 
 init();

@@ -24,22 +24,6 @@ export default class View {
   btnSearchClose = document.querySelector(".button--search-close");
   tabsBodySearchRes = document.querySelector(".tabs__body--search-res");
 
-  // // new form elements
-  // btnNewRep = document.querySelector(".button--new-rep");
-  // inputNewCat = document.querySelector(".input--new-cat");
-  // tabsBodyNew = document.querySelector(".tabs__body--new");
-  // btnNewSave = document.querySelector(".button--new-save");
-  // btnNewClose = document.querySelector(".button--new-close");
-  // btnGCal = document.querySelector(".gcal");
-
-  // // edit form elements
-  // btnEditDel = document.querySelector(".button--edit-del");
-  // btnEditRep = document.querySelector(".button--edit-rep");
-  // inputEditCat = document.querySelector(".input--edit-cat");
-  // tabsBodyEdit = document.querySelector(".tabs__body--edit");
-  // btnEditSave = document.querySelector(".button--edit-save");
-  // btnEditClose = document.querySelector(".button--edit-close");
-
   // main buttons elements
   buttons = document.querySelector(".buttons");
   btnNew = document.querySelector(".button--new");
@@ -96,7 +80,7 @@ export default class View {
     this.container.classList.add("container--max-height");
     this.tabs.classList.add("tabs--max-height");
   }
-  renderError(err) {
+  renderMessage(err, showBtns = false) {
     // add an overlay layer to whole view
     document.querySelector(".overlay").classList.remove("hidden");
 
@@ -123,7 +107,10 @@ export default class View {
         break;
       case "confirm to delete task":
         msg = `Are you sure you want to delete this task?
-
+        `;
+        break;
+      case "confirm to delete cat":
+        msg = `Are you sure you want to delete this category?
         `;
         break;
     }
@@ -133,12 +120,28 @@ export default class View {
       .querySelector(".message__body")
       .insertAdjacentHTML("afterbegin", msgEl);
 
-    // if (showBtns) messageBtns.classList.remove("hidden");
+    if (showBtns)
+      document.querySelector(".message__buttons").classList.remove("hidden");
   }
-  closeError() {
+  closeMessage() {
     document.querySelector(".overlay").classList.add("hidden");
     document.querySelector(".message").classList.add("hidden");
     document.querySelector(".message__body--text").remove();
+  }
+  updateCategories(cats, curCate) {
+    // clean "place" content
+    if (!this._childEl) return;
+
+    this._childEl.innerHTML = "";
+
+    let html = "";
+    cats.forEach((cat) => {
+      html += `<option ${
+        cat === curCate ? "selected" : ""
+      } value="${cat}">${cat}</option>`;
+    });
+
+    this._childEl.insertAdjacentHTML("beforeend", html);
   }
   // render with new and edit tags
   // render(task = "") {
@@ -215,27 +218,20 @@ export default class View {
       if (btn) handler();
     });
   }
-  updateCategories(cats, curCate) {
-    // clean "place" content
-    if (!this._childEl) return;
-
-    this._childEl.innerHTML = "";
-
-    let html = "";
-    cats.forEach((cat) => {
-      html += `<option ${
-        cat === curCate ? "selected" : ""
-      } value="${cat}">${cat}</option>`;
-    });
-
-    this._childEl.insertAdjacentHTML("beforeend", html);
-  }
-  addHandlerCloseError(handler) {
+  addHandlercloseMessage(handler) {
     document.addEventListener("click", function (e) {
       const btn = e.target.closest(".button--message-close");
       if (!btn) return;
 
       handler();
+    });
+  }
+  addHandlerCheckAnswer(yes, no) {
+    document.addEventListener("click", function (e) {
+      const yesBtn = e.target.closest(".message__button--yes");
+      const noBtn = e.target.closest(".message__button--no");
+      if (yesBtn) return yes();
+      if (noBtn) return no();
     });
   }
 }

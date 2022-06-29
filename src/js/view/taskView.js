@@ -4,38 +4,6 @@ class TaskView extends View {
   _parentEl = document.querySelector(".tabs__body--task");
   _childEl = document.querySelector(".input--cat");
 
-  // save() {
-  //   const title = document.querySelector(".input--title").value;
-  //   const date = document.querySelector(".input--date").value;
-  //   const cat = document.querySelector(".input--cat").value
-  //     ? document.querySelector(".input--cat").value
-  //     : "Main";
-  //   const description = document.querySelector(".input--des").value;
-  //   const repeatPeriod = document.querySelector(".select--period")?.value;
-  //   let period;
-  //   if (repeatPeriod === "days") period = 1;
-  //   if (repeatPeriod === "weeks") period = 7;
-  //   if (repeatPeriod === "monthes") period = 30;
-  //   if (repeatPeriod === "years") period = 365;
-
-  //   // calculate repetition count
-  //   let repCount;
-  //   if (
-  //     !document.querySelector(".input--repeat-count") ||
-  //     document.querySelector(".input--repeat-count").value === ""
-  //   ) {
-  //     repCount = null;
-  //   } else {
-  //     repCount = document.querySelector(".input--repeat-count").value;
-  //   }
-  //   const repeatCount = repCount * period;
-
-  //   const id = document.querySelector(".form").dataset?.id;
-
-  //   const taskData = [title, date, cat, description, repeatCount, id];
-
-  //   return taskData;
-  // }
   save() {
     const form = document.querySelector(".form--task");
     const dataArr = [...new FormData(form)];
@@ -51,7 +19,6 @@ class TaskView extends View {
   render(task) {
     this.show();
 
-    // ${task ? "edit" : "new"}
     const markup = `
     <form class="form--task" data-id=${task ? task.id : ""}>
       <i class="far fa-times button--close"></i>
@@ -120,9 +87,7 @@ class TaskView extends View {
     </form>
 
     `;
-    // if (task) {
-    //   this.repeat(task.repeatCount);
-    // }
+
     this._parentEl.insertAdjacentHTML("beforeend", markup);
     this._childEl = document.querySelector(".input--cat");
     this.btnRep = document.querySelector(".button--rep");
@@ -207,20 +172,21 @@ class TaskView extends View {
       )
         return errorHandler("no task date");
 
-      // wrong repeat count
-      if (isNaN(document.querySelector(".input--repeat-count")?.value))
-        return errorHandler("wrong repeat count");
+      // // wrong repeat count
+      // if (document.querySelector(".input--repeat-count")?.value)
+      //   return errorHandler("wrong repeat count");
 
       handler();
     });
   }
-  addHandlerDelete(handler) {
+  addHandlerDelete(errorHandler) {
     this._parentEl.addEventListener("click", function (e) {
       const btn = e.target.closest(".button--del");
       if (!btn) return;
       e.preventDefault();
       const id = e.target.closest(".form--task").dataset.id;
-      handler(id);
+      // handler(id);
+      return errorHandler("confirm to delete task", true);
     });
   }
   addHandlerGcal(handler) {
