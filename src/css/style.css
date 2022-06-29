@@ -468,7 +468,7 @@ select:focus-visible {
   height: 25px;
 }
 
-/* input[type="date"] {
+input[type="date"] {
   position: relative;
   appearance: none;
 }
@@ -488,7 +488,7 @@ input[type="date"]:before {
   position: absolute;
   right: 6px;
   color: var(--color-secondary);
-} */
+}
 /*------------------------------------*\
   # New task section
 \*------------------------------------*/

@@ -5,22 +5,27 @@ export const state = {
   sort: false,
   theme: "light",
   task: {},
-  search: {
-    query: "",
-    results: [],
-  },
+  search: [],
 };
 
 class Task {
   id = (Date.now() + "").slice(-10);
   doneDate;
-  constructor(title, date, cat, description = "", repeatCount = 0) {
+  constructor(
+    title,
+    date,
+    cat,
+    description = "",
+    repeatCount = 0,
+    period = ""
+  ) {
     this.title = title;
     this.date = date;
     this.cat = cat;
     this.description = description;
     this.status = false;
     this.repeatCount = repeatCount;
+    this.period = period;
   }
 }
 
@@ -46,11 +51,11 @@ export const newTask = function (data) {
   state.curCat = data.cat;
   const id = data.id;
 
-  let period;
-  if (data.period === "days") period = 1;
-  if (data.period === "weeks") period = 7;
-  if (data.period === "monthes") period = 30;
-  if (data.period === "years") period = 365;
+  // let period;
+  // if (data.period === "days") period = 1;
+  // if (data.period === "weeks") period = 7;
+  // if (data.period === "monthes") period = 30;
+  // if (data.period === "years") period = 365;
 
   if (!id) {
     let task = new Task(
@@ -58,8 +63,10 @@ export const newTask = function (data) {
       data.date,
       data.cat,
       data.description,
-      data.repeatCount * period
+      data.repeatCount,
+      data.period
     );
+
     state.allTasks.push(task);
   } else {
     const task = state.allTasks.find((task) => task.id === id);
@@ -67,7 +74,8 @@ export const newTask = function (data) {
       (task.date = data.date),
       (task.cat = data.cat),
       (task.description = data.description),
-      (task.repeatCount = data.repeatCount);
+      (task.repeatCount = data.repeatCount),
+      (task.period = data.period);
   }
 
   _setLocalStorage();
@@ -160,6 +168,30 @@ export const getLocalStorage = function () {
 export const checkTask = function (id) {
   const task = state.allTasks.find((task) => task.id === id);
   task.status = !task.status;
+};
+
+export const checkRepeat = function (id) {
+  const task = state.allTasks.find((task) => task.id === id);
+  // check if there is a repeat
+  if (task.repeatCount > 0 && task.status) {
+    let period;
+    if (task.period === "days") period = 1;
+    if (task.period === "weeks") period = 7;
+    if (task.period === "monthes") period = 30;
+    if (task.period === "years") period = 365;
+
+    let repTask = new Task(
+      task.title,
+      new Date(
+        +new Date(task.date) + period * task.repeatCount * 24 * 60 * 60 * 1000
+      ),
+      task.cat,
+      task.description,
+      task.repeatCount,
+      task.period
+    );
+    state.allTasks.push(repTask);
+  }
 
   // save in local storage
   _setLocalStorage();
@@ -181,8 +213,7 @@ export const deleteTask = function (id) {
 };
 
 export const searchTask = function (word) {
-  const resTasks = state.allTasks.filter((task) => task.title.includes(word));
-  return resTasks;
+  state.search = state.allTasks.filter((task) => task.title.includes(word));
 };
 
 export const theme = function () {

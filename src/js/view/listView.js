@@ -1,4 +1,5 @@
 import View from "./view.js";
+import { formatDate } from "../helper.js";
 
 class ListView extends View {
   _parentEl = document.querySelector(".tabs__body--tasks-lists");
@@ -12,39 +13,21 @@ class ListView extends View {
     const taskDate = new Date(date);
 
     // calculate days between task's date and now
-    const remDays = Math.trunc(
+    const remDays = Math.ceil(
       (taskDate.getTime() - now) / (1000 * 60 * 60 * 24)
     );
 
-    const options =
-      new Date(date).getFullYear() === new Date(Date.now()).getFullYear()
-        ? { month: "numeric", day: "numeric" }
-        : { month: "numeric", day: "numeric", year: "numeric" };
-
     // retrun text or remain days
-    if (remDays < -1)
-      return new Intl.DateTimeFormat("en-US", {
-        month: "numeric",
-        day: "numeric",
-      }).format(taskDate);
+    if (remDays < -1) return formatDate(taskDate);
     if (remDays === -1) return "Yesterday";
     if (remDays === 0) return "Today";
     if (remDays === 1) return "Tomorrow";
-    if (remDays < 7)
-      return new Intl.DateTimeFormat("en-US", { weekday: "short" }).format(
-        taskDate
-      );
-    if (remDays >= 7)
-      return new Intl.DateTimeFormat("en-US", options).format(taskDate);
+    if (remDays < 7) return formatDate(taskDate, "weekday");
+    if (remDays >= 7) return formatDate(taskDate);
   }
   _renderTask(task, search = false) {
-    const options =
-      new Date(task.date).getFullYear() === new Date(Date.now()).getFullYear()
-        ? { month: "numeric", day: "numeric" }
-        : { month: "numeric", day: "numeric", year: "numeric" };
-    const intlDate = task.date
-      ? new Intl.DateTimeFormat("en-US", options).format(new Date(task.date))
-      : "";
+    new Date(task.date);
+    const intlDate = task.date ? formatDate(new Date(task.date)) : "";
     const status = task.status;
 
     const isLate =

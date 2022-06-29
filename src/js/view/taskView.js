@@ -1,5 +1,5 @@
 import View from "./view.js";
-
+import { formatDate } from "../helper.js";
 class TaskView extends View {
   // _parentEl = document.querySelector(".tabs__body--new");
   _parentEl = document.querySelector(".tabs__body--task");
@@ -68,8 +68,14 @@ class TaskView extends View {
       </div>
       <div class="form__field field--date">
         <i class="far fa-calendar form__label"></i>
-        <input class="input input--date" type="date" name="date" ${
-          task?.date ? `value="${task.date}"` : ""
+        <input class="input input--date"  name="date" ${
+          task?.date
+            ? `type="date" value="${
+                new Date(task.date).toISOString().split("T")[0]
+              }" `
+            : `type="text"
+          onfocus="(this.type='date')"
+          placeholder="Date"`
         }> </input>
         
         <span class="button--rep">
@@ -120,22 +126,30 @@ class TaskView extends View {
     this.btnRep = document.querySelector(".button--rep");
   }
 
-  repeat(repeatCount) {
+  repeat(task = undefined) {
     // if (!repeatCount) return;
     let html = `
       <div class="form__field form__field--repeat ">
         <i class="far fa-repeat-alt form__label"></i><span class="form__label form__label--rep">Every</span>
         <input class="input input--repeat-count " type="number" min="1" max="1000" placeholder="" name="repeatCount"
-        value="${repeatCount ? repeatCount : ""}" />
+        value="${task?.repeatCount ? task.repeatCount : ""}" />
         <select class="select--period" name="period" >
-          <option value="days">days</option>
-          <option value="weeks">weeks</option>
-          <option value="monthes">monthes</option>
-          <option value="years">years</option>
+          <option value="days" ${
+            task?.period === "days" ? "selected" : ""
+          }>days</option>
+          <option value="weeks" ${
+            task?.period === "weeks" ? "selected" : ""
+          }>weeks</option>
+          <option value="monthes" ${
+            task?.period === "monthes" ? "selected" : ""
+          }>monthes</option>
+          <option value="years" ${
+            task?.period === "years" ? "selected" : ""
+          }>years</option>
         </select>
       </div>
     `;
-    if (repeatCount >= 0) {
+    if (task?.repeatCount > 0) {
       this.btnRep.innerHTML = `<i class="far fa-times"></i>`;
       document
         .querySelector(".field--date")
@@ -177,18 +191,18 @@ class TaskView extends View {
   }
   addHandlerSave(handler) {
     this._parentEl.addEventListener("click", function (e) {
-      // e.preventDefault();
       const btn = e.target.closest(".button--save");
       if (!btn) return;
+      e.preventDefault();
       if (document.querySelector(".input--title").value !== "") handler();
     });
   }
   addHandlerDelete(handler) {
     this._parentEl.addEventListener("click", function (e) {
-      // e.preventDefault();
       const btn = e.target.closest(".button--del");
       if (!btn) return;
-      const id = e.target.closest(".form").dataset.id;
+      e.preventDefault();
+      const id = e.target.closest(".form--task").dataset.id;
       handler(id);
     });
   }

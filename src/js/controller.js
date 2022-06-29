@@ -865,9 +865,6 @@ const controlNewTask = function () {
   taskView.render();
 
   taskView.updateCategories(model.state.allCats, model.state.curCat);
-
-  // gcal
-  taskView.addHandlerGcal(controlGcal);
 };
 const controlAddRepeat = function () {
   taskView.repeat();
@@ -894,15 +891,20 @@ const controlCheckTask = function (id) {
   model.checkTask(id);
   // show all tasks on selected category
   listView.renderAllTasks(model.state.allTasks, false, model.state.curCat);
+
+  model.checkRepeat(id);
+
+  setTimeout(function () {
+    listView.renderAllTasks(model.state.allTasks, false, model.state.curCat);
+  }, 1000);
 };
 
 const controlEditTask = function (id) {
-  // console.log(model.editTask(id));
   const task = model.editTask(id);
 
   taskView.render(task);
   if (task.repeatCount > 0) {
-    taskView.repeat(task.repeatCount);
+    taskView.repeat(task);
   } else {
     taskView.repeat();
     taskView.repeat();
@@ -962,10 +964,9 @@ const controlSearchBtn = function () {
 const controlSearchWord = function () {
   const word = searchView.searchWord();
   if (!word) return;
-  const data = model.searchTask(word);
-  console.log(data);
+  model.searchTask(word);
 
-  data.forEach((task) => {
+  model.state.search.forEach((task) => {
     listView._renderTask(task, true);
   });
 };
@@ -1028,17 +1029,11 @@ const init = function () {
   // close form
   taskView.addHandlerClose(controlClose);
 
-  // save new task
-  taskView.addHandlerSave(controlSaveTask);
-
   // check task
   listView.addHandlerCheck(controlCheckTask);
 
   // edit task
   listView.addHandlerEdit(controlEditTask);
-
-  // delete task
-  taskView.addHandlerDelete(controlDelete);
 
   // search btn
   listView.addHandlerSearchButton(controlSearchBtn);
@@ -1055,8 +1050,13 @@ const init = function () {
   // theme
   themeView.addHandlerTheme(controlTheme);
 
-  // // gcal
-  // taskView.addHandlerGcal(controlGcal);
+  // gcal
+  taskView.addHandlerGcal(controlGcal);
+
+  // save new task
+  taskView.addHandlerSave(controlSaveTask);
+  // delete task
+  taskView.addHandlerDelete(controlDelete);
 };
 
 init();
