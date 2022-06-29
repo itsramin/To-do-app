@@ -1,5 +1,5 @@
 import View from "./view.js";
-import { formatDate } from "../helper.js";
+
 class TaskView extends View {
   _parentEl = document.querySelector(".tabs__body--task");
   _childEl = document.querySelector(".input--cat");
@@ -127,7 +127,6 @@ class TaskView extends View {
     this._childEl = document.querySelector(".input--cat");
     this.btnRep = document.querySelector(".button--rep");
   }
-
   repeat(task = undefined) {
     // if (!repeatCount) return;
     let html = `
@@ -151,25 +150,25 @@ class TaskView extends View {
         </select>
       </div>
     `;
+    const btnRep = document.querySelector(".button--rep");
     if (task?.repeatCount > 0) {
-      this.btnRep.innerHTML = `<i class="far fa-times"></i>`;
+      btnRep.innerHTML = `<i class="far fa-times"></i>`;
       document
         .querySelector(".field--date")
         .insertAdjacentHTML("afterend", html);
     } else {
-      if (this.btnRep.innerHTML === `<i class="far fa-times"></i>`) {
-        this.btnRep.innerHTML = `<i class="far fa-repeat-alt"></i> repeat</span>`;
+      if (btnRep.innerHTML === `<i class="far fa-times"></i>`) {
+        btnRep.innerHTML = `<i class="far fa-repeat-alt"></i> repeat</span>`;
         document.querySelector(".form__field--repeat")?.remove();
       } else {
-        this.btnRep.innerHTML = `<i class="far fa-times"></i>`;
+        btnRep.innerHTML = `<i class="far fa-times"></i>`;
         document
           .querySelector(".field--date")
           .insertAdjacentHTML("afterend", html);
       }
     }
-    this.btnRep.classList.toggle("move-repeat");
+    btnRep.classList.toggle("move-repeat");
   }
-
   saveToGcal() {
     const title = document.querySelector(".input--title").value;
     const date = new Date(document.querySelector(".input--date").value);
