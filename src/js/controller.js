@@ -43,23 +43,12 @@ const controlEditTask = function (id) {
   }
   taskView.updateCategories(model.state.allCats, task.cat);
 };
-// const controlDelete = function (id) {
-//   if (model.deleteTask(id)) {
-//     taskView.close();
-//     listView.renderAllTasks(model.state.allTasks, false, model.state.curCat);
-//   }
-// };
 const controlDelete = function () {
   if (!model.state.curId) return;
   model.deleteTask(model.state.curId);
   taskView.close();
   taskView.closeMessage();
   listView.renderAllTasks(model.state.allTasks, false, model.state.curCat);
-  // taskView.renderMessage();
-  // if () {
-  //   taskView.close();
-  //   listView.renderAllTasks(model.state.allTasks, false, model.state.curCat);
-  // }
 };
 const controlGcal = function () {
   taskView.saveToGcal();

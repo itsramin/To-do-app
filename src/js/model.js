@@ -75,14 +75,12 @@ export const newCat = function (newCat) {
 
     return newCateFormatted;
   } else {
-    //   this._alertError("duplicate cat");
     return false;
   }
 };
 
 export const delCat = function (cat) {
   // check if user is deleting main category
-
   if (cat !== "Main") {
     // delete "THAT" category from all categories array
     state.allCats.splice(
@@ -122,12 +120,6 @@ export const getLocalStorage = function () {
   if (Array.isArray(data2) && data2.length === 0) return;
   // save all tasks and categories to variables
   state.allCats = data2;
-
-  //   // create category list from all categories
-  //   this._createCatsList(selectCategory);
-
-  //   // set current category to categoy selection value
-  //   this.#currentCat = selectCategory.value;
 };
 
 export const checkTask = function (id) {

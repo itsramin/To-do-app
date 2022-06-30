@@ -48,8 +48,7 @@ class ListView extends View {
 
       </div>
     `;
-    // console.log(tabsBodyTasksUndone);
-    // ${status === false ? this._remainDays(task.date) : intlDate}</div>
+
     if (search) {
       this.tabsBodySearchRes.insertAdjacentHTML("beforeend", html);
     } else {

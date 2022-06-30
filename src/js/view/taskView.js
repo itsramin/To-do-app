@@ -11,9 +11,6 @@ class TaskView extends View {
 
     data.id = document.querySelector(".form--task").dataset?.id;
 
-    // const [title, date, cat, description] = data;
-    // const taskData = [title, date, cat, description, repeatCount, id];
-
     return data;
   }
   render(task) {
@@ -93,7 +90,6 @@ class TaskView extends View {
     this.btnRep = document.querySelector(".button--rep");
   }
   repeat(task = undefined) {
-    // if (!repeatCount) return;
     let html = `
       <div class="form__field form__field--repeat ">
         <i class="far fa-repeat-alt form__label"></i><span class="form__label form__label--rep">Every</span>
@@ -141,13 +137,11 @@ class TaskView extends View {
     const month = String(date.getMonth() + 1).padStart(2, 0);
     const day = String(date.getDate()).padStart(2, 0);
     const des = document.querySelector(".input--des").value;
-    // let link = `https://www.google.com/calendar/render?action=TEMPLATE&text=${title}&details=${des}&dates=${year}${month}${day}T110000Z%2F${year}${month}${day}T110100Zhttps://www.google.com/calendar/render?action=TEMPLATE&text=${title}&details=${des}&dates=${year}${month}${day}T110000Z%2F${year}${month}${day}T110100Z`;
     let link = `https://calendar.google.com/calendar/render?action=TEMPLATE&dates=${year}${month}${day}%2F${year}${month}${day}&details=${des}&location=&text=${title}`;
     window.open(link, "_blank");
   }
 
   // handlers
-
   addHandlerRepeat(handler) {
     this._parentEl.addEventListener("click", function (e) {
       const btn = e.target.closest(".button--rep");
@@ -172,10 +166,6 @@ class TaskView extends View {
       )
         return errorHandler("no task date");
 
-      // // wrong repeat count
-      // if (document.querySelector(".input--repeat-count")?.value)
-      //   return errorHandler("wrong repeat count");
-
       handler();
     });
   }
@@ -184,8 +174,7 @@ class TaskView extends View {
       const btn = e.target.closest(".button--del");
       if (!btn) return;
       e.preventDefault();
-      const id = e.target.closest(".form--task").dataset.id;
-      // handler(id);
+
       return errorHandler("confirm to delete task", true);
     });
   }
