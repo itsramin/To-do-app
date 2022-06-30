@@ -130,9 +130,9 @@ const controlCloseSearch = function () {
 
 // sort
 const controlSort = function () {
-  const sort = !model.sort;
+  const sort = !model.state.sort;
   listView.renderAllTasks(model.state.allTasks, sort, model.state.curCat);
-  model.sort = sort;
+  model.state.sort = sort;
 };
 
 // theme
