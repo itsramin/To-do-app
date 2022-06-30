@@ -1,11 +1,10 @@
 # Todo app
 
 A simple todo application without any dependencies, working with html, css and javascript.
-see live [demo](https://itsramin.github.io/To-do-app/).
+see live [demo](https://todo-ramin.netlify.app/).
 
 ## Features
 
-- pwa
 - due date
 - dark mode
 - categories
