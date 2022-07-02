@@ -1,4 +1,5 @@
 import View from "./view.js";
+import { formatDate } from "../helper.js";
 
 class TaskView extends View {
   _parentEl = document.querySelector(".tabs__body--task");
@@ -47,6 +48,19 @@ class TaskView extends View {
           <i class="far fa-repeat-alt"></i> <span>repeat</span>
         </span>
       </div>
+
+      ${
+        task?.status
+          ? `<div class="form__field form__field--done-date">
+      <i class="far fa-check-circle form__label"></i>
+        <label class="form__label--done-date">Completed on ${formatDate(
+          task.doneDate,
+          "fullTime"
+        )}</label>
+      </div>`
+          : ""
+      }
+          
       <div class="form__field field--cat">
         <i class="far fa-folder-open form__label"></i>
         <select class="input input--cat" name="cat">

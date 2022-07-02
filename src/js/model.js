@@ -125,6 +125,8 @@ export const getLocalStorage = function () {
 export const checkTask = function (id) {
   const task = state.allTasks.find((task) => task.id === id);
   task.status = !task.status;
+
+  if (task.status) task.doneDate = new Date();
 };
 
 export const checkRepeat = function (id) {

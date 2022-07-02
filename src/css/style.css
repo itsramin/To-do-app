@@ -221,8 +221,9 @@ select:focus-visible {
 .tabs {
   width: 100%;
   margin-top: 20px;
-  height: calc(100% - 144px);
+  min-height: calc(100% - 144px);
 }
+
 .tabs__list {
   width: 100%;
   display: flex;
@@ -598,18 +599,18 @@ input[type="date"]:before {
     height: calc(100% - 12px);
   }
   .container {
-    width: 96%;
+    width: 98%;
     height: calc(100% - 140px);
   }
   .container--max-height {
     height: 100%;
   }
   .tabs {
-    height: calc(100% - 100px);
+    min-height: calc(100% - 100px);
   }
-  .tabs--max-height {
+  /* .tabs--max-height {
     height: calc(100% - 40px);
-  }
+  } */
   .box--cat {
     width: 90%;
     transform: scale(0.8);

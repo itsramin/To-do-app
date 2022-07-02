@@ -7,5 +7,13 @@ export const formatDate = function (date, style = "full") {
         ? { month: "numeric", day: "numeric" }
         : { month: "numeric", day: "numeric", year: "numeric" };
   if (style === "weekday") options = { weekday: "short" };
+  if (style === "fullTime")
+    options = {
+      month: "numeric",
+      day: "numeric",
+      year: "numeric",
+      hour: "numeric",
+      minute: "numeric",
+    };
   return new Intl.DateTimeFormat("en-US", options).format(new Date(date));
 };
