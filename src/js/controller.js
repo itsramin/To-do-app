@@ -218,7 +218,9 @@ init();
 
 if ("serviceWorker" in navigator) {
   navigator.serviceWorker
-    .register("./serviceWorker.js")
+    .register(new URL("../../serviceWorker.js", import.meta.url), {
+      type: "module",
+    })
     .then((reg) => {
       console.log("Service worker registred successfully", reg);
     })

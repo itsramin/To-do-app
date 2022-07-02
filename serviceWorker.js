@@ -1,13 +1,12 @@
 const staticCacheName = "site-static-v1";
 const cacheAssets = [
-  "/",
+  "./",
   "./index.html",
   "./src/js/controller.js",
   "./src/js/model.js",
   "./src/js/helper.js",
   "./src/css/reset.css",
   "./src/css/style.css",
-  "./src/js/media/icon/icon-72.png",
 ];
 
 self.addEventListener("install", (evt) => {
@@ -31,7 +30,7 @@ self.addEventListener("fetch", (evt) => {
       })
       .catch((err) => {
         if (evt.request.url.indexOf(".html") > -1) {
-          return caches.match("./pages/fallback.html");
+          return console.log("fetch error");
         }
       })
   );
