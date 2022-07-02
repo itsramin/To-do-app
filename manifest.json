@@ -13,48 +13,48 @@
       "sizes": "36x36"
     },
     {
-      "src": "./src/media/icon/icon-48.png",
+      "src": "./src/media/icon/Icon-48.png",
       "type": "image/png",
       "sizes": "48x48"
     },
 
     {
-      "src": "./src/media/icon/icon-96.png",
+      "src": "./src/media/icon/Icon-96.png",
       "type": "image/png",
       "sizes": "96x96"
     },
     {
-      "src": "./src/media/icon/icon-144.png",
+      "src": "./src/media/icon/Icon-144.png",
       "type": "image/png",
       "sizes": "144x144"
     },
     {
-      "src": "./src/media/icon/icon-172.png",
+      "src": "./src/media/icon/Icon-172.png",
       "type": "image/png",
       "sizes": "172x172"
     },
     {
-      "src": "./src/media/icon/icon-192.png",
+      "src": "./src/media/icon/Icon-192.png",
       "type": "image/png",
       "sizes": "192x192"
     },
     {
-      "src": "./src/media/icon/icon-196.png",
+      "src": "./src/media/icon/Icon-196.png",
       "type": "image/png",
       "sizes": "196x196"
     },
     {
-      "src": "./src/media/icon/icon-256.png",
+      "src": "./src/media/icon/Icon-256.png",
       "type": "image/png",
       "sizes": "256x256"
     },
     {
-      "src": "./src/media/icon/icon-512.png",
+      "src": "./src/media/icon/Icon-512.png",
       "type": "image/png",
       "sizes": "512x512"
     },
     {
-      "src": "./src/media/icon/icon-1024.png",
+      "src": "./src/media/icon/Icon-1024.png",
       "type": "image/png",
       "sizes": "1024x1024",
       "purpose": "maskable"
