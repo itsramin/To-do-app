@@ -17,11 +17,7 @@
       "type": "image/png",
       "sizes": "48x48"
     },
-    {
-      "src": "./src/media/icon/icon-72.png",
-      "type": "image/png",
-      "sizes": "72x72"
-    },
+
     {
       "src": "./src/media/icon/icon-96.png",
       "type": "image/png",
