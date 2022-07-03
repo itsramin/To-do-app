@@ -467,6 +467,8 @@ select:focus-visible {
   padding-right: 10px;
   width: 25px;
   height: 25px;
+  background: url(../media/icon/gcal.png) no-repeat;
+  background-size: 25px;
 }
 
 input[type="date"] {

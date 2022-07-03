@@ -7,6 +7,12 @@ const cacheAssets = [
   "./src/js/helper.js",
   "./src/css/reset.css",
   "./src/css/style.css",
+  "./src/js/view/view.js",
+  "./src/js/view/categoryView.js",
+  "./src/js/view/listView.js",
+  "./src/js/view/searchView.js",
+  "./src/js/view/taskView.js",
+  "./src/js/view/themeView.js",
 ];
 
 self.addEventListener("install", (evt) => {

@@ -79,11 +79,7 @@ class TaskView extends View {
       </div>
       <div class="form__field field--gcal">
         <div class="gcal">
-          <img
-            src="./src/media/icon/gcal.png"
-            alt="google calendar"
-            class="img--gcal"
-          />
+          <span class="img--gcal"></span>
           Add to Google Calendar
         </div>
       </div>
