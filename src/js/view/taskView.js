@@ -98,6 +98,7 @@ class TaskView extends View {
     this._parentEl.insertAdjacentHTML("beforeend", markup);
     this._childEl = document.querySelector(".input--cat");
     this.btnRep = document.querySelector(".button--rep");
+    if (!task) document.querySelector(".input--title").focus();
   }
   repeat(task = undefined) {
     let html = `

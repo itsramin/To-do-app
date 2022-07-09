@@ -77,7 +77,8 @@ body {
   font-size: 1rem;
   font-family: Vazirmatn, "Franklin Gothic Medium", "Arial Narrow", Arial,
     sans-serif;
-  padding-top: 2rem;
+  /* padding-top: 2rem; */
+  height: 100vh;
 }
 * {
   -webkit-tap-highlight-color: transparent;
@@ -97,7 +98,7 @@ select:focus-visible {
 }
 
 .container {
-  height: calc(100% - 105px);
+  height: calc(100%);
   width: 350px;
   display: flex;
   flex-direction: column;
@@ -138,6 +139,7 @@ select:focus-visible {
   border-radius: 7px;
   position: relative;
   width: 300px;
+  margin-top: 2rem;
 }
 .box__title--cat {
   position: absolute;
@@ -221,7 +223,7 @@ select:focus-visible {
 .tabs {
   width: 100%;
   margin-top: 20px;
-  min-height: calc(100% - 144px);
+  height: calc(100vh - 280px);
 }
 
 .tabs__list {
@@ -332,7 +334,7 @@ select:focus-visible {
   cursor: pointer;
 }
 .buttons {
-  position: absolute;
+  position: fixed;
   bottom: 1.5rem;
 }
 
@@ -602,17 +604,10 @@ input[type="date"]:before {
   }
   .container {
     width: 98%;
-    height: calc(100% - 140px);
   }
   .container--max-height {
     height: 100%;
   }
-  .tabs {
-    min-height: calc(100% - 100px);
-  }
-  /* .tabs--max-height {
-    height: calc(100% - 40px);
-  } */
   .box--cat {
     width: 90%;
     transform: scale(0.8);
